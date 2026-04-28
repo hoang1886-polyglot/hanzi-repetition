@@ -22,17 +22,36 @@
 }
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden}
 
+/* SYNC */
+#sync-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:9999;transition:all 0.3s}
+#sync-bar.syncing{background:linear-gradient(90deg,var(--red),var(--amber),var(--red));background-size:200%;animation:syncAnim 1.2s linear infinite}
+#sync-bar.synced{background:var(--green)}
+@keyframes syncAnim{0%{background-position:0%}100%{background-position:200%}}
+#sync-pill{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#1A1A1A;color:#fff;font-size:12px;padding:7px 16px;border-radius:99px;display:none;align-items:center;gap:7px;z-index:9999;box-shadow:0 4px 14px rgba(0,0,0,0.25)}
+#sync-pill.show{display:flex}
+.sdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sdot.green{background:var(--green)}
+.sdot.spin{background:var(--amber);animation:blink 0.8s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+
+/* LOADING */
+#loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9998;gap:14px}
+.big-logo{width:56px;height:56px;background:var(--red);border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'Noto Serif SC',serif;font-size:30px;color:#fff;font-weight:700}
+.spinner{width:24px;height:24px;border:2.5px solid var(--border2);border-top-color:var(--red);border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
 /* SIDEBAR */
-#sidebar{width:220px;min-width:220px;background:var(--sidebar);display:flex;flex-direction:column;padding:0;overflow-y:auto}
+#sidebar{width:220px;min-width:220px;background:var(--sidebar);display:flex;flex-direction:column;overflow-y:auto}
 .sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid #2A2A2A;display:flex;align-items:center;gap:10px}
 .logo-icon{width:32px;height:32px;background:var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Noto Serif SC',serif;font-size:18px;color:#fff;font-weight:700;flex-shrink:0}
-.logo-text{color:#fff}.logo-text .zh{font-family:'Noto Serif SC',serif;font-size:15px;font-weight:600;line-height:1}.logo-text .sub{font-size:10px;color:#888;letter-spacing:0.04em;margin-top:2px}
+.logo-text .zh{font-family:'Noto Serif SC',serif;font-size:15px;font-weight:600;color:#fff;line-height:1}
+.logo-text .sub{font-size:10px;color:#888;letter-spacing:0.04em;margin-top:2px}
 .sidebar-nav{padding:12px 0;flex:1}
 .nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;color:#9A9690;font-size:13.5px;font-weight:500;transition:all 0.15s;border-left:3px solid transparent}
 .nav-item:hover{color:var(--sidebar-text);background:#252525}
 .nav-item.active{color:#fff;background:#252525;border-left-color:var(--red)}
 .nav-item svg{width:16px;height:16px;flex-shrink:0}
-.sidebar-footer{padding:16px 20px;border-top:1px solid #2A2A2A;font-size:11px;color:#555;line-height:1.6}
+.sidebar-footer{padding:16px 20px;border-top:1px solid #2A2A2A;font-size:11px;color:#555;line-height:1.8}
 
 /* MAIN */
 #main{flex:1;overflow-y:auto;background:var(--bg)}
@@ -48,60 +67,57 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .stat-card .label{font-size:12px;color:var(--text2);font-weight:500;margin-bottom:8px}
 .stat-card .value{font-size:26px;font-weight:600;letter-spacing:-0.03em}
 .stat-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
-.icon-red{background:var(--red-light);color:var(--red)}
-.icon-green{background:var(--green-light);color:var(--green)}
-.icon-amber{background:var(--amber-light);color:var(--amber)}
-.icon-blue{background:var(--blue-light);color:var(--blue)}
+.icon-red{background:var(--red-light)}.icon-green{background:var(--green-light)}.icon-amber{background:var(--amber-light)}.icon-blue{background:var(--blue-light)}
+.stat-clickable{cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s}
+.stat-clickable:hover{border-color:var(--border2);box-shadow:0 2px 10px rgba(0,0,0,0.07)}
 
 /* CARDS */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px}
 .card-title{font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:16px}
 
-/* WORD LIST */
+/* WORD GRID */
 .word-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.word-tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;cursor:pointer;transition:border-color 0.15s}
+.word-tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;transition:border-color 0.15s}
 .word-tile:hover{border-color:var(--border2)}
 .word-tile .zh{font-family:'Noto Serif SC',serif;font-size:20px;font-weight:600;margin-bottom:3px}
 .word-tile .py{font-size:12px;color:var(--red);margin-bottom:2px;font-weight:500}
 .word-tile .vi{font-size:12px;color:var(--text2)}
 
 /* REVIEW */
-#review-page{max-width:680px;margin:0 auto}
 .review-progress{background:var(--border);border-radius:99px;height:4px;margin-bottom:32px;overflow:hidden}
 .review-progress-fill{height:100%;background:var(--red);border-radius:99px;transition:width 0.4s ease}
 .review-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:40px;text-align:center;margin-bottom:20px}
 .review-vi{font-size:14px;color:var(--text2);margin-bottom:8px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em}
 .review-word{font-size:36px;font-weight:600;margin-bottom:6px;line-height:1.3}
-.review-example{font-size:13px;color:var(--text2);margin-top:16px;padding:12px 16px;background:var(--surface2);border-radius:8px;line-height:1.6;text-align:left;border:1px solid var(--border);display:none}
-.answer-area{margin-top:20px}
-.answer-input{width:100%;padding:14px 18px;font-size:22px;font-family:'Noto Sans SC',sans-serif;border:1.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);text-align:center;outline:none;transition:border-color 0.2s}
+.answer-input{width:100%;padding:14px 18px;font-size:22px;font-family:'Noto Sans SC',sans-serif;border:1.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);text-align:center;outline:none;transition:border-color 0.2s;margin-top:20px}
 .answer-input:focus{border-color:var(--red)}
 .answer-input.correct{border-color:var(--green);background:var(--green-light)}
 .answer-input.wrong{border-color:var(--red);background:var(--red-light)}
 .check-btn{margin-top:12px;padding:12px 32px;background:var(--red);color:#fff;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity 0.15s;width:100%}
 .check-btn:hover{opacity:0.88}
 .check-btn:disabled{opacity:0.4;cursor:not-allowed}
-
-/* DIFFICULTY BUTTONS */
 .diff-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
 .diff-btn{padding:12px 8px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;background:var(--surface);transition:all 0.15s;font-family:'DM Sans',sans-serif;text-align:center;line-height:1.4}
 .diff-btn .emoji{font-size:18px;display:block;margin-bottom:4px}
 .diff-btn .label{color:var(--text);display:block}
 .diff-btn .interval{font-size:11px;color:var(--text2);display:block;font-weight:400;margin-top:2px}
-.diff-btn:hover{border-color:var(--red);background:var(--red-light)}
-.diff-btn.again:hover{border-color:#D93025;background:#FEE8E6}
-.diff-btn.hard:hover{border-color:#B45309;background:#FEF3C7}
-.diff-btn.good:hover{border-color:#1E7A4A;background:#E6F4EC}
-.diff-btn.easy:hover{border-color:#1D4ED8;background:#EFF6FF}
+.diff-btn.again:hover{border-color:var(--red);background:var(--red-light)}
+.diff-btn.hard:hover{border-color:var(--amber);background:var(--amber-light)}
+.diff-btn.good:hover{border-color:var(--green);background:var(--green-light)}
+.diff-btn.easy:hover{border-color:var(--blue);background:var(--blue-light)}
+.feedback-bar{padding:12px 18px;border-radius:var(--radius-sm);font-size:14px;font-weight:500;margin-top:12px;display:none}
+.feedback-bar.correct{background:var(--green-light);color:var(--green);border:1px solid #A7D7BC;display:block}
+.feedback-bar.wrong{background:var(--red-light);color:var(--red);border:1px solid var(--red-mid);display:block}
+.correct-answer{font-size:14px;color:var(--green);font-weight:500;margin-top:8px}
+.review-pinyin{font-size:14px;color:var(--red);margin-top:4px;font-weight:500;min-height:20px}
 
-/* ADD WORD FORM */
+/* ADD FORM */
 .form-group{margin-bottom:18px}
 .form-group label{display:block;font-size:13px;font-weight:500;color:var(--text2);margin-bottom:6px}
 .form-group input,.form-group textarea{width:100%;padding:10px 14px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text);outline:none;transition:border-color 0.2s}
 .form-group input:focus,.form-group textarea:focus{border-color:var(--red)}
 .form-group textarea{resize:vertical;min-height:64px;line-height:1.6}
 .pinyin-preview{font-size:13px;color:var(--red);margin-top:4px;font-weight:500;min-height:18px}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .submit-btn{padding:11px 24px;background:var(--red);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
 .submit-btn:hover{opacity:0.88}
 .optional-tag{font-size:11px;color:var(--text3);font-weight:400;margin-left:4px}
@@ -110,14 +126,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .heatmap-grid{display:flex;gap:3px;flex-wrap:wrap}
 .heatmap-week{display:flex;flex-direction:column;gap:3px}
 .heatmap-cell{width:12px;height:12px;border-radius:2px;background:var(--border)}
-.heatmap-cell.l1{background:#FECACA}
-.heatmap-cell.l2{background:#F28B82}
-.heatmap-cell.l3{background:#D93025}
-.heatmap-cell.l4{background:#9B111E}
-.heatmap-labels{display:flex;gap:3px;margin-bottom:4px}
-.heatmap-month-label{font-size:10px;color:var(--text3);width:12px;text-align:center}
+.heatmap-cell.l1{background:#FECACA}.heatmap-cell.l2{background:#F28B82}
+.heatmap-cell.l3{background:#D93025}.heatmap-cell.l4{background:#9B111E}
 
-/* WORD LIST PAGE */
+/* WORD LIST */
 .wordlist-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .search-input{padding:8px 14px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text);outline:none;width:220px}
 .search-input:focus{border-color:var(--red)}
@@ -126,53 +138,39 @@ th{text-align:left;padding:10px 14px;font-size:11px;font-weight:600;color:var(--
 td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
 tr:last-child td{border-bottom:none}
 .badge{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600}
-.badge-new{background:#E6F4EC;color:#1E7A4A}
-.badge-learning{background:#FEF3C7;color:#B45309}
-.badge-review{background:#EFF6FF;color:#1D4ED8}
-.badge-mastered{background:var(--surface2);color:var(--text2)}
+.badge-new{background:#E6F4EC;color:var(--green)}.badge-learning{background:var(--amber-light);color:var(--amber)}
+.badge-review{background:var(--blue-light);color:var(--blue)}.badge-mastered{background:var(--surface2);color:var(--text2)}
 .del-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:2px 6px;border-radius:4px}
 .del-btn:hover{color:var(--red);background:var(--red-light)}
+.filter-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600;margin-bottom:12px}
+.filter-pill.fall{background:var(--red-light);color:var(--red)}.filter-pill.fdue{background:var(--amber-light);color:var(--amber)}
+.filter-pill.flearned{background:var(--green-light);color:var(--green)}.filter-pill.fmastered{background:var(--blue-light);color:var(--blue)}
+.filter-clear{cursor:pointer;opacity:0.6;font-size:14px}.filter-clear:hover{opacity:1}
 
-/* REVIEW EMPTY */
+/* MISC */
 .empty-state{text-align:center;padding:60px 20px}
 .empty-state .emoji{font-size:48px;margin-bottom:12px}
 .empty-state h3{font-size:18px;font-weight:600;margin-bottom:6px}
 .empty-state p{font-size:14px;color:var(--text2)}
-
-/* FEEDBACK */
-.feedback-bar{padding:12px 18px;border-radius:var(--radius-sm);font-size:14px;font-weight:500;margin-bottom:12px;display:none}
-.feedback-bar.correct{background:var(--green-light);color:var(--green);border:1px solid #A7D7BC;display:block}
-.feedback-bar.wrong{background:var(--red-light);color:var(--red);border:1px solid var(--red-mid);display:block}
-
-/* STREAK */
-.streak-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.streak-flame{font-size:24px}
+.streak-row{display:flex;align-items:center;gap:8px}
 .streak-num{font-size:28px;font-weight:700;letter-spacing:-0.03em}
 .streak-label{font-size:13px;color:var(--text2)}
-
-/* SCROLLBAR */
 ::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:#C8C4BC;border-radius:99px}
-
-/* NOTIFICATIONS */
-.toast{position:fixed;bottom:24px;right:24px;background:#1A1A1A;color:#fff;padding:12px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:500;z-index:999;animation:slideUp 0.3s ease;pointer-events:none}
+.toast{position:fixed;bottom:24px;right:24px;background:#1A1A1A;color:#fff;padding:12px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:500;z-index:9999;animation:slideUp 0.3s ease;pointer-events:none}
 @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
-
-.review-pinyin{font-size:14px;color:var(--red);margin-top:4px;font-weight:500;min-height:20px}
-.correct-answer{font-size:14px;color:var(--green);font-weight:500;margin-top:8px}
-.stat-clickable{cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s}
-.stat-clickable:hover{border-color:var(--border2);box-shadow:0 2px 10px rgba(0,0,0,0.07)}
-.filter-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600;margin-bottom:12px}
-.filter-pill.fall{background:var(--red-light);color:var(--red)}
-.filter-pill.fdue{background:var(--amber-light);color:var(--amber)}
-.filter-pill.flearned{background:var(--green-light);color:var(--green)}
-.filter-pill.fmastered{background:var(--blue-light);color:var(--blue)}
-.filter-clear{cursor:pointer;opacity:0.6;font-size:14px;line-height:1;margin-left:2px}
-.filter-clear:hover{opacity:1}
 </style>
 </head>
 <body>
+
+<div id="sync-bar"></div>
+<div id="sync-pill"><div class="sdot spin" id="sdot"></div><span id="stext">Đang đồng bộ...</span></div>
+
+<div id="loading">
+  <div class="big-logo">字</div>
+  <div class="spinner"></div>
+  <p style="font-size:14px;color:var(--text2)">Đang kết nối Firebase...</p>
+</div>
 
 <nav id="sidebar">
   <div class="sidebar-logo">
@@ -183,25 +181,26 @@ tr:last-child td{border-bottom:none}
     </div>
   </div>
   <div class="sidebar-nav">
-    <div class="nav-item active" data-page="dashboard" onclick="nav('dashboard')">
+    <div class="nav-item active" data-page="dashboard" id="nav-dashboard">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       Dashboard
     </div>
-    <div class="nav-item" data-page="review" onclick="nav('review')">
+    <div class="nav-item" data-page="review" id="nav-review">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       Review
     </div>
-    <div class="nav-item" data-page="add" onclick="nav('add')">
+    <div class="nav-item" data-page="add" id="nav-add">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
       Thêm từ mới
     </div>
-    <div class="nav-item" data-page="wordlist" onclick="nav('wordlist')">
+    <div class="nav-item" data-page="wordlist" id="nav-wordlist">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
       Danh sách từ
     </div>
   </div>
   <div class="sidebar-footer">
-    HànZì v1.0<br>Dữ liệu lưu cục bộ
+    HànZì v2.0<br>
+    <span style="color:#3A8A5A">● Firebase Sync</span>
   </div>
 </nav>
 
@@ -209,66 +208,36 @@ tr:last-child td{border-bottom:none}
 
 <!-- DASHBOARD -->
 <div id="dashboard" class="page active">
-  <div class="page-header">
-    <h1>Dashboard</h1>
-    <p>Tiến trình học tiếng Trung của bạn</p>
-  </div>
+  <div class="page-header"><h1>Dashboard</h1><p>Tiến trình học tiếng Trung của bạn</p></div>
   <div class="stats-grid">
-    <div class="stat-card stat-clickable" onclick="navWordlistFilter('all')" title="Xem tất cả từ">
+    <div class="stat-card stat-clickable" id="card-all">
       <div><div class="label">Tổng số từ</div><div class="value" id="stat-total">0</div></div>
       <div class="stat-icon icon-red">📚</div>
     </div>
-    <div class="stat-card stat-clickable" onclick="navWordlistFilter('due')" title="Xem từ cần ôn tập">
+    <div class="stat-card stat-clickable" id="card-due">
       <div><div class="label">Cần ôn tập</div><div class="value" id="stat-due">0</div></div>
       <div class="stat-icon icon-amber">⏰</div>
     </div>
-    <div class="stat-card stat-clickable" onclick="navWordlistFilter('learned')" title="Xem từ đã học">
+    <div class="stat-card stat-clickable" id="card-learned">
       <div><div class="label">Đã học</div><div class="value" id="stat-learned">0</div></div>
       <div class="stat-icon icon-green">🎓</div>
     </div>
-    <div class="stat-card stat-clickable" onclick="navWordlistFilter('mastered')" title="Xem từ thành thạo">
+    <div class="stat-card stat-clickable" id="card-mastered">
       <div><div class="label">Thành thạo</div><div class="value" id="stat-mastered">0</div></div>
       <div class="stat-icon icon-blue">⭐</div>
     </div>
   </div>
-
-  <!-- Streak & Accuracy Row -->
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px">
-    <div class="card" style="margin:0">
-      <div class="card-title">Chuỗi ngày học</div>
-      <div class="streak-row">
-        <span class="streak-flame">🔥</span>
-        <span class="streak-num" id="stat-streak">0</span>
-        <span class="streak-label">ngày liên tiếp</span>
-      </div>
-    </div>
-    <div class="card" style="margin:0">
-      <div class="card-title">Độ chính xác</div>
-      <div class="streak-row">
-        <span class="streak-flame">🎯</span>
-        <span class="streak-num" id="stat-accuracy">—</span>
-        <span class="streak-label">% đúng</span>
-      </div>
-    </div>
-    <div class="card" style="margin:0">
-      <div class="card-title">Học hôm nay</div>
-      <div class="streak-row">
-        <span class="streak-flame">📖</span>
-        <span class="streak-num" id="stat-today">0</span>
-        <span class="streak-label">từ đã ôn</span>
-      </div>
-    </div>
+    <div class="card" style="margin:0"><div class="card-title">Chuỗi ngày học</div><div class="streak-row"><span style="font-size:24px">🔥</span><span class="streak-num" id="stat-streak">0</span><span class="streak-label">ngày liên tiếp</span></div></div>
+    <div class="card" style="margin:0"><div class="card-title">Độ chính xác</div><div class="streak-row"><span style="font-size:24px">🎯</span><span class="streak-num" id="stat-accuracy">—</span><span class="streak-label">% đúng</span></div></div>
+    <div class="card" style="margin:0"><div class="card-title">Học hôm nay</div><div class="streak-row"><span style="font-size:24px">📖</span><span class="streak-num" id="stat-today">0</span><span class="streak-label">từ đã ôn</span></div></div>
   </div>
-
-  <!-- Due Now Banner -->
-  <div id="due-banner" class="card" style="background:var(--red);border-color:var(--red);color:#fff;cursor:pointer;margin-bottom:16px;display:none" onclick="nav('review')">
+  <div id="due-banner" class="card" style="background:var(--red);border-color:var(--red);color:#fff;cursor:pointer;margin-bottom:16px;display:none" id="due-banner">
     <div style="display:flex;align-items:center;justify-content:space-between">
       <div><div style="font-size:13px;font-weight:600;opacity:0.85;margin-bottom:4px">BẮT ĐẦU ÔN TẬP</div><div style="font-size:18px;font-weight:700" id="due-banner-text"></div></div>
       <div style="font-size:32px">→</div>
     </div>
   </div>
-
-  <!-- Heatmap -->
   <div class="card">
     <div class="card-title">Hoạt động học tập (12 tuần qua)</div>
     <div id="heatmap" class="heatmap-grid"></div>
@@ -282,38 +251,30 @@ tr:last-child td{border-bottom:none}
       <span style="font-size:11px;color:var(--text3)">Nhiều hơn</span>
     </div>
   </div>
-
-  <!-- Recently Added -->
   <div class="card">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
       <div class="card-title" style="margin:0">Mới thêm gần đây</div>
-      <span style="font-size:13px;color:var(--red);cursor:pointer;font-weight:500" onclick="nav('wordlist')">Xem tất cả</span>
+      <span style="font-size:13px;color:var(--red);cursor:pointer;font-weight:500" id="view-all-link">Xem tất cả</span>
     </div>
     <div class="word-grid" id="recent-words"></div>
   </div>
 </div>
 
-<!-- REVIEW PAGE -->
+<!-- REVIEW -->
 <div id="review" class="page" style="padding:36px 40px">
-  <div id="review-page" style="max-width:640px;margin:0 auto">
-    <div class="page-header">
-      <h1>Ôn tập</h1>
-      <p id="review-subtitle">Đang tải...</p>
-    </div>
+  <div style="max-width:640px;margin:0 auto">
+    <div class="page-header"><h1>Ôn tập</h1><p id="review-subtitle"></p></div>
     <div id="review-content"></div>
   </div>
 </div>
 
-<!-- ADD WORD PAGE -->
+<!-- ADD WORD -->
 <div id="add" class="page">
-  <div class="page-header">
-    <h1>Thêm từ mới</h1>
-    <p>Nhập từ tiếng Trung và nghĩa tiếng Việt</p>
-  </div>
+  <div class="page-header"><h1>Thêm từ mới</h1><p>Nhập từ tiếng Trung và nghĩa tiếng Việt</p></div>
   <div class="card" style="max-width:560px">
     <div class="form-group">
       <label>Chữ Hán <span style="color:var(--red)">*</span></label>
-      <input type="text" id="inp-zh" placeholder="e.g. 你好" oninput="previewPinyin()">
+      <input type="text" id="inp-zh" placeholder="e.g. 你好">
       <div class="pinyin-preview" id="pinyin-preview"></div>
     </div>
     <div class="form-group">
@@ -331,463 +292,358 @@ tr:last-child td{border-bottom:none}
         <textarea id="inp-ex-vi" placeholder="e.g. Xin chào, tôi tên là Tiểu Minh."></textarea>
       </div>
     </div>
-    <button class="submit-btn" onclick="addWord()">+ Thêm từ</button>
+    <button class="submit-btn" id="add-word-btn">+ Thêm từ</button>
   </div>
 </div>
 
-<!-- WORD LIST PAGE -->
+<!-- WORD LIST -->
 <div id="wordlist" class="page">
-  <div class="page-header">
-    <h1>Danh sách từ</h1>
-    <p id="wordlist-count">0 từ trong thư viện</p>
-  </div>
+  <div class="page-header"><h1>Danh sách từ</h1><p id="wordlist-count">0 từ</p></div>
   <div id="wordlist-filter-pill"></div>
   <div class="card">
     <div class="wordlist-header">
-      <input class="search-input" type="text" placeholder="Tìm kiếm..." oninput="renderWordList(this.value)">
-      <div style="font-size:13px;color:var(--text2)" id="filter-info"></div>
+      <input class="search-input" type="text" id="search-input" placeholder="Tìm kiếm...">
     </div>
     <table>
-      <thead>
-        <tr>
-          <th>Chữ Hán</th>
-          <th>Pinyin</th>
-          <th>Nghĩa tiếng Việt</th>
-          <th>Trạng thái</th>
-          <th>Lần ôn tiếp</th>
-          <th></th>
-        </tr>
-      </thead>
+      <thead><tr><th>Chữ Hán</th><th>Pinyin</th><th>Nghĩa tiếng Việt</th><th>Trạng thái</th><th>Lần ôn tiếp</th><th></th></tr></thead>
       <tbody id="word-table-body"></tbody>
     </table>
   </div>
 </div>
 
-</div><!-- end main -->
+</div><!-- end #main -->
 
-<script>
-// ─── STATE ───────────────────────────────────────────────────────────────────
-// ─── CẤU HÌNH FIREBASE ───────────────────────────────────────────────────────
+<!-- ═══════════════════════════════════════════════════════
+     ALL JAVASCRIPT — single type="module" block
+════════════════════════════════════════════════════════ -->
+<script type="module">
+import { initializeApp }              from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc,
+         setDoc, onSnapshot }         from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// ─── FIREBASE INIT ────────────────────────────────────────────────────────────
 const firebaseConfig = {
-  // BẠN CẦN PASTE API KEY CỦA BẠN VÀO ĐÂY (Lấy từ Firebase Console)
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_ID",
-  appId: "YOUR_APP_ID"
+  apiKey:            "AIzaSyCwg68CV50FGXISL-7qEsfUwRnxGCXcLaY",
+  authDomain:        "hanzi-storage.firebaseapp.com",
+  projectId:         "hanzi-storage",
+  storageBucket:     "hanzi-storage.firebasestorage.app",
+  messagingSenderId: "500185685871",
+  appId:             "1:500185685871:web:a6442e21949c5b10d1529a"
 };
+const app       = initializeApp(firebaseConfig);
+const firestore = getFirestore(app);
+const DB_DOC    = doc(firestore, "hanzi", "data");
 
-// Khởi tạo Firebase
-firebase.initializeApp(firebaseConfig);
-const firestore = firebase.firestore();
+// ─── APP STATE ────────────────────────────────────────────────────────────────
+let db          = { words:[], sessions:{}, correct:0, total:0 };
+let reviewQueue = [], currentCard = null, answered = false, saveTimer = null;
+let _wf         = 'all'; // word-list filter
 
-// ─── STATE ───────────────────────────────────────────────────────────────────
-// Biến db giờ chỉ chứa cấu trúc mặc định
-let db = {
-  words: [],
-  sessions: {},   
-  correct: 0,
-  total: 0,
-  lastStudied: null
-};
+// ─── SYNC UI ─────────────────────────────────────────────────────────────────
+const syncBar  = document.getElementById('sync-bar');
+const syncPill = document.getElementById('sync-pill');
+const sdot     = document.getElementById('sdot');
+const stext    = document.getElementById('stext');
 
-// Đặt một ID giả định cho dữ liệu của bạn. 
-// Sau này nếu có làm chức năng Đăng nhập, bạn sẽ thay "my_unique_data" bằng User ID của tài khoản.
-const userDocRef = firestore.collection("users").doc("my_unique_data");
+function setSyncing(){ syncBar.className='syncing'; sdot.className='sdot spin'; stext.textContent='Đang đồng bộ...'; syncPill.className='show'; }
+function setSynced(){  syncBar.className='synced';  sdot.className='sdot green'; stext.textContent='Đã đồng bộ ✓'; setTimeout(()=>{ syncPill.className=''; syncBar.className=''; }, 2000); }
+function setSyncErr(){ sdot.className='sdot'; sdot.style.background='var(--red)'; stext.textContent='Lỗi kết nối ⚠'; syncPill.className='show'; }
 
-// Hàm save mới: Lưu lên cả Cloud và Backup ở Local
-function save() {
-  // Backup ở máy
-  localStorage.setItem('hanzi_db', JSON.stringify(db));
-  
-  // Đẩy lên Firebase
-  userDocRef.set(db).catch(error => {
-    console.error("Lỗi khi đồng bộ lên Firebase:", error);
-    toast("Lỗi đồng bộ dữ liệu mây!");
-  });
+// ─── SAVE ────────────────────────────────────────────────────────────────────
+function save(){
+  // Local backup
+  try{ localStorage.setItem('hanzi_bk', JSON.stringify(db)); }catch(e){}
+  // Debounced Firebase write
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    setSyncing();
+    try{
+      await setDoc(DB_DOC, JSON.parse(JSON.stringify(db)));
+      setSynced();
+    } catch(e){
+      console.error('Save error:', e);
+      setSyncErr();
+      toast('⚠️ Lỗi đồng bộ. Kiểm tra kết nối mạng.');
+    }
+    saveTimer = null;
+  }, 400);
 }
 
-// ─── PINYIN ──────────────────────────────────────────────────────────────────
-function getPinyin(zh){
-  if(!window.pinyinPro) return '';
-  return pinyinPro.pinyin(zh,{toneType:'symbol',type:'string',separator:' '});
+// ─── LOAD + REALTIME ─────────────────────────────────────────────────────────
+async function init(){
+  try{
+    const snap = await getDoc(DB_DOC);
+    if(snap.exists()){
+      const d = snap.data();
+      db = { words:d.words||[], sessions:d.sessions||{}, correct:d.correct||0, total:d.total||0 };
+    } else {
+      seedWords();
+      await setDoc(DB_DOC, JSON.parse(JSON.stringify(db)));
+    }
+  } catch(e){
+    console.error('Firebase load failed:', e);
+    const bk = localStorage.getItem('hanzi_bk');
+    if(bk){ try{ db = JSON.parse(bk); }catch(ex){ seedWords(); } }
+    else { seedWords(); }
+    toast('⚠️ Không kết nối Firebase. Dùng dữ liệu cục bộ.');
+  }
+
+  document.getElementById('loading').style.display = 'none';
+  renderDashboard();
+  setupListeners();
+
+  // Real-time listener — refresh UI when another device makes changes
+  onSnapshot(DB_DOC, snap => {
+    if(snap.exists() && !saveTimer){
+      const d = snap.data();
+      db = { words:d.words||[], sessions:d.sessions||{}, correct:d.correct||0, total:d.total||0 };
+      const ap = document.querySelector('.page.active')?.id;
+      if(ap === 'dashboard') renderDashboard();
+      if(ap === 'wordlist')  renderWordList('');
+    }
+  }, err => console.warn('Snapshot error:', err));
 }
 
-// ─── NAV ──────────────────────────────────────────────────────────────────────
+// ─── SEED DATA ────────────────────────────────────────────────────────────────
+function seedWords(){
+  [ {zh:'你好', vi:'xin chào',          exZh:'你好，很高兴认识你。',  exVi:'Xin chào, rất vui được gặp bạn.'},
+    {zh:'谢谢', vi:'cảm ơn',            exZh:'谢谢你的帮助！',         exVi:'Cảm ơn sự giúp đỡ của bạn!'},
+    {zh:'学习', vi:'học tập',            exZh:'我喜欢学习汉语。',       exVi:'Tôi thích học tiếng Trung.'},
+    {zh:'漂亮', vi:'xinh đẹp, đẹp',     exZh:'她很漂亮。',             exVi:'Cô ấy rất xinh đẹp.'},
+    {zh:'工作', vi:'làm việc, công việc',exZh:'我的工作很有趣。',       exVi:'Công việc của tôi rất thú vị.'} ]
+  .forEach(s => db.words.push({ id:Date.now()+Math.random(), pinyin:getPinyin(s.zh), status:'new', ef:2.5, interval:0, repetitions:0, nextReview:null, lastReview:null, added:Date.now(), ...s }));
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function getPinyin(zh){ return window.pinyinPro ? pinyinPro.pinyin(zh,{toneType:'symbol',type:'string',separator:' '}) : ''; }
+function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2400); }
+function $(id){ return document.getElementById(id); }
+
+// ─── NAV ─────────────────────────────────────────────────────────────────────
 function nav(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById(page).classList.add('active');
-  document.querySelector(`[data-page="${page}"]`).classList.add('active');
+  document.getElementById(`nav-${page}`).classList.add('active');
   if(page==='dashboard') renderDashboard();
-  if(page==='review') startReview();
-  if(page==='wordlist') renderWordList('');
+  if(page==='review')    startReview();
+  if(page==='wordlist')  renderWordList('');
+}
+
+function navWordlistFilter(f){ _wf=f; nav('wordlist'); }
+
+// ─── EVENT LISTENERS (replaces inline onclick) ────────────────────────────────
+function setupListeners(){
+  // Sidebar nav
+  ['dashboard','review','add','wordlist'].forEach(p => $(`nav-${p}`).addEventListener('click', ()=>nav(p)));
+
+  // Stat cards → filter word list
+  $('card-all').addEventListener('click',     ()=>navWordlistFilter('all'));
+  $('card-due').addEventListener('click',     ()=>navWordlistFilter('due'));
+  $('card-learned').addEventListener('click', ()=>navWordlistFilter('learned'));
+  $('card-mastered').addEventListener('click',()=>navWordlistFilter('mastered'));
+
+  // Due banner → review
+  $('due-banner').addEventListener('click', ()=>nav('review'));
+
+  // View all link
+  $('view-all-link').addEventListener('click', ()=>nav('wordlist'));
+
+  // Add word form
+  $('inp-zh').addEventListener('input', ()=>{ $('pinyin-preview').textContent = getPinyin($('inp-zh').value)||''; });
+  $('add-word-btn').addEventListener('click', addWord);
+  $('inp-vi').addEventListener('keydown', e=>{ if(e.key==='Enter') addWord(); });
+
+  // Word list search
+  $('search-input').addEventListener('input', e=>renderWordList(e.target.value));
 }
 
 // ─── SM-2 ALGORITHM ──────────────────────────────────────────────────────────
-function sm2(word, grade){
-  // grade: 0=Again, 1=Hard, 2=Good, 3=Easy
-  let {ef=2.5, interval=0, repetitions=0} = word;
-  if(grade===0){
-    repetitions=0; interval=1;
-  } else if(grade===1){
-    interval = Math.max(1, Math.round(interval * 1.2));
-    ef = Math.max(1.3, ef - 0.15);
-  } else if(grade===2){
-    if(repetitions===0) interval=1;
-    else if(repetitions===1) interval=4;
-    else interval=Math.round(interval*ef);
-    repetitions++;
-    ef = Math.max(1.3, ef + 0.1 - (3-2)*(0.08+(3-2)*0.02));
-  } else {
-    if(repetitions===0) interval=4;
-    else interval=Math.round(interval*ef*1.3);
-    repetitions++;
-    ef = Math.max(1.3, ef+0.15);
-  }
-  const now = Date.now();
-  word.ef = ef;
-  word.interval = interval;
-  word.repetitions = repetitions;
-  word.nextReview = now + interval*864e5;
-  word.lastReview = now;
-  if(repetitions>=3) word.status='mastered';
-  else if(repetitions>=1) word.status='review';
-  else word.status='learning';
+function sm2(w, g){
+  let {ef=2.5, interval=0, repetitions=0} = w;
+  if(g===0){ repetitions=0; interval=1; }
+  else if(g===1){ interval=Math.max(1, Math.round(interval*1.2)); ef=Math.max(1.3,ef-0.15); }
+  else if(g===2){ interval=repetitions===0?1:repetitions===1?4:Math.round(interval*ef); repetitions++; ef=Math.max(1.3,ef-0.08); }
+  else          { interval=repetitions===0?4:Math.round(interval*ef*1.3);                 repetitions++; ef=Math.max(1.3,ef+0.15); }
+  w.ef=ef; w.interval=interval; w.repetitions=repetitions;
+  w.nextReview=Date.now()+interval*864e5; w.lastReview=Date.now();
+  w.status=repetitions>=3?'mastered':repetitions>=1?'review':'learning';
 }
-
-function intervalLabel(grade, word){
-  const {ef=2.5, interval=0, repetitions=0}=word;
-  if(grade===0) return '<10 phút';
-  if(grade===1) return `${Math.max(1,Math.round(interval*1.2))} ngày`;
-  if(grade===2){
-    if(repetitions===0) return '1 ngày';
-    if(repetitions===1) return '4 ngày';
-    return `${Math.round(interval*ef)} ngày`;
-  }
-  if(grade===3){
-    if(repetitions===0) return '4 ngày';
-    return `${Math.round(interval*ef*1.3)} ngày`;
-  }
+function intLabel(g, w){
+  const {ef=2.5,interval=0,repetitions=0}=w;
+  if(g===0) return '<10 phút';
+  if(g===1) return `${Math.max(1,Math.round(interval*1.2))} ngày`;
+  if(g===2) return repetitions===0?'1 ngày':repetitions===1?'4 ngày':`${Math.round(interval*ef)} ngày`;
+  return repetitions===0?'4 ngày':`${Math.round(interval*ef*1.3)} ngày`;
 }
 
 // ─── DASHBOARD ───────────────────────────────────────────────────────────────
 function renderDashboard(){
-  const words=db.words;
-  const now=Date.now();
-  const today=new Date().toISOString().split('T')[0];
+  const words=db.words, now=Date.now(), today=new Date().toISOString().split('T')[0];
   const due=words.filter(w=>!w.nextReview||w.nextReview<=now);
-  const learned=words.filter(w=>w.repetitions>0);
-  const mastered=words.filter(w=>w.status==='mastered');
-  document.getElementById('stat-total').textContent=words.length;
-  document.getElementById('stat-due').textContent=due.length;
-  document.getElementById('stat-learned').textContent=learned.length;
-  document.getElementById('stat-mastered').textContent=mastered.length;
-  document.getElementById('stat-today').textContent=db.sessions[today]||0;
-  
-  // Streak
-  let streak=0, d=new Date();
-  while(true){
-    const k=d.toISOString().split('T')[0];
-    if(db.sessions[k] && db.sessions[k]>0){ streak++; d.setDate(d.getDate()-1); }
-    else break;
-  }
-  document.getElementById('stat-streak').textContent=streak;
-  const acc = db.total>0 ? Math.round(db.correct/db.total*100) : null;
-  document.getElementById('stat-accuracy').textContent = acc!==null ? acc : '—';
-  
-  // Due banner
-  const banner=document.getElementById('due-banner');
-  if(due.length>0){
-    banner.style.display='block';
-    document.getElementById('due-banner-text').textContent=`${due.length} từ cần ôn tập ngay!`;
-  } else { banner.style.display='none'; }
-  
-  // Heatmap
-  renderHeatmap();
-  
-  // Recent words
-  const container=document.getElementById('recent-words');
-  const recent=[...words].reverse().slice(0,6);
-  container.innerHTML=recent.length?recent.map(w=>`
-    <div class="word-tile">
-      <div class="zh">${w.zh}</div>
-      <div class="py">${w.pinyin}</div>
-      <div class="vi">${w.vi}</div>
-    </div>
-  `).join(''):'<div style="color:var(--text3);font-size:14px;grid-column:1/-1">Chưa có từ nào. <span style="color:var(--red);cursor:pointer" onclick="nav(\'add\')">Thêm từ đầu tiên!</span></div>';
-}
+  $('stat-total').textContent    = words.length;
+  $('stat-due').textContent      = due.length;
+  $('stat-learned').textContent  = words.filter(w=>w.repetitions>0).length;
+  $('stat-mastered').textContent = words.filter(w=>w.status==='mastered').length;
+  $('stat-today').textContent    = db.sessions[today]||0;
+  $('stat-accuracy').textContent = db.total>0 ? Math.round(db.correct/db.total*100) : '—';
 
-function renderHeatmap(){
-  const hm=document.getElementById('heatmap');
-  hm.innerHTML='';
-  const today=new Date();
-  const weeks=12;
-  for(let w=weeks-1;w>=0;w--){
-    const col=document.createElement('div');
-    col.className='heatmap-week';
-    for(let d=0;d<7;d++){
-      const date=new Date(today);
-      date.setDate(date.getDate()-w*7-d);
-      const k=date.toISOString().split('T')[0];
-      const cnt=db.sessions[k]||0;
+  let streak=0, d=new Date();
+  while(true){ const k=d.toISOString().split('T')[0]; if((db.sessions[k]||0)>0){ streak++; d.setDate(d.getDate()-1); } else break; }
+  $('stat-streak').textContent = streak;
+
+  const banner=$('due-banner');
+  if(due.length){ banner.style.display='block'; $('due-banner-text').textContent=`${due.length} từ cần ôn tập ngay!`; }
+  else { banner.style.display='none'; }
+
+  // Heatmap
+  const hm=$('heatmap'); hm.innerHTML='';
+  const td=new Date();
+  for(let w=11;w>=0;w--){
+    const col=document.createElement('div'); col.className='heatmap-week';
+    for(let dy=0;dy<7;dy++){
+      const dt=new Date(td); dt.setDate(dt.getDate()-w*7-dy);
+      const k=dt.toISOString().split('T')[0]; const c=db.sessions[k]||0;
       const cell=document.createElement('div');
-      cell.className='heatmap-cell'+(cnt===0?'':cnt<3?' l1':cnt<7?' l2':cnt<15?' l3':' l4');
-      cell.title=`${k}: ${cnt} từ`;
-      col.appendChild(cell);
+      cell.className='heatmap-cell'+(c===0?'':c<3?' l1':c<7?' l2':c<15?' l3':' l4');
+      cell.title=`${k}: ${c} từ`; col.appendChild(cell);
     }
     hm.appendChild(col);
   }
+
+  // Recent words
+  const rw=$('recent-words');
+  const recent=[...words].reverse().slice(0,6);
+  rw.innerHTML=recent.length
+    ? recent.map(w=>`<div class="word-tile"><div class="zh">${w.zh}</div><div class="py">${w.pinyin}</div><div class="vi">${w.vi}</div></div>`).join('')
+    : `<div style="color:var(--text3);font-size:14px;grid-column:1/-1">Chưa có từ. <span style="color:var(--red);cursor:pointer" id="add-first-link">Thêm từ đầu tiên!</span></div>`;
+  document.getElementById('add-first-link')?.addEventListener('click', ()=>nav('add'));
 }
 
 // ─── REVIEW ───────────────────────────────────────────────────────────────────
 function startReview(){
-  const now=Date.now();
-  reviewQueue=db.words.filter(w=>!w.nextReview||w.nextReview<=now).map(w=>({...w}));
-  reviewQueue.sort(()=>Math.random()-0.5);
+  reviewQueue = db.words.filter(w=>!w.nextReview||w.nextReview<=Date.now()).map(w=>({...w})).sort(()=>Math.random()-0.5);
   answered=false;
   renderReviewCard();
 }
 
 function renderReviewCard(){
-  const content=document.getElementById('review-content');
-  const subtitle=document.getElementById('review-subtitle');
-  
-  if(reviewQueue.length===0){
-    subtitle.textContent='';
-    content.innerHTML=`
-      <div class="empty-state">
-        <div class="emoji">🎉</div>
-        <h3>Tuyệt vời! Đã hoàn thành!</h3>
-        <p>Không có từ nào cần ôn tập. Hãy thêm từ mới hoặc quay lại sau!</p>
-        <button class="submit-btn" style="margin-top:20px" onclick="nav('add')">+ Thêm từ mới</button>
-      </div>`;
+  const rc=$('review-content'), rs=$('review-subtitle');
+  if(!reviewQueue.length){
+    rs.textContent='';
+    rc.innerHTML=`<div class="empty-state"><div class="emoji">🎉</div><h3>Tuyệt vời! Đã hoàn thành!</h3><p>Không có từ cần ôn. Thêm từ mới hoặc quay lại sau!</p></div>`;
+    const btn=document.createElement('button'); btn.className='submit-btn'; btn.style.marginTop='20px'; btn.textContent='+ Thêm từ mới'; btn.addEventListener('click',()=>nav('add')); rc.querySelector('.empty-state').appendChild(btn);
     return;
   }
-  
   currentCard=reviewQueue[0];
   const total=db.words.filter(w=>!w.nextReview||w.nextReview<=Date.now()).length;
-  const remaining=reviewQueue.length;
-  subtitle.textContent=`Còn ${remaining} từ cần ôn`;
-  
-  content.innerHTML=`
-    <div class="review-progress"><div class="review-progress-fill" style="width:${Math.max(0,(total-remaining)/Math.max(total,1)*100)}%"></div></div>
+  rs.textContent=`Còn ${reviewQueue.length} từ cần ôn`;
+
+  rc.innerHTML=`
+    <div class="review-progress"><div class="review-progress-fill" style="width:${Math.max(0,(total-reviewQueue.length)/Math.max(total,1)*100)}%"></div></div>
     <div class="review-card">
       <div class="review-vi">NGHĨA TIẾNG VIỆT</div>
       <div class="review-word">${currentCard.vi}</div>
-      ${currentCard.exVi?`<div class="review-example" id="ex-box"><div style="font-size:11px;font-weight:600;color:var(--text3);margin-bottom:4px">VÍ DỤ</div><div style="font-family:'Noto Sans SC',sans-serif;font-size:15px;margin-bottom:4px">${currentCard.exZh||''}</div><div style="font-size:13px;color:var(--text2)">${currentCard.exVi}</div></div>`:''}
-      <div class="answer-area">
-        <div class="feedback-bar" id="feedback-bar"></div>
-        <div class="correct-answer" id="correct-ans" style="display:none"></div>
-        <div class="review-pinyin" id="live-pinyin"></div>
-        <input type="text" class="answer-input" id="answer-input" placeholder="Nhập chữ Hán..." 
-          oninput="livePin(this.value)" onkeydown="if(event.key==='Enter')checkOrNext()">
-        <button class="check-btn" id="check-btn" onclick="checkOrNext()">Kiểm tra</button>
-      </div>
+      ${currentCard.exVi?`<div style="font-size:13px;color:var(--text2);margin-top:12px;padding:10px 14px;background:var(--surface2);border-radius:8px;text-align:left;border:1px solid var(--border)"><div style="font-family:'Noto Sans SC',sans-serif;font-size:14px;margin-bottom:3px">${currentCard.exZh||''}</div><div>${currentCard.exVi}</div></div>`:''}
+      <div class="review-pinyin" id="live-pinyin"></div>
+      <input type="text" class="answer-input" id="answer-input" placeholder="Nhập chữ Hán...">
+      <div class="feedback-bar" id="feedback-bar"></div>
+      <div class="correct-answer" id="correct-ans" style="display:none"></div>
+      <button class="check-btn" id="check-btn">Kiểm tra</button>
     </div>
     <div class="diff-btns" id="diff-btns" style="display:none">
-      <button class="diff-btn again" onclick="gradeCard(0)"><span class="emoji">❌</span><span class="label">Lại</span><span class="interval" id="int-0"></span></button>
-      <button class="diff-btn hard" onclick="gradeCard(1)"><span class="emoji">😐</span><span class="label">Khó</span><span class="interval" id="int-1"></span></button>
-      <button class="diff-btn good" onclick="gradeCard(2)"><span class="emoji">🙂</span><span class="label">Được</span><span class="interval" id="int-2"></span></button>
-      <button class="diff-btn easy" onclick="gradeCard(3)"><span class="emoji">😎</span><span class="label">Dễ</span><span class="interval" id="int-3"></span></button>
-    </div>
-  `;
-  document.getElementById('answer-input').focus();
+      <button class="diff-btn again" data-grade="0"><span class="emoji">❌</span><span class="label">Lại</span><span class="interval" id="i0"></span></button>
+      <button class="diff-btn hard"  data-grade="1"><span class="emoji">😐</span><span class="label">Khó</span><span class="interval" id="i1"></span></button>
+      <button class="diff-btn good"  data-grade="2"><span class="emoji">🙂</span><span class="label">Được</span><span class="interval" id="i2"></span></button>
+      <button class="diff-btn easy"  data-grade="3"><span class="emoji">😎</span><span class="label">Dễ</span><span class="interval" id="i3"></span></button>
+    </div>`;
+
+  // Wire up review events
+  const inp=$('answer-input');
+  inp.focus();
+  inp.addEventListener('input',  ()=>{ const el=$('live-pinyin'); if(el) el.textContent=getPinyin(inp.value); });
+  inp.addEventListener('keydown',e=>{ if(e.key==='Enter') checkAnswer(); });
+  $('check-btn').addEventListener('click', checkAnswer);
+  rc.querySelectorAll('.diff-btn').forEach(btn=>btn.addEventListener('click',()=>gradeCard(parseInt(btn.dataset.grade))));
   answered=false;
-  
-  // Show example if exists
-  if(currentCard.exZh&&document.getElementById('ex-box')) document.getElementById('ex-box').style.display='block';
 }
 
-function livePin(val){
-  const py=getPinyin(val);
-  const el=document.getElementById('live-pinyin');
-  if(el) el.textContent=py;
-}
-
-function checkOrNext(){
-  if(answered){return;}
-  const input=document.getElementById('answer-input');
-  if(!input||!input.value.trim()) return;
+function checkAnswer(){
+  if(answered) return;
+  const inp=$('answer-input');
+  if(!inp?.value.trim()) return;
   answered=true;
-  
-  const userAns=input.value.trim();
-  const correct=userAns===currentCard.zh;
-  
-  // Update accuracy
-  db.total++;
-  if(correct) db.correct++;
-  
-  // Today session
+  const ok = inp.value.trim() === currentCard.zh;
+  db.total++; if(ok) db.correct++;
   const today=new Date().toISOString().split('T')[0];
   db.sessions[today]=(db.sessions[today]||0)+1;
   save();
-  
-  const fb=document.getElementById('feedback-bar');
-  const ans=document.getElementById('correct-ans');
-  if(correct){
-    input.classList.add('correct');
-    fb.className='feedback-bar correct';
-    fb.textContent='✓ Chính xác!';
-    ans.style.display='none';
-  } else {
-    input.classList.add('wrong');
-    fb.className='feedback-bar wrong';
-    fb.textContent='✗ Sai rồi!';
-    ans.style.display='block';
-    ans.textContent=`Đáp án đúng: ${currentCard.zh} (${currentCard.pinyin})`;
-  }
-  
-  // Show diff buttons
-  document.getElementById('diff-btns').style.display='grid';
-  document.getElementById('check-btn').textContent='Chọn mức độ khó →';
-  document.getElementById('check-btn').disabled=true;
-  
-  // Show interval hints
-  for(let g=0;g<4;g++){
-    const el=document.getElementById(`int-${g}`);
-    if(el) el.textContent=intervalLabel(g,currentCard);
-  }
+  const fb=$('feedback-bar'), ca=$('correct-ans');
+  if(ok){ inp.classList.add('correct'); fb.className='feedback-bar correct'; fb.textContent='✓ Chính xác!'; ca.style.display='none'; }
+  else  { inp.classList.add('wrong');   fb.className='feedback-bar wrong';   fb.textContent='✗ Sai rồi!';    ca.style.display='block'; ca.textContent=`Đáp án đúng: ${currentCard.zh} (${currentCard.pinyin})`; }
+  $('diff-btns').style.display='grid';
+  $('check-btn').textContent='Chọn mức độ khó →';
+  $('check-btn').disabled=true;
+  for(let g=0;g<4;g++){ const el=$(`i${g}`); if(el) el.textContent=intLabel(g,currentCard); }
 }
 
-function gradeCard(grade){
-  // Find actual word in db and update
-  const word=db.words.find(w=>w.id===currentCard.id);
-  if(word){
-    sm2(word, grade);
-    save();
-  }
-  reviewQueue.shift();
-  answered=false;
-  renderReviewCard();
+function gradeCard(g){
+  const w=db.words.find(x=>x.id===currentCard.id);
+  if(w){ sm2(w,g); save(); }
+  reviewQueue.shift(); answered=false; renderReviewCard();
 }
 
 // ─── ADD WORD ─────────────────────────────────────────────────────────────────
-function previewPinyin(){
-  const val=document.getElementById('inp-zh').value;
-  document.getElementById('pinyin-preview').textContent=val?getPinyin(val):'';
-}
-
 function addWord(){
-  const zh=document.getElementById('inp-zh').value.trim();
-  const vi=document.getElementById('inp-vi').value.trim();
-  const exZh=document.getElementById('inp-ex-zh').value.trim();
-  const exVi=document.getElementById('inp-ex-vi').value.trim();
-  if(!zh||!vi){toast('Vui lòng nhập chữ Hán và nghĩa tiếng Việt!');return;}
-  
-  const word={
-    id: Date.now(),
-    zh, vi, pinyin:getPinyin(zh),
-    exZh:exZh||'', exVi:exVi||'',
-    status:'new', ef:2.5, interval:0, repetitions:0,
-    nextReview:null, lastReview:null, added:Date.now()
-  };
-  db.words.push(word);
+  const zh=$('inp-zh').value.trim(), vi=$('inp-vi').value.trim();
+  if(!zh||!vi){ toast('Vui lòng nhập chữ Hán và nghĩa!'); return; }
+  db.words.push({ id:Date.now(), zh, vi, pinyin:getPinyin(zh), exZh:$('inp-ex-zh').value.trim(), exVi:$('inp-ex-vi').value.trim(), status:'new', ef:2.5, interval:0, repetitions:0, nextReview:null, lastReview:null, added:Date.now() });
   save();
-  
-  document.getElementById('inp-zh').value='';
-  document.getElementById('inp-vi').value='';
-  document.getElementById('inp-ex-zh').value='';
-  document.getElementById('inp-ex-vi').value='';
-  document.getElementById('pinyin-preview').textContent='';
+  ['inp-zh','inp-vi','inp-ex-zh','inp-ex-vi'].forEach(id=>$(id).value='');
+  $('pinyin-preview').textContent='';
   toast(`✓ Đã thêm: ${zh}`);
 }
 
-// ─── WORD LIST ─────────────────────────────────────────────────────────────────
-let _wordlistFilter = 'all';
-function navWordlistFilter(filter){
-  _wordlistFilter = filter;
-  nav('wordlist');
-}
-
+// ─── WORD LIST ────────────────────────────────────────────────────────────────
 function renderWordList(q=''){
   q=q.toLowerCase();
   const now=Date.now();
-  let base=db.words;
-  const filterLabels={all:'Tất cả từ',due:'Cần ôn tập',learned:'Đã học',mastered:'Thành thạo'};
-  const filterClass={all:'fall',due:'fdue',learned:'flearned',mastered:'fmastered'};
-  if(_wordlistFilter==='due') base=db.words.filter(w=>!w.nextReview||w.nextReview<=now);
-  else if(_wordlistFilter==='learned') base=db.words.filter(w=>w.repetitions>0&&w.status!=='mastered');
-  else if(_wordlistFilter==='mastered') base=db.words.filter(w=>w.status==='mastered');
-  const pill=_wordlistFilter!=='all'?`<div class="filter-pill f${_wordlistFilter}">${filterLabels[_wordlistFilter]||''} <span class="filter-clear" onclick="_wordlistFilter='all';renderWordList(document.querySelector('.search-input').value||'')" title="Xoá lọc">✕</span></div>`:'';
-  document.getElementById('wordlist-count').textContent=`${db.words.length} từ trong thư viện`;
-  document.getElementById('wordlist-filter-pill').innerHTML=pill;
-  const filtered=base.filter(w=>
-    !q||w.zh.includes(q)||w.vi.toLowerCase().includes(q)||w.pinyin.toLowerCase().includes(q)
-  );
-  const statusLabel={new:'Mới',learning:'Đang học',review:'Ôn tập',mastered:'Thành thạo'};
-  const statusBadge={new:'badge-new',learning:'badge-learning',review:'badge-review',mastered:'badge-mastered'};
-  const body=document.getElementById('word-table-body');
-  body.innerHTML=filtered.length?filtered.slice().reverse().map(w=>{
-    const due=!w.nextReview?'Ngay bây giờ':new Date(w.nextReview).toLocaleDateString('vi-VN');
-    return `<tr>
-      <td style="font-family:'Noto Serif SC',serif;font-size:18px;font-weight:600">${w.zh}</td>
-      <td style="color:var(--red);font-weight:500">${w.pinyin}</td>
-      <td>${w.vi}</td>
-      <td><span class="badge ${statusBadge[w.status]||'badge-new'}">${statusLabel[w.status]||'Mới'}</span></td>
-      <td style="color:var(--text2);font-size:13px">${due}</td>
-      <td><button class="del-btn" onclick="deleteWord(${w.id})" title="Xoá">✕</button></td>
-    </tr>`;
-  }).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:24px">Không tìm thấy từ nào.</td></tr>';
+  const base = _wf==='due'     ? db.words.filter(w=>!w.nextReview||w.nextReview<=now)
+              :_wf==='learned' ? db.words.filter(w=>w.repetitions>0&&w.status!=='mastered')
+              :_wf==='mastered'? db.words.filter(w=>w.status==='mastered')
+              : db.words;
+  const labels={all:'Tất cả từ',due:'Cần ôn tập',learned:'Đã học',mastered:'Thành thạo'};
+  $('wordlist-count').textContent=`${db.words.length} từ trong thư viện`;
+  $('wordlist-filter-pill').innerHTML=_wf!=='all'
+    ? `<div class="filter-pill f${_wf}">${labels[_wf]} <span class="filter-clear" id="clear-filter">✕</span></div>`:'';
+  document.getElementById('clear-filter')?.addEventListener('click',()=>{ _wf='all'; renderWordList($('search-input').value||''); });
+
+  const filtered=base.filter(w=>!q||w.zh.includes(q)||w.vi.toLowerCase().includes(q)||w.pinyin.toLowerCase().includes(q));
+  const sl={new:'Mới',learning:'Đang học',review:'Ôn tập',mastered:'Thành thạo'};
+  const sb={new:'badge-new',learning:'badge-learning',review:'badge-review',mastered:'badge-mastered'};
+  const tbody=$('word-table-body');
+  tbody.innerHTML=filtered.length
+    ? [...filtered].reverse().map(w=>`<tr>
+        <td style="font-family:'Noto Serif SC',serif;font-size:18px;font-weight:600">${w.zh}</td>
+        <td style="color:var(--red);font-weight:500">${w.pinyin}</td>
+        <td>${w.vi}</td>
+        <td><span class="badge ${sb[w.status]||'badge-new'}">${sl[w.status]||'Mới'}</span></td>
+        <td style="color:var(--text2);font-size:13px">${!w.nextReview?'Ngay bây giờ':new Date(w.nextReview).toLocaleDateString('vi-VN')}</td>
+        <td><button class="del-btn" data-id="${w.id}">✕</button></td>
+      </tr>`).join('')
+    : '<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:24px">Không tìm thấy từ nào.</td></tr>';
+
+  tbody.querySelectorAll('.del-btn').forEach(btn=>btn.addEventListener('click',()=>deleteWord(Number(btn.dataset.id))));
 }
 
 function deleteWord(id){
   if(!confirm('Xoá từ này?')) return;
   db.words=db.words.filter(w=>w.id!==id);
-  save();
-  renderWordList(document.querySelector('.search-input')?.value||'');
-  toast('Đã xoá từ.');
+  save(); renderWordList($('search-input')?.value||''); toast('Đã xoá từ.');
 }
 
-// ─── TOAST ───────────────────────────────────────────────────────────────────
-function toast(msg){
-  const t=document.createElement('div');
-  t.className='toast'; t.textContent=msg;
-  document.body.appendChild(t);
-  setTimeout(()=>t.remove(),2200);
-}
-
-// ─── INIT & TẢI DỮ LIỆU TỪ FIREBASE ──────────────────────────────────────────
-async function initApp() {
-  try {
-    // Thử lấy dữ liệu từ Firebase
-    const docSnap = await userDocRef.get();
-    
-    if (docSnap.exists) {
-      // Nếu trên mây đã có dữ liệu -> Lấy về dùng
-      db = docSnap.data();
-    } else {
-      // Nếu trên mây chưa có gì (lần đầu tiên sử dụng)
-      // Thử xem dưới máy (localStorage) có dữ liệu cũ không, có thì lấy lên mây
-      const localData = JSON.parse(localStorage.getItem('hanzi_db'));
-      if (localData && localData.words && localData.words.length > 0) {
-         db = localData;
-         save(); // Đẩy dữ liệu cũ lên mây
-      } else {
-         // Nếu máy cũng trắng bóc -> Tạo dữ liệu mẫu (Seed Data)
-         const seed=[
-            {zh:'你好',vi:'xin chào',exZh:'你好，很高兴认识你。',exVi:'Xin chào, rất vui được gặp bạn.'},
-            {zh:'谢谢',vi:'cảm ơn',exZh:'谢谢你的帮助！',exVi:'Cảm ơn sự giúp đỡ của bạn!'}
-         ];
-         seed.forEach(s=>{ db.words.push({id:Date.now()+Math.random(),pinyin:getPinyin(s.zh),status:'new',ef:2.5,interval:0,repetitions:0,nextReview:null,lastReview:null,added:Date.now(),...s}); });
-         save();
-      }
-    }
-  } catch (error) {
-    console.error("Lỗi khởi tạo Firebase, chuyển về dùng Local:", error);
-    // Nếu rớt mạng hoặc Firebase lỗi, tự động dùng lại dữ liệu offline
-    db = JSON.parse(localStorage.getItem('hanzi_db') || 'null') || db;
-  }
-
-  // Chạy giao diện sau khi đã có dữ liệu
-  renderDashboard();
-}
-
-// Bắt đầu chạy ứng dụng
-initApp();
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+// ─── START ────────────────────────────────────────────────────────────────────
+init();
 </script>
 </body>
 </html>
