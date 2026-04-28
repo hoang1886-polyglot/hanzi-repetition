@@ -367,18 +367,46 @@ tr:last-child td{border-bottom:none}
 
 <script>
 // ─── STATE ───────────────────────────────────────────────────────────────────
-let db = JSON.parse(localStorage.getItem('hanzi_db') || 'null') || {
+// ─── CẤU HÌNH FIREBASE ───────────────────────────────────────────────────────
+const firebaseConfig = {
+  // BẠN CẦN PASTE API KEY CỦA BẠN VÀO ĐÂY (Lấy từ Firebase Console)
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_ID",
+  appId: "YOUR_APP_ID"
+};
+
+// Khởi tạo Firebase
+firebase.initializeApp(firebaseConfig);
+const firestore = firebase.firestore();
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+// Biến db giờ chỉ chứa cấu trúc mặc định
+let db = {
   words: [],
-  sessions: {},   // date → count
+  sessions: {},   
   correct: 0,
   total: 0,
   lastStudied: null
 };
-let reviewQueue = [];
-let currentCard = null;
-let answered = false;
 
-function save(){localStorage.setItem('hanzi_db',JSON.stringify(db))}
+// Đặt một ID giả định cho dữ liệu của bạn. 
+// Sau này nếu có làm chức năng Đăng nhập, bạn sẽ thay "my_unique_data" bằng User ID của tài khoản.
+const userDocRef = firestore.collection("users").doc("my_unique_data");
+
+// Hàm save mới: Lưu lên cả Cloud và Backup ở Local
+function save() {
+  // Backup ở máy
+  localStorage.setItem('hanzi_db', JSON.stringify(db));
+  
+  // Đẩy lên Firebase
+  userDocRef.set(db).catch(error => {
+    console.error("Lỗi khi đồng bộ lên Firebase:", error);
+    toast("Lỗi đồng bộ dữ liệu mây!");
+  });
+}
 
 // ─── PINYIN ──────────────────────────────────────────────────────────────────
 function getPinyin(zh){
@@ -720,21 +748,46 @@ function toast(msg){
   setTimeout(()=>t.remove(),2200);
 }
 
-// ─── SEED DATA ────────────────────────────────────────────────────────────────
-if(db.words.length===0){
-  const seed=[
-    {zh:'你好',vi:'xin chào',exZh:'你好，很高兴认识你。',exVi:'Xin chào, rất vui được gặp bạn.'},
-    {zh:'谢谢',vi:'cảm ơn',exZh:'谢谢你的帮助！',exVi:'Cảm ơn sự giúp đỡ của bạn!'},
-    {zh:'学习',vi:'học tập',exZh:'我喜欢学习汉语。',exVi:'Tôi thích học tiếng Trung.'},
-    {zh:'漂亮',vi:'xinh đẹp, đẹp',exZh:'她很漂亮。',exVi:'Cô ấy rất xinh đẹp.'},
-    {zh:'工作',vi:'làm việc, công việc',exZh:'我的工作很有趣。',exVi:'Công việc của tôi rất thú vị.'},
-  ];
-  seed.forEach(s=>{ db.words.push({id:Date.now()+Math.random(),pinyin:getPinyin(s.zh),status:'new',ef:2.5,interval:0,repetitions:0,nextReview:null,lastReview:null,added:Date.now(),...s}); });
-  save();
+// ─── INIT & TẢI DỮ LIỆU TỪ FIREBASE ──────────────────────────────────────────
+async function initApp() {
+  try {
+    // Thử lấy dữ liệu từ Firebase
+    const docSnap = await userDocRef.get();
+    
+    if (docSnap.exists) {
+      // Nếu trên mây đã có dữ liệu -> Lấy về dùng
+      db = docSnap.data();
+    } else {
+      // Nếu trên mây chưa có gì (lần đầu tiên sử dụng)
+      // Thử xem dưới máy (localStorage) có dữ liệu cũ không, có thì lấy lên mây
+      const localData = JSON.parse(localStorage.getItem('hanzi_db'));
+      if (localData && localData.words && localData.words.length > 0) {
+         db = localData;
+         save(); // Đẩy dữ liệu cũ lên mây
+      } else {
+         // Nếu máy cũng trắng bóc -> Tạo dữ liệu mẫu (Seed Data)
+         const seed=[
+            {zh:'你好',vi:'xin chào',exZh:'你好，很高兴认识你。',exVi:'Xin chào, rất vui được gặp bạn.'},
+            {zh:'谢谢',vi:'cảm ơn',exZh:'谢谢你的帮助！',exVi:'Cảm ơn sự giúp đỡ của bạn!'}
+         ];
+         seed.forEach(s=>{ db.words.push({id:Date.now()+Math.random(),pinyin:getPinyin(s.zh),status:'new',ef:2.5,interval:0,repetitions:0,nextReview:null,lastReview:null,added:Date.now(),...s}); });
+         save();
+      }
+    }
+  } catch (error) {
+    console.error("Lỗi khởi tạo Firebase, chuyển về dùng Local:", error);
+    // Nếu rớt mạng hoặc Firebase lỗi, tự động dùng lại dữ liệu offline
+    db = JSON.parse(localStorage.getItem('hanzi_db') || 'null') || db;
+  }
+
+  // Chạy giao diện sau khi đã có dữ liệu
+  renderDashboard();
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────────────────
-renderDashboard();
+// Bắt đầu chạy ứng dụng
+initApp();
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </script>
 </body>
 </html>
