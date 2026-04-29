@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HànZì — Spaced Repetition</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=Noto+Sans+SC:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pinyin-pro@3.26.0/dist/index.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -36,15 +36,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 
 /* LOADING */
 #loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9998;gap:14px}
-.big-logo{width:56px;height:56px;background:var(--red);border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'ZCOOL KuaiLe',sans-serif;font-size:30px;color:#fff;font-weight:700}
+.big-logo{width:56px;height:56px;background:var(--red);border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'Noto Serif SC',serif;font-size:30px;color:#fff;font-weight:700}
 .spinner{width:24px;height:24px;border:2.5px solid var(--border2);border-top-color:var(--red);border-radius:50%;animation:spin 0.7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* SIDEBAR */
 #sidebar{width:220px;min-width:220px;background:var(--sidebar);display:flex;flex-direction:column;overflow-y:auto}
 .sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid #2A2A2A;display:flex;align-items:center;gap:10px}
-.logo-icon{width:32px;height:32px;background:var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'ZCOOL KuaiLe',sans-serif;font-size:18px;color:#fff;font-weight:700;flex-shrink:0}
-.logo-text .zh{font-family:'ZCOOL KuaiLe',sans-serif;font-size:15px;font-weight:600;color:#fff;line-height:1}
+.logo-icon{width:32px;height:32px;background:var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Noto Serif SC',serif;font-size:18px;color:#fff;font-weight:700;flex-shrink:0}
+.logo-text .zh{font-family:'Noto Serif SC',serif;font-size:15px;font-weight:600;color:#fff;line-height:1}
 .logo-text .sub{font-size:10px;color:#888;letter-spacing:0.04em;margin-top:2px}
 .sidebar-nav{padding:12px 0;flex:1}
 .nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;color:#9A9690;font-size:13.5px;font-weight:500;transition:all 0.15s;border-left:3px solid transparent}
@@ -79,7 +79,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .word-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .word-tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;transition:border-color 0.15s}
 .word-tile:hover{border-color:var(--border2)}
-.word-tile .zh{font-family:'ZCOOL KuaiLe',sans-serif;font-size:20px;font-weight:600;margin-bottom:3px}
+.word-tile .zh{font-family:'Noto Serif SC',serif;font-size:20px;font-weight:600;margin-bottom:3px}
 .word-tile .py{font-size:12px;color:var(--red);margin-bottom:2px;font-weight:500}
 .word-tile .vi{font-size:12px;color:var(--text2)}
 
@@ -89,7 +89,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .review-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:40px;text-align:center;margin-bottom:20px}
 .review-vi{font-size:14px;color:var(--text2);margin-bottom:8px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em}
 .review-word{font-size:36px;font-weight:600;margin-bottom:6px;line-height:1.3}
-.answer-input{width:100%;padding:14px 18px;font-size:22px;font-family:'ZCOOL KuaiLe',sans-serif;border:1.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);text-align:center;outline:none;transition:border-color 0.2s;margin-top:20px}
+.answer-input{width:100%;padding:14px 18px;font-size:22px;font-family:'Noto Sans SC',sans-serif;border:1.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);text-align:center;outline:none;transition:border-color 0.2s;margin-top:20px}
 .answer-input:focus{border-color:var(--red)}
 .answer-input.correct{border-color:var(--green);background:var(--green-light)}
 .answer-input.wrong{border-color:var(--red);background:var(--red-light)}
@@ -118,6 +118,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .form-group input:focus,.form-group textarea:focus{border-color:var(--red)}
 .form-group textarea{resize:vertical;min-height:64px;line-height:1.6}
 .pinyin-preview{font-size:13px;color:var(--red);margin-top:4px;font-weight:500;min-height:18px}
+/* DICT LOOKUP */
+.dict-result{margin-top:6px;min-height:20px;transition:all 0.2s}
+.dict-chip{display:inline-flex;align-items:center;gap:6px;background:var(--green-light);border:1px solid #A7D7BC;border-radius:6px;padding:5px 10px;font-size:13px;color:var(--green);font-weight:500;cursor:pointer;transition:all 0.15s;max-width:100%;flex-wrap:wrap}
+.dict-chip:hover{background:#D1EAD8}
+.dict-chip .dict-arrow{opacity:0.6;font-size:11px}
+.dict-chip .dict-vi{color:var(--text2);font-size:12px}
+.dict-chip .dict-apply{font-size:11px;font-weight:700;color:var(--green);margin-left:4px;background:rgba(30,122,74,0.12);border-radius:4px;padding:1px 6px}
+.dict-searching{font-size:12px;color:var(--text3);font-style:italic}
+.dict-notfound{font-size:12px;color:var(--text3)}
+
 .submit-btn{padding:11px 24px;background:var(--red);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
 .submit-btn:hover{opacity:0.88}
 .optional-tag{font-size:11px;color:var(--text3);font-weight:400;margin-left:4px}
@@ -276,6 +286,7 @@ tr:last-child td{border-bottom:none}
       <label>Chữ Hán <span style="color:var(--red)">*</span></label>
       <input type="text" id="inp-zh" placeholder="e.g. 你好">
       <div class="pinyin-preview" id="pinyin-preview"></div>
+      <div class="dict-result" id="dict-result"></div>
     </div>
     <div class="form-group">
       <label>Nghĩa tiếng Việt <span style="color:var(--red)">*</span></label>
@@ -338,6 +349,68 @@ const DB_DOC    = doc(firestore, "hanzi", "data");
 let db          = { words:[], sessions:{}, correct:0, total:0 };
 let reviewQueue = [], currentCard = null, answered = false, saveTimer = null;
 let _wf         = 'all'; // word-list filter
+
+
+// ─── DICTIONARY LOOKUP ────────────────────────────────────────────────────────
+let dictData = null;
+let dictLoading = false;
+
+async function loadDict(){
+  if(dictData || dictLoading) return;
+  dictLoading = true;
+  try{
+    const res = await fetch('./cvdict.json');
+    if(!res.ok) throw new Error('fetch failed');
+    dictData = await res.json();
+    console.log('Dictionary loaded:', Object.keys(dictData).length, 'entries');
+  } catch(e){
+    console.warn('Dictionary not available:', e.message);
+    dictData = {};
+  }
+  dictLoading = false;
+}
+
+function lookupDict(zh){
+  const el = $('dict-result');
+  if(!el) return;
+  if(!zh.trim()){ el.innerHTML=''; return; }
+
+  if(!dictData){
+    el.innerHTML='<span class="dict-searching">Đang tải từ điển...</span>';
+    loadDict().then(()=>lookupDict($('inp-zh').value));
+    return;
+  }
+
+  // Try full word first, then each character
+  const found = dictData[zh];
+  if(found){
+    el.innerHTML=`<div class="dict-chip" id="dict-chip" title="Nhấn để điền vào ô nghĩa">
+      <span>${zh}</span>
+      <span class="dict-arrow">→</span>
+      <span class="dict-vi">${found}</span>
+      <span class="dict-apply">↙ Dùng</span>
+    </div>`;
+    $('dict-chip').addEventListener('click', ()=>{
+      $('inp-vi').value = found;
+      $('inp-vi').focus();
+      el.innerHTML='<span style="font-size:12px;color:var(--green)">✓ Đã điền nghĩa!</span>';
+      setTimeout(()=>el.innerHTML='', 1500);
+    });
+  } else {
+    // Try individual chars if multi-char word not found
+    const chars = [...zh];
+    if(chars.length > 1){
+      const charResults = chars.map(c => dictData[c] ? `${c}: ${dictData[c].split(';')[0]}` : null).filter(Boolean);
+      if(charResults.length){
+        el.innerHTML=`<div class="dict-notfound">Không tìm thấy cụm từ. Từng chữ: <em>${charResults.join(' | ')}</em></div>`;
+      } else {
+        el.innerHTML='<span class="dict-notfound">Không tìm thấy trong từ điển</span>';
+      }
+    } else {
+      el.innerHTML='<span class="dict-notfound">Không tìm thấy trong từ điển</span>';
+    }
+  }
+}
 
 // ─── SYNC UI ─────────────────────────────────────────────────────────────────
 const syncBar  = document.getElementById('sync-bar');
@@ -450,7 +523,7 @@ function setupListeners(){
   $('view-all-link').addEventListener('click', ()=>nav('wordlist'));
 
   // Add word form
-  $('inp-zh').addEventListener('input', ()=>{ $('pinyin-preview').textContent = getPinyin($('inp-zh').value)||''; });
+  $('inp-zh').addEventListener('input', ()=>{ const v=$('inp-zh').value; $('pinyin-preview').textContent = getPinyin(v)||''; lookupDict(v); });
   $('add-word-btn').addEventListener('click', addWord);
   $('inp-vi').addEventListener('keydown', e=>{ if(e.key==='Enter') addWord(); });
 
@@ -544,7 +617,7 @@ function renderReviewCard(){
     <div class="review-card">
       <div class="review-vi">NGHĨA TIẾNG VIỆT</div>
       <div class="review-word">${currentCard.vi}</div>
-      ${currentCard.exVi?`<div style="font-size:13px;color:var(--text2);margin-top:12px;padding:10px 14px;background:var(--surface2);border-radius:8px;text-align:left;border:1px solid var(--border)"><div style="font-family:'ZCOOL KuaiLe',sans-serif;font-size:14px;margin-bottom:3px">${currentCard.exZh||''}</div><div>${currentCard.exVi}</div></div>`:''}
+      ${currentCard.exVi?`<div style="font-size:13px;color:var(--text2);margin-top:12px;padding:10px 14px;background:var(--surface2);border-radius:8px;text-align:left;border:1px solid var(--border)"><div style="font-family:'Noto Sans SC',sans-serif;font-size:14px;margin-bottom:3px">${currentCard.exZh||''}</div><div>${currentCard.exVi}</div></div>`:''}
       <div class="review-pinyin" id="live-pinyin"></div>
       <input type="text" class="answer-input" id="answer-input" placeholder="Nhập chữ Hán...">
       <div class="feedback-bar" id="feedback-bar"></div>
@@ -624,7 +697,7 @@ function renderWordList(q=''){
   const tbody=$('word-table-body');
   tbody.innerHTML=filtered.length
     ? [...filtered].reverse().map(w=>`<tr>
-        <td style="font-family:'ZCOOL KuaiLe',sans-serif;font-size:18px;font-weight:600">${w.zh}</td>
+        <td style="font-family:'Noto Serif SC',serif;font-size:18px;font-weight:600">${w.zh}</td>
         <td style="color:var(--red);font-weight:500">${w.pinyin}</td>
         <td>${w.vi}</td>
         <td><span class="badge ${sb[w.status]||'badge-new'}">${sl[w.status]||'Mới'}</span></td>
@@ -643,6 +716,7 @@ function deleteWord(id){
 }
 
 // ─── START ────────────────────────────────────────────────────────────────────
+loadDict(); // preload dictionary in background
 init();
 </script>
 </body>
