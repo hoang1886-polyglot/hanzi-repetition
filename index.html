@@ -21,7 +21,7 @@
   --radius:12px;--radius-sm:8px;
 }
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden}
- 
+
 /* SYNC */
 #sync-bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:9999;transition:all 0.3s}
 #sync-bar.syncing{background:linear-gradient(90deg,var(--red),var(--amber),var(--red));background-size:200%;animation:syncAnim 1.2s linear infinite}
@@ -33,13 +33,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .sdot.green{background:var(--green)}
 .sdot.spin{background:var(--amber);animation:blink 0.8s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
- 
+
 /* LOADING */
 #loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9998;gap:14px}
 .big-logo{width:56px;height:56px;background:var(--red);border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'Noto Serif SC',serif;font-size:30px;color:#fff;font-weight:700}
 .spinner{width:24px;height:24px;border:2.5px solid var(--border2);border-top-color:var(--red);border-radius:50%;animation:spin 0.7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
- 
+
 /* SIDEBAR */
 #sidebar{width:220px;min-width:220px;background:var(--sidebar);display:flex;flex-direction:column;overflow-y:auto}
 .sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid #2A2A2A;display:flex;align-items:center;gap:10px}
@@ -52,18 +52,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .nav-item.active{color:#fff;background:#252525;border-left-color:var(--red)}
 .nav-item svg{width:16px;height:16px;flex-shrink:0}
 .sidebar-footer{padding:16px 20px;border-top:1px solid #2A2A2A;font-size:11px;color:#555;line-height:1.8}
- 
+
 /* MAIN */
-#main{flex:1;overflow-y:auto;background:var(--bg);display:flex;flex-direction:column}
-.page{display:none;padding:36px 40px;max-width:1100px}
+#main{flex:1;overflow-y:auto;background:var(--bg);display:flex;flex-direction:column;align-items:center}
+.page{display:none;padding:36px 40px;width:100%;max-width:1100px;box-sizing:border-box}
 .page.active{display:block}
-#add.page.active{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;max-width:100%;padding:36px 40px;box-sizing:border-box}
+#add.page.active{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;max-width:100%;padding:36px 40px}
 #add .page-header{text-align:center;width:100%;max-width:560px}
 #add .card{width:100%;max-width:560px;margin:0}
+#review.page{max-width:760px}
 .page-header{margin-bottom:28px}
 .page-header h1{font-size:26px;font-weight:600;letter-spacing:-0.02em}
 .page-header p{font-size:14px;color:var(--text2);margin-top:4px}
- 
+
 /* STAT CARDS */
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;display:flex;align-items:flex-start;justify-content:space-between}
@@ -73,11 +74,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .icon-red{background:var(--red-light)}.icon-green{background:var(--green-light)}.icon-amber{background:var(--amber-light)}.icon-blue{background:var(--blue-light)}
 .stat-clickable{cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s}
 .stat-clickable:hover{border-color:var(--border2);box-shadow:0 2px 10px rgba(0,0,0,0.07)}
- 
+
 /* CARDS */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px}
 .card-title{font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:16px}
- 
+
 /* WORD GRID */
 .word-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .word-tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;transition:border-color 0.15s}
@@ -85,7 +86,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .word-tile .zh{font-family:'Noto Serif SC',serif;font-size:20px;font-weight:600;margin-bottom:3px}
 .word-tile .py{font-size:12px;color:var(--red);margin-bottom:2px;font-weight:500}
 .word-tile .vi{font-size:12px;color:var(--text2)}
- 
+
 /* REVIEW */
 .review-progress{background:var(--border);border-radius:99px;height:4px;margin-bottom:32px;overflow:hidden}
 .review-progress-fill{height:100%;background:var(--red);border-radius:99px;transition:width 0.4s ease}
@@ -113,7 +114,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .feedback-bar.wrong{background:var(--red-light);color:var(--red);border:1px solid var(--red-mid);display:block}
 .correct-answer{font-size:14px;color:var(--green);font-weight:500;margin-top:8px}
 .review-pinyin{font-size:14px;color:var(--red);margin-top:4px;font-weight:500;min-height:20px}
- 
+
 /* ADD FORM */
 .form-group{margin-bottom:18px}
 .form-group label{display:block;font-size:13px;font-weight:500;color:var(--text2);margin-bottom:6px}
@@ -130,18 +131,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .dict-chip .dict-apply{font-size:11px;font-weight:700;color:var(--green);margin-left:4px;background:rgba(30,122,74,0.12);border-radius:4px;padding:1px 6px}
 .dict-searching{font-size:12px;color:var(--text3);font-style:italic}
 .dict-notfound{font-size:12px;color:var(--text3)}
- 
+
 .submit-btn{padding:11px 24px;background:var(--red);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
 .submit-btn:hover{opacity:0.88}
 .optional-tag{font-size:11px;color:var(--text3);font-weight:400;margin-left:4px}
- 
+
 /* HEATMAP */
 .heatmap-grid{display:flex;gap:3px;flex-wrap:wrap}
 .heatmap-week{display:flex;flex-direction:column;gap:3px}
 .heatmap-cell{width:12px;height:12px;border-radius:2px;background:var(--border)}
 .heatmap-cell.l1{background:#FECACA}.heatmap-cell.l2{background:#F28B82}
 .heatmap-cell.l3{background:#D93025}.heatmap-cell.l4{background:#9B111E}
- 
+
 /* WORD LIST */
 .wordlist-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .search-input{padding:8px 14px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text);outline:none;width:220px}
@@ -159,7 +160,7 @@ tr:last-child td{border-bottom:none}
 .filter-pill.fall{background:var(--red-light);color:var(--red)}.filter-pill.fdue{background:var(--amber-light);color:var(--amber)}
 .filter-pill.flearned{background:var(--green-light);color:var(--green)}.filter-pill.fmastered{background:var(--blue-light);color:var(--blue)}
 .filter-clear{cursor:pointer;opacity:0.6;font-size:14px}.filter-clear:hover{opacity:1}
- 
+
 /* MISC */
 .empty-state{text-align:center;padding:60px 20px}
 .empty-state .emoji{font-size:48px;margin-bottom:12px}
@@ -175,16 +176,16 @@ tr:last-child td{border-bottom:none}
 </style>
 </head>
 <body>
- 
+
 <div id="sync-bar"></div>
 <div id="sync-pill"><div class="sdot spin" id="sdot"></div><span id="stext">Đang đồng bộ...</span></div>
- 
+
 <div id="loading">
   <div class="big-logo">字</div>
   <div class="spinner"></div>
   <p style="font-size:14px;color:var(--text2)">Đang kết nối Firebase...</p>
 </div>
- 
+
 <nav id="sidebar">
   <div class="sidebar-logo">
     <div class="logo-icon">字</div>
@@ -216,9 +217,9 @@ tr:last-child td{border-bottom:none}
     <span style="color:#3A8A5A">● Firebase Sync</span>
   </div>
 </nav>
- 
+
 <div id="main">
- 
+
 <!-- DASHBOARD -->
 <div id="dashboard" class="page active">
   <div class="page-header"><h1>Dashboard</h1><p>Tiến trình học tiếng Trung của bạn</p></div>
@@ -272,7 +273,7 @@ tr:last-child td{border-bottom:none}
     <div class="word-grid" id="recent-words"></div>
   </div>
 </div>
- 
+
 <!-- REVIEW -->
 <div id="review" class="page" style="padding:36px 40px">
   <div style="max-width:640px;margin:0 auto">
@@ -280,7 +281,7 @@ tr:last-child td{border-bottom:none}
     <div id="review-content"></div>
   </div>
 </div>
- 
+
 <!-- ADD WORD -->
 <div id="add" class="page">
   <div class="page-header"><h1>Thêm từ mới</h1><p>Nhập từ tiếng Trung và nghĩa tiếng Việt</p></div>
@@ -309,7 +310,7 @@ tr:last-child td{border-bottom:none}
     <button class="submit-btn" id="add-word-btn">+ Thêm từ</button>
   </div>
 </div>
- 
+
 <!-- WORD LIST -->
 <div id="wordlist" class="page">
   <div class="page-header"><h1>Danh sách từ</h1><p id="wordlist-count">0 từ</p></div>
@@ -324,9 +325,9 @@ tr:last-child td{border-bottom:none}
     </table>
   </div>
 </div>
- 
+
 </div><!-- end #main -->
- 
+
 <!-- ═══════════════════════════════════════════════════════
      ALL JAVASCRIPT — single type="module" block
 ════════════════════════════════════════════════════════ -->
@@ -334,7 +335,7 @@ tr:last-child td{border-bottom:none}
 import { initializeApp }              from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, doc, getDoc,
          setDoc, onSnapshot }         from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
- 
+
 // ─── FIREBASE INIT ────────────────────────────────────────────────────────────
 const firebaseConfig = {
   apiKey:            "AIzaSyCwg68CV50FGXISL-7qEsfUwRnxGCXcLaY",
@@ -347,17 +348,17 @@ const firebaseConfig = {
 const app       = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
 const DB_DOC    = doc(firestore, "hanzi", "data");
- 
+
 // ─── APP STATE ────────────────────────────────────────────────────────────────
 let db          = { words:[], sessions:{}, correct:0, total:0 };
 let reviewQueue = [], currentCard = null, answered = false, saveTimer = null;
 let _wf         = 'all'; // word-list filter
- 
- 
+
+
 // ─── DICTIONARY LOOKUP ────────────────────────────────────────────────────────
 let dictData = null;
 let dictLoading = false;
- 
+
 async function loadDict(){
   if(dictData || dictLoading) return;
   dictLoading = true;
@@ -372,18 +373,18 @@ async function loadDict(){
   }
   dictLoading = false;
 }
- 
+
 function lookupDict(zh){
   const el = $('dict-result');
   if(!el) return;
   if(!zh.trim()){ el.innerHTML=''; return; }
- 
+
   if(!dictData){
     el.innerHTML='<span class="dict-searching">Đang tải từ điển...</span>';
     loadDict().then(()=>lookupDict($('inp-zh').value));
     return;
   }
- 
+
   // Try full word first, then each character
   const found = dictData[zh];
   if(found){
@@ -414,17 +415,17 @@ function lookupDict(zh){
     }
   }
 }
- 
+
 // ─── SYNC UI ─────────────────────────────────────────────────────────────────
 const syncBar  = document.getElementById('sync-bar');
 const syncPill = document.getElementById('sync-pill');
 const sdot     = document.getElementById('sdot');
 const stext    = document.getElementById('stext');
- 
+
 function setSyncing(){ syncBar.className='syncing'; sdot.className='sdot spin'; stext.textContent='Đang đồng bộ...'; syncPill.className='show'; }
 function setSynced(){  syncBar.className='synced';  sdot.className='sdot green'; stext.textContent='Đã đồng bộ ✓'; setTimeout(()=>{ syncPill.className=''; syncBar.className=''; }, 2000); }
 function setSyncErr(){ sdot.className='sdot'; sdot.style.background='var(--red)'; stext.textContent='Lỗi kết nối ⚠'; syncPill.className='show'; }
- 
+
 // ─── SAVE ────────────────────────────────────────────────────────────────────
 function save(){
   // Local backup
@@ -444,7 +445,7 @@ function save(){
     saveTimer = null;
   }, 400);
 }
- 
+
 // ─── LOAD + REALTIME ─────────────────────────────────────────────────────────
 async function init(){
   try{
@@ -463,11 +464,11 @@ async function init(){
     else { seedWords(); }
     toast('⚠️ Không kết nối Firebase. Dùng dữ liệu cục bộ.');
   }
- 
+
   document.getElementById('loading').style.display = 'none';
   renderDashboard();
   setupListeners();
- 
+
   // Real-time listener — refresh UI when another device makes changes
   onSnapshot(DB_DOC, snap => {
     if(snap.exists() && !saveTimer){
@@ -479,7 +480,7 @@ async function init(){
     }
   }, err => console.warn('Snapshot error:', err));
 }
- 
+
 // ─── SEED DATA ────────────────────────────────────────────────────────────────
 function seedWords(){
   [ {zh:'你好', vi:'xin chào',          exZh:'你好，很高兴认识你。',  exVi:'Xin chào, rất vui được gặp bạn.'},
@@ -489,12 +490,12 @@ function seedWords(){
     {zh:'工作', vi:'làm việc, công việc',exZh:'我的工作很有趣。',       exVi:'Công việc của tôi rất thú vị.'} ]
   .forEach(s => db.words.push({ id:Date.now()+Math.random(), pinyin:getPinyin(s.zh), status:'new', ef:2.5, interval:0, repetitions:0, nextReview:null, lastReview:null, added:Date.now(), ...s }));
 }
- 
+
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 function getPinyin(zh){ return window.pinyinPro ? pinyinPro.pinyin(zh,{toneType:'symbol',type:'string',separator:' '}) : ''; }
 function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2400); }
 function $(id){ return document.getElementById(id); }
- 
+
 // ─── NAV ─────────────────────────────────────────────────────────────────────
 function nav(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -505,35 +506,35 @@ function nav(page){
   if(page==='review')    startReview();
   if(page==='wordlist')  renderWordList('');
 }
- 
+
 function navWordlistFilter(f){ _wf=f; nav('wordlist'); }
- 
+
 // ─── EVENT LISTENERS (replaces inline onclick) ────────────────────────────────
 function setupListeners(){
   // Sidebar nav
   ['dashboard','review','add','wordlist'].forEach(p => $(`nav-${p}`).addEventListener('click', ()=>nav(p)));
- 
+
   // Stat cards → filter word list
   $('card-all').addEventListener('click',     ()=>navWordlistFilter('all'));
   $('card-due').addEventListener('click',     ()=>navWordlistFilter('due'));
   $('card-learned').addEventListener('click', ()=>navWordlistFilter('learned'));
   $('card-mastered').addEventListener('click',()=>navWordlistFilter('mastered'));
- 
+
   // Due banner → review
   $('due-banner').addEventListener('click', ()=>nav('review'));
- 
+
   // View all link
   $('view-all-link').addEventListener('click', ()=>nav('wordlist'));
- 
+
   // Add word form
   $('inp-zh').addEventListener('input', ()=>{ const v=$('inp-zh').value; $('pinyin-preview').textContent = getPinyin(v)||''; lookupDict(v); });
   $('add-word-btn').addEventListener('click', addWord);
   $('inp-vi').addEventListener('keydown', e=>{ if(e.key==='Enter') addWord(); });
- 
+
   // Word list search
   $('search-input').addEventListener('input', e=>renderWordList(e.target.value));
 }
- 
+
 // ─── SM-2 ALGORITHM ──────────────────────────────────────────────────────────
 function sm2(w, g){
   let {ef=2.5, interval=0, repetitions=0} = w;
@@ -552,7 +553,7 @@ function intLabel(g, w){
   if(g===2) return repetitions===0?'1 ngày':repetitions===1?'4 ngày':`${Math.round(interval*ef)} ngày`;
   return repetitions===0?'4 ngày':`${Math.round(interval*ef*1.3)} ngày`;
 }
- 
+
 // ─── DASHBOARD ───────────────────────────────────────────────────────────────
 function renderDashboard(){
   const words=db.words, now=Date.now(), today=new Date().toISOString().split('T')[0];
@@ -563,15 +564,15 @@ function renderDashboard(){
   $('stat-mastered').textContent = words.filter(w=>w.status==='mastered').length;
   $('stat-today').textContent    = db.sessions[today]||0;
   $('stat-accuracy').textContent = db.total>0 ? Math.round(db.correct/db.total*100) : '—';
- 
+
   let streak=0, d=new Date();
   while(true){ const k=d.toISOString().split('T')[0]; if((db.sessions[k]||0)>0){ streak++; d.setDate(d.getDate()-1); } else break; }
   $('stat-streak').textContent = streak;
- 
+
   const banner=$('due-banner');
   if(due.length){ banner.style.display='block'; $('due-banner-text').textContent=`${due.length} từ cần ôn tập ngay!`; }
   else { banner.style.display='none'; }
- 
+
   // Heatmap
   const hm=$('heatmap'); hm.innerHTML='';
   const td=new Date();
@@ -586,7 +587,7 @@ function renderDashboard(){
     }
     hm.appendChild(col);
   }
- 
+
   // Recent words
   const rw=$('recent-words');
   const recent=[...words].reverse().slice(0,6);
@@ -595,14 +596,14 @@ function renderDashboard(){
     : `<div style="color:var(--text3);font-size:14px;grid-column:1/-1">Chưa có từ. <span style="color:var(--red);cursor:pointer" id="add-first-link">Thêm từ đầu tiên!</span></div>`;
   document.getElementById('add-first-link')?.addEventListener('click', ()=>nav('add'));
 }
- 
+
 // ─── REVIEW ───────────────────────────────────────────────────────────────────
 function startReview(){
   reviewQueue = db.words.filter(w=>!w.nextReview||w.nextReview<=Date.now()).map(w=>({...w})).sort(()=>Math.random()-0.5);
   answered=false;
   renderReviewCard();
 }
- 
+
 function renderReviewCard(){
   const rc=$('review-content'), rs=$('review-subtitle');
   if(!reviewQueue.length){
@@ -614,7 +615,7 @@ function renderReviewCard(){
   currentCard=reviewQueue[0];
   const total=db.words.filter(w=>!w.nextReview||w.nextReview<=Date.now()).length;
   rs.textContent=`Còn ${reviewQueue.length} từ cần ôn`;
- 
+
   rc.innerHTML=`
     <div class="review-progress"><div class="review-progress-fill" style="width:${Math.max(0,(total-reviewQueue.length)/Math.max(total,1)*100)}%"></div></div>
     <div class="review-card">
@@ -633,7 +634,7 @@ function renderReviewCard(){
       <button class="diff-btn good"  data-grade="2"><span class="emoji">🙂</span><span class="label">Được</span><span class="interval" id="i2"></span></button>
       <button class="diff-btn easy"  data-grade="3"><span class="emoji">😎</span><span class="label">Dễ</span><span class="interval" id="i3"></span></button>
     </div>`;
- 
+
   // Wire up review events
   const inp=$('answer-input');
   inp.focus();
@@ -643,7 +644,7 @@ function renderReviewCard(){
   rc.querySelectorAll('.diff-btn').forEach(btn=>btn.addEventListener('click',()=>gradeCard(parseInt(btn.dataset.grade))));
   answered=false;
 }
- 
+
 function checkAnswer(){
   if(answered) return;
   const inp=$('answer-input');
@@ -662,13 +663,13 @@ function checkAnswer(){
   $('check-btn').disabled=true;
   for(let g=0;g<4;g++){ const el=$(`i${g}`); if(el) el.textContent=intLabel(g,currentCard); }
 }
- 
+
 function gradeCard(g){
   const w=db.words.find(x=>x.id===currentCard.id);
   if(w){ sm2(w,g); save(); }
   reviewQueue.shift(); answered=false; renderReviewCard();
 }
- 
+
 // ─── ADD WORD ─────────────────────────────────────────────────────────────────
 function addWord(){
   const zh=$('inp-zh').value.trim(), vi=$('inp-vi').value.trim();
@@ -679,7 +680,7 @@ function addWord(){
   $('pinyin-preview').textContent='';
   toast(`✓ Đã thêm: ${zh}`);
 }
- 
+
 // ─── WORD LIST ────────────────────────────────────────────────────────────────
 function renderWordList(q=''){
   q=q.toLowerCase();
@@ -693,7 +694,7 @@ function renderWordList(q=''){
   $('wordlist-filter-pill').innerHTML=_wf!=='all'
     ? `<div class="filter-pill f${_wf}">${labels[_wf]} <span class="filter-clear" id="clear-filter">✕</span></div>`:'';
   document.getElementById('clear-filter')?.addEventListener('click',()=>{ _wf='all'; renderWordList($('search-input').value||''); });
- 
+
   const filtered=base.filter(w=>!q||w.zh.includes(q)||w.vi.toLowerCase().includes(q)||w.pinyin.toLowerCase().includes(q));
   const sl={new:'Mới',learning:'Đang học',review:'Ôn tập',mastered:'Thành thạo'};
   const sb={new:'badge-new',learning:'badge-learning',review:'badge-review',mastered:'badge-mastered'};
@@ -708,16 +709,16 @@ function renderWordList(q=''){
         <td><button class="del-btn" data-id="${w.id}">✕</button></td>
       </tr>`).join('')
     : '<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:24px">Không tìm thấy từ nào.</td></tr>';
- 
+
   tbody.querySelectorAll('.del-btn').forEach(btn=>btn.addEventListener('click',()=>deleteWord(Number(btn.dataset.id))));
 }
- 
+
 function deleteWord(id){
   if(!confirm('Xoá từ này?')) return;
   db.words=db.words.filter(w=>w.id!==id);
   save(); renderWordList($('search-input')?.value||''); toast('Đã xoá từ.');
 }
- 
+
 // ─── START ────────────────────────────────────────────────────────────────────
 loadDict(); // preload dictionary in background
 init();
