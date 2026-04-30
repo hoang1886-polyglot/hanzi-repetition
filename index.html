@@ -675,8 +675,10 @@ function addWord(){
   ['inp-zh','inp-vi','inp-ex-zh','inp-ex-vi'].forEach(id=>$(id).value='');
   $('pinyin-preview').textContent='';
   toast(`✓ Đã thêm: ${zh}`);
-}
+
 grep -n "maxWidth:560\|max-width:560\|maxWidth.*560\|style={{maxWidth" /home/claude/hanzi-react.html
+}
+
 // ─── WORD LIST ────────────────────────────────────────────────────────────────
 function renderWordList(q=''){
   q=q.toLowerCase();
