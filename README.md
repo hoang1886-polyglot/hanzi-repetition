@@ -1,3 +1,3 @@
 # hanzi-repetition
-điện thoại: https://playful-crostata-a77fbd.netlify.app/
-web: https://hoang1886-polyglot.github.io/hanzi-repetition
+điện thoại: hanzi-netlify
+web: https://https://hanzi-repetition.vercel.app/
