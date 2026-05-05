@@ -1649,11 +1649,59 @@ function initMobileMenu(){
   });
 }
  
+// ─── AUTH ─────────────────────────────────────────────────────────────────────
+// Wire up Google sign-in button
+document.getElementById('google-signin-btn').addEventListener('click', async () => {
+  const errEl = document.getElementById('login-err');
+  if(errEl) errEl.textContent = '';
+  try {
+    await signInWithPopup(auth, provider);
+  } catch(e) {
+    console.error('Sign-in error:', e);
+    if(errEl) errEl.textContent = 'Đăng nhập thất bại: ' + (e.message || e.code || 'Lỗi không xác định');
+  }
+});
+ 
+// Wire up sign-out button
+document.getElementById('signout-btn')?.addEventListener('click', () => signOut(auth));
+ 
+// React to auth state — show/hide login screen and bootstrap the app
+onAuthStateChanged(auth, async user => {
+  const loginScreen  = document.getElementById('login-screen');
+  const loadingScreen = document.getElementById('loading');
+  if (user) {
+    // User is signed in
+    loginScreen.style.display = 'none';
+    // Show user info in sidebar
+    const nameEl   = document.getElementById('user-name');
+    const emailEl  = document.getElementById('user-email');
+    const avatarEl = document.getElementById('user-avatar');
+    const fallbackEl = document.getElementById('user-avatar-fallback');
+    if(nameEl)  nameEl.textContent  = user.displayName || 'Người dùng';
+    if(emailEl) emailEl.textContent = user.email || '';
+    if(user.photoURL){
+      if(avatarEl){ avatarEl.src = user.photoURL; avatarEl.style.display = 'block'; }
+      if(fallbackEl) fallbackEl.style.display = 'none';
+    } else {
+      if(avatarEl) avatarEl.style.display = 'none';
+      if(fallbackEl){ fallbackEl.style.display = 'flex'; fallbackEl.textContent = (user.displayName||'?')[0].toUpperCase(); }
+    }
+    // Set per-user Firestore document
+    DB_DOC = doc(firestore, 'users', user.uid, 'data', 'main');
+    // Now bootstrap the app
+    await init();
+  } else {
+    // Signed out — show login screen
+    if(loadingScreen) loadingScreen.style.display = 'none';
+    loginScreen.style.display = 'flex';
+  }
+});
+ 
 // ─── START ────────────────────────────────────────────────────────────────────
 loadDict(); // preload dictionary in background
 initDarkMode();
 initMobileMenu();
-init();
+// Note: init() is now called by onAuthStateChanged above after login
 </script>
 </body>
 </html>
