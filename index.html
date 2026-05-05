@@ -1557,6 +1557,9 @@ function setupTextSelection(){
   if(!body) return;
  
   document.addEventListener('mouseup', e => {
+    // If the click is inside the popup, do nothing — don't hide it
+    if(popup.contains(e.target)) return;
+ 
     const sel = window.getSelection();
     const text = sel?.toString().trim();
     if(!text || !body.contains(sel?.anchorNode)){
@@ -1663,36 +1666,38 @@ document.getElementById('google-signin-btn').addEventListener('click', async () 
 });
  
 // Wire up sign-out button
-document.getElementById('signout-btn')?.addEventListener('click', () => signOut(auth));
+document.getElementById('signout-btn').addEventListener('click', async () => {
+  await signOut(auth);
+});
  
 // React to auth state — show/hide login screen and bootstrap the app
 onAuthStateChanged(auth, async user => {
-  const loginScreen  = document.getElementById('login-screen');
+  const loginScreen   = document.getElementById('login-screen');
   const loadingScreen = document.getElementById('loading');
+  const userRow       = document.getElementById('user-row');
   if (user) {
-    // User is signed in
+    // User is signed in — hide login, show app
     loginScreen.style.display = 'none';
-    // Show user info in sidebar
-    const nameEl   = document.getElementById('user-name');
-    const emailEl  = document.getElementById('user-email');
-    const avatarEl = document.getElementById('user-avatar');
-    const fallbackEl = document.getElementById('user-avatar-fallback');
-    if(nameEl)  nameEl.textContent  = user.displayName || 'Người dùng';
-    if(emailEl) emailEl.textContent = user.email || '';
+ 
+    // Populate sidebar user row
+    document.getElementById('user-name').textContent  = user.displayName || 'Người dùng';
+    document.getElementById('user-email').textContent = user.email || '';
+    const wrap = document.getElementById('user-avatar-wrap');
     if(user.photoURL){
-      if(avatarEl){ avatarEl.src = user.photoURL; avatarEl.style.display = 'block'; }
-      if(fallbackEl) fallbackEl.style.display = 'none';
+      wrap.innerHTML = `<img class="user-avatar" src="${user.photoURL}" referrerpolicy="no-referrer">`;
     } else {
-      if(avatarEl) avatarEl.style.display = 'none';
-      if(fallbackEl){ fallbackEl.style.display = 'flex'; fallbackEl.textContent = (user.displayName||'?')[0].toUpperCase(); }
+      wrap.innerHTML = `<div class="user-avatar-fallback">${(user.displayName||'?')[0].toUpperCase()}</div>`;
     }
+    if(userRow) userRow.style.display = 'flex';
+ 
     // Set per-user Firestore document
     DB_DOC = doc(firestore, 'users', user.uid, 'data', 'main');
-    // Now bootstrap the app
+    // Bootstrap the app
     await init();
   } else {
-    // Signed out — show login screen
+    // Signed out — show login screen, hide user row
     if(loadingScreen) loadingScreen.style.display = 'none';
+    if(userRow) userRow.style.display = 'none';
     loginScreen.style.display = 'flex';
   }
 });
@@ -1705,3 +1710,4 @@ initMobileMenu();
 </script>
 </body>
 </html>
+ 
