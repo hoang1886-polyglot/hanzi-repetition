@@ -474,7 +474,39 @@ tbody tr:hover td{background:var(--surface2)}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px}
 ::-webkit-scrollbar-thumb:hover{background:var(--border3)}
 
-/* ─── TOAST ──────────────────────────────────────────────────────────── */
+/* ─── ARTICLE CARDS ─────────────────────────────────────────────────── */
+.article-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px 24px;
+  margin-bottom:12px;box-shadow:var(--shadow-sm);
+  cursor:pointer;transition:all var(--duration) var(--ease-out);
+  display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+}
+.article-card:hover{border-color:var(--border3);box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.article-card-title{font-size:16px;font-weight:600;margin-bottom:5px;font-family:'Noto Serif SC',serif}
+.article-card-meta{font-size:12px;color:var(--text3)}
+.article-card-preview{font-size:13px;color:var(--text2);margin-top:7px;line-height:1.6;font-family:'Noto Sans SC',sans-serif}
+.article-card-actions{display:flex;gap:6px;flex-shrink:0}
+.article-del-btn{
+  background:none;border:none;cursor:pointer;color:var(--text4);
+  font-size:14px;padding:6px 9px;border-radius:var(--radius-xs);
+  transition:all 0.15s;
+}
+.article-del-btn:hover{color:var(--red);background:var(--red-light)}
+
+/* highlight effect */
+.word-highlight{
+  background:rgba(200,40,30,0.12);
+  border-radius:3px;
+  color:var(--red);
+  border-bottom:1.5px solid var(--red-mid);
+  cursor:pointer;
+  transition:background 0.15s;
+}
+.word-highlight:hover{background:rgba(200,40,30,0.2)}
+
+#selection-popup input::placeholder{color:#666}
+
 .toast{
   position:fixed;bottom:28px;right:28px;
   background:#111;color:#fff;
@@ -523,6 +555,10 @@ tbody tr:hover td{background:var(--surface2)}
     <div class="nav-item" data-page="wordlist" id="nav-wordlist">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
       Danh sách từ
+    </div>
+    <div class="nav-item" data-page="articles" id="nav-articles">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      Bài báo
     </div>
   </div>
   <div class="sidebar-footer">
@@ -639,7 +675,100 @@ tbody tr:hover td{background:var(--surface2)}
   </div>
 </div>
 
-</div><!-- end #main -->
+<!-- ARTICLES LIST -->
+<div id="articles" class="page">
+  <div class="page-header">
+    <h1>Bài báo</h1>
+    <p>Đọc và học từ mới từ bài báo tiếng Trung</p>
+  </div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:14px">
+    <button class="submit-btn" id="go-upload-btn" style="padding:10px 22px;font-size:13px">+ Upload bài báo mới</button>
+  </div>
+  <div id="articles-list"></div>
+</div>
+
+<!-- UPLOAD ARTICLE -->
+<div id="upload-article" class="page">
+  <div class="page-header"><h1>Upload bài báo</h1><p>Dán nội dung bài báo tiếng Trung vào đây</p></div>
+  <div class="card" style="max-width:720px">
+    <div class="form-group">
+      <label>Tiêu đề bài báo <span style="color:var(--red)">*</span></label>
+      <input type="text" id="article-title-inp" placeholder="e.g. 中国经济发展报告">
+    </div>
+    <div class="form-group">
+      <label>Nguồn / Tác giả <span class="optional-tag">(tuỳ chọn)</span></label>
+      <input type="text" id="article-source-inp" placeholder="e.g. 人民日报, Xinhua...">
+    </div>
+    <div class="form-group">
+      <label>Nội dung bài báo <span style="color:var(--red)">*</span></label>
+      <textarea id="article-body-inp" style="min-height:200px;font-family:'Noto Sans SC',sans-serif;font-size:15px;line-height:1.8" placeholder="Dán nội dung tiếng Trung vào đây..."></textarea>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="submit-btn" id="save-article-btn">💾 Lưu bài báo</button>
+      <button id="cancel-upload-btn" style="padding:12px 22px;background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-weight:500;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">Huỷ</button>
+    </div>
+  </div>
+</div>
+
+<!-- READ ARTICLE -->
+<div id="read-article" class="page">
+  <div class="page-header">
+    <div style="display:flex;align-items:center;gap:14px">
+      <button id="back-articles-btn" style="background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-sm);padding:8px 16px;font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif;transition:all 0.15s">← Quay lại</button>
+      <div>
+        <h1 id="read-article-title" style="font-size:22px"></h1>
+        <p id="read-article-source" style="font-size:13px;color:var(--text2);margin-top:3px"></p>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 320px;gap:18px;max-width:1060px">
+    <!-- Article text -->
+    <div class="card" style="margin:0">
+      <div class="card-title" style="margin-bottom:12px">NỘI DUNG — <span style="color:var(--red);font-weight:700">bôi đen từ để thêm vào danh sách học</span></div>
+      <div id="article-reader-body" style="font-family:'Noto Sans SC',sans-serif;font-size:16px;line-height:2;color:var(--text);user-select:text;cursor:text"></div>
+    </div>
+
+    <!-- Right panel -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <!-- Selection popup will appear here, or use fixed popup -->
+
+      <!-- Manual add from article -->
+      <div class="card" style="margin:0">
+        <div class="card-title">THÊM TỪ MỚI THỦ CÔNG</div>
+        <div class="form-group" style="margin-bottom:12px">
+          <label>Chữ Hán</label>
+          <input type="text" id="art-inp-zh" placeholder="e.g. 经济" style="font-family:'Noto Sans SC',sans-serif">
+          <div class="pinyin-preview" id="art-pinyin-preview"></div>
+        </div>
+        <div class="form-group" style="margin-bottom:14px">
+          <label>Nghĩa tiếng Việt</label>
+          <input type="text" id="art-inp-vi" placeholder="e.g. kinh tế">
+        </div>
+        <button class="submit-btn" id="art-add-word-btn" style="width:100%;padding:10px">+ Thêm từ</button>
+      </div>
+
+      <!-- Words added from this article -->
+      <div class="card" style="margin:0">
+        <div class="card-title">TỪ ĐÃ THÊM TỪ BÀI NÀY</div>
+        <div id="article-added-words" style="font-size:13px;color:var(--text3)">Chưa có từ nào.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SELECTION POPUP (floating) -->
+<div id="selection-popup" style="display:none;position:fixed;z-index:1000;background:#111;color:#fff;border-radius:10px;padding:10px 14px;box-shadow:0 8px 28px rgba(0,0,0,0.3);font-size:13px;font-weight:500;min-width:200px">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+    <span style="font-family:'Noto Serif SC',serif;font-size:18px;font-weight:700" id="popup-word"></span>
+    <span style="color:var(--red-mid);font-size:12px" id="popup-pinyin"></span>
+  </div>
+  <input id="popup-vi-inp" placeholder="Nhập nghĩa tiếng Việt..." style="width:100%;padding:7px 10px;border-radius:6px;border:none;background:#222;color:#fff;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:8px">
+  <div style="display:flex;gap:6px">
+    <button id="popup-add-btn" style="flex:1;padding:7px;background:var(--red);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">+ Thêm vào từ điển</button>
+    <button id="popup-cancel-btn" style="padding:7px 12px;background:#222;color:#aaa;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif">✕</button>
+  </div>
+</div>
 
 <script type="module">
 import { initializeApp }              from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -660,7 +789,7 @@ const firestore = getFirestore(app);
 const DB_DOC    = doc(firestore, "hanzi", "data");
 
 // ─── APP STATE ────────────────────────────────────────────────────────────────
-let db          = { words:[], sessions:{}, correct:0, total:0 };
+let db          = { words:[], sessions:{}, correct:0, total:0, articles:[] };
 let reviewQueue = [], currentCard = null, answered = false, saveTimer = null;
 let _wf         = 'all'; // word-list filter
 
@@ -762,7 +891,7 @@ async function init(){
     const snap = await getDoc(DB_DOC);
     if(snap.exists()){
       const d = snap.data();
-      db = { words:d.words||[], sessions:d.sessions||{}, correct:d.correct||0, total:d.total||0 };
+      db = { words:d.words||[], sessions:d.sessions||{}, correct:d.correct||0, total:d.total||0, articles:d.articles||[] };
     } else {
       seedWords();
       await setDoc(DB_DOC, JSON.parse(JSON.stringify(db)));
@@ -783,7 +912,7 @@ async function init(){
   onSnapshot(DB_DOC, snap => {
     if(snap.exists() && !saveTimer){
       const d = snap.data();
-      db = { words:d.words||[], sessions:d.sessions||{}, correct:d.correct||0, total:d.total||0 };
+      db = { words:d.words||[], sessions:d.sessions||{}, correct:d.correct||0, total:d.total||0, articles:d.articles||[] };
       const ap = document.querySelector('.page.active')?.id;
       if(ap === 'dashboard') renderDashboard();
       if(ap === 'wordlist')  renderWordList('');
@@ -811,10 +940,14 @@ function nav(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById(page).classList.add('active');
-  document.getElementById(`nav-${page}`).classList.add('active');
+  const navEl = document.getElementById(`nav-${page}`);
+  if(navEl) navEl.classList.add('active');
+  // For sub-pages without nav items, highlight parent
+  if(page==='upload-article'||page==='read-article') document.getElementById('nav-articles').classList.add('active');
   if(page==='dashboard') renderDashboard();
   if(page==='review')    startReview();
   if(page==='wordlist')  renderWordList('');
+  if(page==='articles')  renderArticlesList();
 }
 
 function navWordlistFilter(f){ _wf=f; nav('wordlist'); }
@@ -822,7 +955,7 @@ function navWordlistFilter(f){ _wf=f; nav('wordlist'); }
 // ─── EVENT LISTENERS (replaces inline onclick) ────────────────────────────────
 function setupListeners(){
   // Sidebar nav
-  ['dashboard','review','add','wordlist'].forEach(p => $(`nav-${p}`).addEventListener('click', ()=>nav(p)));
+  ['dashboard','review','add','wordlist','articles'].forEach(p => { const el=$(`nav-${p}`); if(el) el.addEventListener('click', ()=>nav(p)); });
 
   // Stat cards → filter word list
   $('card-all').addEventListener('click',     ()=>navWordlistFilter('all'));
@@ -840,6 +973,26 @@ function setupListeners(){
   $('inp-zh').addEventListener('input', ()=>{ const v=$('inp-zh').value; $('pinyin-preview').textContent = getPinyin(v)||''; lookupDict(v); });
   $('add-word-btn').addEventListener('click', addWord);
   $('inp-vi').addEventListener('keydown', e=>{ if(e.key==='Enter') addWord(); });
+
+  // Article buttons
+  $('go-upload-btn').addEventListener('click', ()=>nav('upload-article'));
+  $('save-article-btn').addEventListener('click', saveArticle);
+  $('cancel-upload-btn').addEventListener('click', ()=>nav('articles'));
+  $('back-articles-btn').addEventListener('click', ()=>nav('articles'));
+  $('art-inp-zh').addEventListener('input', ()=>{
+    const v=$('art-inp-zh').value;
+    $('art-pinyin-preview').textContent = getPinyin(v)||'';
+  });
+  $('art-add-word-btn').addEventListener('click', ()=>{
+    const zh=$('art-inp-zh').value.trim(), vi=$('art-inp-vi').value.trim();
+    const w = addWordFromArticle(zh, vi);
+    if(w){
+      $('art-inp-zh').value=''; $('art-inp-vi').value=''; $('art-pinyin-preview').textContent='';
+      toast(`✓ Đã thêm: ${zh}`);
+      const article = db.articles.find(a=>a.id===currentArticleId);
+      if(article) renderArticleAddedWords(article);
+    }
+  });
 
   // Word list search
   $('search-input').addEventListener('input', e=>renderWordList(e.target.value));
@@ -1027,6 +1180,160 @@ function deleteWord(id){
   if(!confirm('Xoá từ này?')) return;
   db.words=db.words.filter(w=>w.id!==id);
   save(); renderWordList($('search-input')?.value||''); toast('Đã xoá từ.');
+}
+
+// ─── ARTICLES ─────────────────────────────────────────────────────────────────
+let currentArticleId = null;
+
+function renderArticlesList(){
+  const container = $('articles-list');
+  if(!db.articles || !db.articles.length){
+    container.innerHTML = `<div class="empty-state"><div class="emoji">📰</div><h3>Chưa có bài báo nào</h3><p>Upload bài báo tiếng Trung để học từ mới từ ngữ cảnh thực tế!</p></div>`;
+    return;
+  }
+  container.innerHTML = db.articles.map(a => `
+    <div class="article-card" data-id="${a.id}">
+      <div style="flex:1;min-width:0">
+        <div class="article-card-title">${a.title}</div>
+        <div class="article-card-meta">${a.source ? '📰 '+a.source+' · ' : ''}${new Date(a.added).toLocaleDateString('vi-VN')} · ${a.wordCount||0} từ · ${a.addedWords||0} từ đã học</div>
+        <div class="article-card-preview">${(a.body||'').slice(0,80)}...</div>
+      </div>
+      <div class="article-card-actions">
+        <button class="article-del-btn" data-del="${a.id}" title="Xoá">✕</button>
+      </div>
+    </div>
+  `).join('');
+
+  container.querySelectorAll('.article-card').forEach(card => {
+    card.addEventListener('click', e => {
+      if(e.target.closest('[data-del]')) return;
+      openArticle(Number(card.dataset.id));
+    });
+  });
+  container.querySelectorAll('[data-del]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      if(!confirm('Xoá bài báo này?')) return;
+      db.articles = db.articles.filter(a=>a.id!==Number(btn.dataset.del));
+      save(); renderArticlesList(); toast('Đã xoá bài báo.');
+    });
+  });
+}
+
+function saveArticle(){
+  const title = $('article-title-inp').value.trim();
+  const body  = $('article-body-inp').value.trim();
+  if(!title || !body){ toast('Vui lòng nhập tiêu đề và nội dung!'); return; }
+  const article = {
+    id: Date.now(), title,
+    source: $('article-source-inp').value.trim(),
+    body, wordCount: body.length,
+    addedWords: 0, added: Date.now()
+  };
+  if(!db.articles) db.articles = [];
+  db.articles.push(article);
+  save();
+  $('article-title-inp').value='';
+  $('article-source-inp').value='';
+  $('article-body-inp').value='';
+  toast(`✓ Đã lưu: ${title}`);
+  nav('articles');
+}
+
+function openArticle(id){
+  const article = db.articles.find(a=>a.id===id);
+  if(!article) return;
+  currentArticleId = id;
+  $('read-article-title').textContent = article.title;
+  $('read-article-source').textContent = article.source || '';
+  $('article-reader-body').innerHTML = article.body.replace(/\n/g,'<br>');
+  $('art-inp-zh').value=''; $('art-inp-vi').value=''; $('art-pinyin-preview').textContent='';
+  renderArticleAddedWords(article);
+  nav('read-article');
+  setupTextSelection();
+}
+
+function renderArticleAddedWords(article){
+  const wordsDiv = $('article-added-words');
+  const ids = article.linkedWords||[];
+  if(!ids.length){ wordsDiv.textContent='Chưa có từ nào.'; return; }
+  const words = db.words.filter(w=>ids.includes(w.id));
+  wordsDiv.innerHTML = words.map(w=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)">
+      <span style="font-family:'Noto Serif SC',serif;font-size:16px;font-weight:600">${w.zh}</span>
+      <span style="font-size:11px;color:var(--red)">${w.pinyin}</span>
+      <span style="font-size:12px;color:var(--text2);flex:1">${w.vi}</span>
+    </div>
+  `).join('');
+}
+
+function addWordFromArticle(zh, vi){
+  if(!zh||!vi){ toast('Vui lòng nhập chữ Hán và nghĩa!'); return false; }
+  const newWord = { id:Date.now(), zh, vi, pinyin:getPinyin(zh), exZh:'', exVi:'', status:'new', ef:2.5, interval:0, repetitions:0, nextReview:null, lastReview:null, added:Date.now() };
+  db.words.push(newWord);
+  // Link to article
+  const article = db.articles.find(a=>a.id===currentArticleId);
+  if(article){
+    if(!article.linkedWords) article.linkedWords=[];
+    article.linkedWords.push(newWord.id);
+    article.addedWords = article.linkedWords.length;
+    // Highlight in article body
+    highlightWord(zh);
+  }
+  save();
+  return newWord;
+}
+
+function highlightWord(zh){
+  const body = $('article-reader-body');
+  if(!body || !zh) return;
+  body.innerHTML = body.innerHTML.replace(
+    new RegExp(zh.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'g'),
+    `<span class="word-highlight" title="${zh}">${zh}</span>`
+  );
+}
+
+function setupTextSelection(){
+  const body = $('article-reader-body');
+  const popup = $('selection-popup');
+  if(!body) return;
+
+  document.addEventListener('mouseup', e => {
+    const sel = window.getSelection();
+    const text = sel?.toString().trim();
+    if(!text || !body.contains(sel?.anchorNode)){
+      popup.style.display='none'; return;
+    }
+    if(text.length < 1 || text.length > 10){ popup.style.display='none'; return; }
+    const range = sel.getRangeAt(0);
+    const rect  = range.getBoundingClientRect();
+    $('popup-word').textContent = text;
+    $('popup-pinyin').textContent = getPinyin(text);
+    $('popup-vi-inp').value = '';
+    popup.style.display = 'block';
+    popup.style.left = Math.min(rect.left + window.scrollX, window.innerWidth - 230) + 'px';
+    popup.style.top  = (rect.top + window.scrollY - popup.offsetHeight - 10) + 'px';
+    setTimeout(()=>$('popup-vi-inp').focus(), 50);
+  });
+
+  $('popup-cancel-btn').addEventListener('click', ()=>{ popup.style.display='none'; window.getSelection()?.removeAllRanges(); });
+
+  $('popup-add-btn').addEventListener('click', ()=>{
+    const zh = $('popup-word').textContent.trim();
+    const vi = $('popup-vi-inp').value.trim();
+    const w = addWordFromArticle(zh, vi);
+    if(w){
+      toast(`✓ Đã thêm: ${zh}`);
+      popup.style.display='none';
+      window.getSelection()?.removeAllRanges();
+      const article = db.articles.find(a=>a.id===currentArticleId);
+      if(article) renderArticleAddedWords(article);
+    } else {
+      toast('Vui lòng nhập nghĩa!');
+    }
+  });
+
+  $('popup-vi-inp').addEventListener('keydown', e=>{ if(e.key==='Enter') $('popup-add-btn').click(); });
 }
 
 // ─── START ────────────────────────────────────────────────────────────────────
