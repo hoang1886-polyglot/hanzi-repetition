@@ -855,9 +855,20 @@ tbody tr:hover td{background:var(--surface2)}
           <input type="text" id="art-inp-zh" placeholder="e.g. 经济" style="font-family:'Noto Sans SC',sans-serif">
           <div class="pinyin-preview" id="art-pinyin-preview"></div>
         </div>
-        <div class="form-group" style="margin-bottom:14px">
+        <div class="form-group" style="margin-bottom:12px">
           <label>Nghĩa tiếng Việt</label>
           <input type="text" id="art-inp-vi" placeholder="e.g. kinh tế">
+        </div>
+        <div style="border-top:1px solid var(--border);padding-top:12px;margin-bottom:12px">
+          <div style="font-size:11px;color:var(--text3);font-weight:600;letter-spacing:0.06em;margin-bottom:10px">VÍ DỤ <span style="font-weight:400;text-transform:none;letter-spacing:0">(tuỳ chọn)</span></div>
+          <div class="form-group" style="margin-bottom:10px">
+            <label>Câu ví dụ (tiếng Trung)</label>
+            <input type="text" id="art-inp-ex-zh" placeholder="e.g. 中国经济发展很快" style="font-family:'Noto Sans SC',sans-serif">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label>Dịch nghĩa (tiếng Việt)</label>
+            <input type="text" id="art-inp-ex-vi" placeholder="e.g. Kinh tế TQ phát triển nhanh">
+          </div>
         </div>
         <button class="submit-btn" id="art-add-word-btn" style="width:100%;padding:10px">+ Thêm từ</button>
       </div>
@@ -872,12 +883,15 @@ tbody tr:hover td{background:var(--surface2)}
 </div>
  
 <!-- SELECTION POPUP (floating) -->
-<div id="selection-popup" style="display:none;position:fixed;z-index:1000;background:#111;color:#fff;border-radius:10px;padding:10px 14px;box-shadow:0 8px 28px rgba(0,0,0,0.3);font-size:13px;font-weight:500;min-width:200px">
+<div id="selection-popup" style="display:none;position:fixed;z-index:1000;background:#111;color:#fff;border-radius:10px;padding:10px 14px;box-shadow:0 8px 28px rgba(0,0,0,0.3);font-size:13px;font-weight:500;min-width:240px;max-width:300px">
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
     <span style="font-family:'Noto Serif SC',serif;font-size:18px;font-weight:700" id="popup-word"></span>
     <span style="color:var(--red-mid);font-size:12px" id="popup-pinyin"></span>
   </div>
-  <input id="popup-vi-inp" placeholder="Nhập nghĩa tiếng Việt..." style="width:100%;padding:7px 10px;border-radius:6px;border:none;background:#222;color:#fff;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:8px">
+  <input id="popup-vi-inp" placeholder="Nghĩa tiếng Việt..." style="width:100%;padding:7px 10px;border-radius:6px;border:none;background:#222;color:#fff;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:6px">
+  <div style="font-size:10px;color:#555;letter-spacing:0.05em;margin-bottom:5px">VÍ DỤ (tuỳ chọn)</div>
+  <input id="popup-ex-zh-inp" placeholder="Câu ví dụ tiếng Trung..." style="width:100%;padding:6px 10px;border-radius:6px;border:none;background:#1A1A1A;color:#ccc;font-size:12px;font-family:'Noto Sans SC',sans-serif;outline:none;margin-bottom:5px">
+  <input id="popup-ex-vi-inp" placeholder="Dịch nghĩa..." style="width:100%;padding:6px 10px;border-radius:6px;border:none;background:#1A1A1A;color:#ccc;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:8px">
   <div style="display:flex;gap:6px">
     <button id="popup-add-btn" style="flex:1;padding:7px;background:var(--red);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">+ Thêm vào từ điển</button>
     <button id="popup-cancel-btn" style="padding:7px 12px;background:#222;color:#aaa;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif">✕</button>
@@ -1107,9 +1121,12 @@ function setupListeners(){
   });
   $('art-add-word-btn').addEventListener('click', ()=>{
     const zh=$('art-inp-zh').value.trim(), vi=$('art-inp-vi').value.trim();
-    const w = addWordFromArticle(zh, vi);
+    const exZh=$('art-inp-ex-zh').value.trim(), exVi=$('art-inp-ex-vi').value.trim();
+    const w = addWordFromArticle(zh, vi, exZh, exVi);
     if(w){
-      $('art-inp-zh').value=''; $('art-inp-vi').value=''; $('art-pinyin-preview').textContent='';
+      $('art-inp-zh').value=''; $('art-inp-vi').value='';
+      $('art-inp-ex-zh').value=''; $('art-inp-ex-vi').value='';
+      $('art-pinyin-preview').textContent='';
       toast(`✓ Đã thêm: ${zh}`);
       const article = db.articles.find(a=>a.id===currentArticleId);
       if(article) renderArticleAddedWords(article);
@@ -1368,8 +1385,21 @@ function openArticle(id){
   currentArticleId = id;
   $('read-article-title').textContent = article.title;
   $('read-article-source').textContent = article.source || '';
-  $('article-reader-body').innerHTML = article.body.replace(/\n/g,'<br>');
-  $('art-inp-zh').value=''; $('art-inp-vi').value=''; $('art-pinyin-preview').textContent='';
+ 
+  // Render body with persistent highlights re-applied
+  let html = article.body.replace(/\n/g,'<br>');
+  // Re-apply highlights for all previously added words
+  const linkedWords = db.words.filter(w=>(article.linkedWords||[]).includes(w.id));
+  // Sort by length desc to avoid partial-match collisions (longer words first)
+  linkedWords.sort((a,b)=>b.zh.length - a.zh.length);
+  linkedWords.forEach(w=>{
+    html = applyHighlightToHtml(html, w.zh);
+  });
+  $('article-reader-body').innerHTML = html;
+ 
+  $('art-inp-zh').value=''; $('art-inp-vi').value='';
+  $('art-inp-ex-zh').value=''; $('art-inp-ex-vi').value='';
+  $('art-pinyin-preview').textContent='';
   renderArticleAddedWords(article);
   nav('read-article');
   setupTextSelection();
@@ -1389,30 +1419,42 @@ function renderArticleAddedWords(article){
   `).join('');
 }
  
-function addWordFromArticle(zh, vi){
+function addWordFromArticle(zh, vi, exZh='', exVi=''){
   if(!zh||!vi){ toast('Vui lòng nhập chữ Hán và nghĩa!'); return false; }
-  const newWord = { id:Date.now(), zh, vi, pinyin:getPinyin(zh), exZh:'', exVi:'', status:'new', ef:2.5, interval:0, repetitions:0, nextReview:null, lastReview:null, added:Date.now() };
+  // Prevent duplicate in same article
+  const article = db.articles.find(a=>a.id===currentArticleId);
+  if(article && article.linkedWords){
+    const alreadyAdded = db.words.find(w=>w.zh===zh && article.linkedWords.includes(w.id));
+    if(alreadyAdded){ toast(`"${zh}" đã được thêm rồi`); return false; }
+  }
+  const newWord = { id:Date.now(), zh, vi, pinyin:getPinyin(zh), exZh, exVi, status:'new', ef:2.5, interval:0, repetitions:0, nextReview:null, lastReview:null, added:Date.now() };
   db.words.push(newWord);
   // Link to article
-  const article = db.articles.find(a=>a.id===currentArticleId);
   if(article){
     if(!article.linkedWords) article.linkedWords=[];
     article.linkedWords.push(newWord.id);
     article.addedWords = article.linkedWords.length;
-    // Highlight in article body
+    // Highlight in DOM immediately
     highlightWord(zh);
   }
   save();
   return newWord;
 }
  
+// Apply highlight to raw HTML string — skips content already inside tags
+function applyHighlightToHtml(html, zh){
+  if(!zh) return html;
+  const escaped = zh.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  // Only replace text nodes (not inside tags/spans) by splitting around < >
+  return html.replace(new RegExp(`(?<!<[^>]*)${escaped}(?![^<]*>)`, 'g'), match => {
+    return `<span class="word-highlight" title="${zh}">${match}</span>`;
+  });
+}
+ 
 function highlightWord(zh){
   const body = $('article-reader-body');
   if(!body || !zh) return;
-  body.innerHTML = body.innerHTML.replace(
-    new RegExp(zh.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'g'),
-    `<span class="word-highlight" title="${zh}">${zh}</span>`
-  );
+  body.innerHTML = applyHighlightToHtml(body.innerHTML, zh);
 }
  
 function setupTextSelection(){
@@ -1432,6 +1474,8 @@ function setupTextSelection(){
     $('popup-word').textContent = text;
     $('popup-pinyin').textContent = getPinyin(text);
     $('popup-vi-inp').value = '';
+    $('popup-ex-zh-inp').value = '';
+    $('popup-ex-vi-inp').value = '';
     // Auto-fill from dict
     if(dictData && dictData[text]){
       $('popup-vi-inp').value = dictData[text].split(';')[0].trim();
@@ -1449,7 +1493,9 @@ function setupTextSelection(){
   $('popup-add-btn').addEventListener('click', ()=>{
     const zh = $('popup-word').textContent.trim();
     const vi = $('popup-vi-inp').value.trim();
-    const w = addWordFromArticle(zh, vi);
+    const exZh = $('popup-ex-zh-inp').value.trim();
+    const exVi = $('popup-ex-vi-inp').value.trim();
+    const w = addWordFromArticle(zh, vi, exZh, exVi);
     if(w){
       toast(`✓ Đã thêm: ${zh}`);
       popup.style.display='none';
@@ -1461,7 +1507,9 @@ function setupTextSelection(){
     }
   });
  
-  $('popup-vi-inp').addEventListener('keydown', e=>{ if(e.key==='Enter') $('popup-add-btn').click(); });
+  $('popup-vi-inp').addEventListener('keydown', e=>{ if(e.key==='Enter') $('popup-ex-zh-inp').focus(); });
+  $('popup-ex-zh-inp').addEventListener('keydown', e=>{ if(e.key==='Enter') $('popup-ex-vi-inp').focus(); });
+  $('popup-ex-vi-inp').addEventListener('keydown', e=>{ if(e.key==='Enter') $('popup-add-btn').click(); });
 }
  
 function artLookupDict(zh){
