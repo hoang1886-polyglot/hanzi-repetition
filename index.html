@@ -631,7 +631,7 @@ tbody tr:hover td{background:var(--surface2)}
 <div id="sync-pill"><div class="sdot spin" id="sdot"></div><span id="stext">Đang đồng bộ...</span></div>
  
 <div id="loading">
-  <div class="big-logo">黄</div>
+  <div class="big-logo">字</div>
   <div class="spinner"></div>
   <p>Đang kết nối Firebase...</p>
 </div>
@@ -643,7 +643,7 @@ tbody tr:hover td{background:var(--surface2)}
  
 <nav id="sidebar">
   <div class="sidebar-logo">
-    <div class="logo-icon">黄</div>
+    <div class="logo-icon">字</div>
     <div class="logo-text">
       <div class="zh">HànZì</div>
       <div class="sub">Spaced Repetition</div>
@@ -839,7 +839,7 @@ tbody tr:hover td{background:var(--surface2)}
   <div id="article-read-grid" style="display:grid;grid-template-columns:1fr 320px;gap:18px;max-width:1060px">
     <!-- Article text -->
     <div class="card" style="margin:0">
-      <div class="card-title" style="margin-bottom:12px">NỘI DUNG — <span style="color:var(--red);font-weight:700">Bôi đen từ để thêm vào danh sách học</span></div>
+      <div class="card-title" style="margin-bottom:12px">NỘI DUNG — <span style="color:var(--red);font-weight:700">bôi đen từ để thêm vào danh sách học</span></div>
       <div id="article-reader-body" style="font-family:'Noto Sans SC',sans-serif;font-size:16px;line-height:2;color:var(--text);user-select:text;cursor:text"></div>
     </div>
  
@@ -906,6 +906,7 @@ const DB_DOC    = doc(firestore, "hanzi", "data");
 let db          = { words:[], sessions:{}, correct:0, total:0, articles:[] };
 let reviewQueue = [], currentCard = null, answered = false, saveTimer = null;
 let _wf         = 'all'; // word-list filter
+let lastSaveAt  = 0;     // timestamp of last local save — blocks snapshot overwrite
  
  
 // ─── DICTIONARY LOOKUP ────────────────────────────────────────────────────────
@@ -981,14 +982,16 @@ function setSyncErr(){ sdot.className='sdot'; sdot.style.background='var(--red)'
  
 // ─── SAVE ────────────────────────────────────────────────────────────────────
 function save(){
-  // Local backup
+  // Always persist locally first — this is the source of truth
   try{ localStorage.setItem('hanzi_bk', JSON.stringify(db)); }catch(e){}
+  lastSaveAt = Date.now(); // block snapshot from overwriting for a window
   // Debounced Firebase write
   clearTimeout(saveTimer);
   saveTimer = setTimeout(async () => {
     setSyncing();
     try{
-      await setDoc(DB_DOC, JSON.parse(JSON.stringify(db)));
+      const snapshot = JSON.parse(JSON.stringify(db));
+      await setDoc(DB_DOC, snapshot);
       setSynced();
     } catch(e){
       console.error('Save error:', e);
@@ -996,7 +999,7 @@ function save(){
       toast('⚠️ Lỗi đồng bộ. Kiểm tra kết nối mạng.');
     }
     saveTimer = null;
-  }, 400);
+  }, 600);
 }
  
 // ─── LOAD + REALTIME ─────────────────────────────────────────────────────────
@@ -1023,14 +1026,17 @@ async function init(){
   setupListeners();
  
   // Real-time listener — refresh UI when another device makes changes
+  // Guard: ignore snapshots for 5s after a local save to prevent race overwrite
   onSnapshot(DB_DOC, snap => {
-    if(snap.exists() && !saveTimer){
-      const d = snap.data();
-      db = { words:d.words||[], sessions:d.sessions||{}, correct:d.correct||0, total:d.total||0, articles:d.articles||[] };
-      const ap = document.querySelector('.page.active')?.id;
-      if(ap === 'dashboard') renderDashboard();
-      if(ap === 'wordlist')  renderWordList('');
-    }
+    if(!snap.exists()) return;
+    if(Date.now() - lastSaveAt < 5000) return; // local write in progress or just finished
+    const d = snap.data();
+    db = { words:d.words||[], sessions:d.sessions||{}, correct:d.correct||0, total:d.total||0, articles:d.articles||[] };
+    // Also keep localStorage in sync
+    try{ localStorage.setItem('hanzi_bk', JSON.stringify(db)); }catch(e){}
+    const ap = document.querySelector('.page.active')?.id;
+    if(ap === 'dashboard') renderDashboard();
+    if(ap === 'wordlist')  renderWordList('');
   }, err => console.warn('Snapshot error:', err));
 }
  
