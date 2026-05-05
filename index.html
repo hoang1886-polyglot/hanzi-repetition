@@ -10,47 +10,152 @@
 <style>
 /* ─── RESET ──────────────────────────────────────────────────────────── */
 *{margin:0;padding:0;box-sizing:border-box}
-
+ 
 /* ─── DESIGN TOKENS ──────────────────────────────────────────────────── */
 :root{
   /* Brand */
   --red:#C8281E;--red-light:#FEE8E6;--red-mid:#F28B82;--red-dark:#9B1D15;
   --red-glow:rgba(200,40,30,0.18);
-
+ 
   /* Backgrounds */
   --bg:#F4F2EE;--surface:#FFFFFF;--surface2:#F9F8F5;--surface3:#F0EEE9;
-
+ 
   /* Sidebar */
   --sidebar:#141414;--sidebar-hover:#1E1E1E;--sidebar-active:#222222;
   --sidebar-text:#E8E4DC;--sidebar-muted:#6A6660;--sidebar-border:#252525;
-
+ 
   /* Text */
   --text:#1A1A1A;--text2:#6B6860;--text3:#A09D96;--text4:#C8C5BE;
-
+ 
   /* Borders */
   --border:#E8E5DF;--border2:#D4D0C8;--border3:#C0BCB4;
-
+ 
   /* Semantic */
   --green:#177A47;--green-light:#E8F5EE;--green-border:#A7D7BC;
   --amber:#A0510D;--amber-light:#FEF3C7;--amber-border:#F0C070;
   --blue:#1A4BD8;--blue-light:#EEF4FF;--blue-border:#A8C0F0;
-
+ 
   /* Shadows */
   --shadow-sm:0 1px 3px rgba(0,0,0,0.07),0 1px 2px rgba(0,0,0,0.05);
   --shadow-md:0 4px 12px rgba(0,0,0,0.08),0 2px 4px rgba(0,0,0,0.05);
   --shadow-lg:0 8px 28px rgba(0,0,0,0.10),0 4px 10px rgba(0,0,0,0.06);
   --shadow-focus:0 0 0 3px var(--red-glow);
-
+ 
   /* Shape */
   --radius:14px;--radius-sm:9px;--radius-xs:6px;
-
+ 
   /* Animation */
   --ease-spring:cubic-bezier(0.34,1.56,0.64,1);
   --ease-out:cubic-bezier(0.16,1,0.3,1);
   --duration:160ms;
 }
-
-/* ─── GLOBAL ─────────────────────────────────────────────────────────── */
+ 
+/* ─── DARK MODE ──────────────────────────────────────────────────────── */
+body.dark{
+  --bg:#0F0F0F;--surface:#1A1A1A;--surface2:#1F1F1F;--surface3:#252525;
+  --text:#E8E4DC;--text2:#9A9690;--text3:#5A5752;--text4:#3A3835;
+  --border:#2A2825;--border2:#353230;--border3:#454240;
+  --red-light:rgba(200,40,30,0.15);--red-mid:#C8281E;
+  --green-light:rgba(23,122,71,0.15);--green-border:rgba(167,215,188,0.3);
+  --amber-light:rgba(160,81,13,0.15);--amber-border:rgba(240,192,112,0.3);
+  --blue-light:rgba(26,75,216,0.15);--blue-border:rgba(168,192,240,0.3);
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.3),0 1px 2px rgba(0,0,0,0.2);
+  --shadow-md:0 4px 12px rgba(0,0,0,0.4),0 2px 4px rgba(0,0,0,0.2);
+  --shadow-lg:0 8px 28px rgba(0,0,0,0.5),0 4px 10px rgba(0,0,0,0.3);
+}
+body.dark #sidebar{
+  --sidebar:#0A0A0A;--sidebar-hover:#141414;--sidebar-active:#1A1A1A;
+  --sidebar-border:#1A1A1A;--sidebar-muted:#4A4642;
+}
+body.dark .logo-text .zh{color:#E8E4DC}
+body.dark .answer-input{background:var(--surface);color:var(--text)}
+body.dark .form-group input,body.dark .form-group textarea{background:var(--surface);color:var(--text)}
+body.dark table{color:var(--text)}
+body.dark th{background:var(--surface2);color:var(--text3)}
+body.dark .cancel-upload-btn{background:var(--surface)!important;color:var(--text2)!important;border-color:var(--border2)!important}
+body.dark #back-articles-btn{background:var(--surface)!important;color:var(--text2)!important;border-color:var(--border2)!important}
+body.dark .search-input{background:var(--surface);color:var(--text)}
+body.dark #popup-vi-inp{background:#1A1A1A;color:#E8E4DC}
+ 
+/* Dark mode toggle button */
+#dark-toggle{
+  position:relative;
+  width:40px;height:22px;
+  background:var(--surface3);
+  border:1.5px solid var(--border2);
+  border-radius:99px;
+  cursor:pointer;
+  transition:background 0.25s,border-color 0.25s;
+  flex-shrink:0;
+}
+#dark-toggle::after{
+  content:'';
+  position:absolute;top:2px;left:2px;
+  width:14px;height:14px;
+  border-radius:50%;
+  background:var(--text3);
+  transition:transform 0.25s var(--ease-spring),background 0.25s;
+}
+body.dark #dark-toggle{background:var(--red);border-color:var(--red-dark)}
+body.dark #dark-toggle::after{transform:translateX(18px);background:#fff}
+ 
+/* ─── MOBILE MENU ────────────────────────────────────────────────────── */
+#menu-btn{
+  display:none;
+  position:fixed;top:14px;left:14px;z-index:900;
+  width:38px;height:38px;
+  background:var(--sidebar);
+  border:none;border-radius:9px;
+  cursor:pointer;
+  align-items:center;justify-content:center;flex-direction:column;gap:4px;
+  box-shadow:var(--shadow-md);
+}
+#menu-btn span{
+  display:block;width:18px;height:2px;background:#C8C4BC;border-radius:1px;
+  transition:all 0.2s;
+}
+#sidebar-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);
+  z-index:700;backdrop-filter:blur(2px);
+}
+ 
+/* ─── RESPONSIVE ─────────────────────────────────────────────────────── */
+@media(max-width:768px){
+  body{flex-direction:column;height:auto;overflow:auto}
+  #sidebar{
+    position:fixed;top:0;left:0;height:100dvh;z-index:800;
+    transform:translateX(-100%);transition:transform 0.3s var(--ease-out);
+    width:240px;min-width:240px;
+  }
+  #sidebar.open{transform:translateX(0)}
+  #sidebar-overlay.open{display:block}
+  #menu-btn{display:flex}
+  #main{
+    padding-top:62px;height:100dvh;overflow-y:auto;
+  }
+  .page{padding:20px 16px!important}
+  .stats-grid{grid-template-columns:1fr 1fr!important;gap:10px}
+  .mini-stats-row{grid-template-columns:1fr!important;gap:10px}
+  .word-grid{grid-template-columns:1fr 1fr!important}
+  #add.page.active{min-height:unset;padding:20px 16px!important}
+  #add .card{max-width:100%!important}
+  #review.page{max-width:100%}
+  .review-card{padding:28px 20px}
+  .review-word{font-size:28px}
+  .diff-btns{grid-template-columns:repeat(2,1fr)!important}
+  /* Article read page - stack columns */
+  #read-article .page-header>div{flex-direction:column;align-items:flex-start!important;gap:8px}
+  #article-read-grid{grid-template-columns:1fr!important}
+  table{font-size:12px}
+  th,td{padding:9px 10px}
+  .page-header h1{font-size:20px}
+}
+@media(max-width:480px){
+  .stats-grid{grid-template-columns:1fr!important}
+  .word-grid{grid-template-columns:1fr!important}
+  .diff-btns{grid-template-columns:repeat(2,1fr)!important}
+}
+ 
 body{
   font-family:'DM Sans',sans-serif;
   background:var(--bg);
@@ -61,7 +166,7 @@ body{
   font-feature-settings:'cv01','cv02';
   -webkit-font-smoothing:antialiased;
 }
-
+ 
 /* ─── SYNC BAR ───────────────────────────────────────────────────────── */
 #sync-bar{
   position:fixed;top:0;left:0;right:0;height:2px;
@@ -90,7 +195,7 @@ body{
 .sdot.green{background:var(--green)}
 .sdot.spin{background:var(--amber);animation:blink 0.8s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
-
+ 
 /* ─── LOADING SCREEN ─────────────────────────────────────────────────── */
 #loading{
   position:fixed;inset:0;background:var(--bg);
@@ -114,7 +219,7 @@ body{
 }
 @keyframes spin{to{transform:rotate(360deg)}}
 #loading p{font-size:13px;color:var(--text3);letter-spacing:0.01em}
-
+ 
 /* ─── SIDEBAR ────────────────────────────────────────────────────────── */
 #sidebar{
   width:220px;min-width:220px;
@@ -140,7 +245,7 @@ body{
   font-family:'Noto Serif SC',serif;font-size:15px;font-weight:600;color:#fff;line-height:1;
 }
 .logo-text .sub{font-size:10px;color:var(--sidebar-muted);letter-spacing:0.05em;margin-top:3px}
-
+ 
 .sidebar-nav{padding:10px 0;flex:1}
 .nav-item{
   display:flex;align-items:center;gap:10px;
@@ -164,27 +269,27 @@ body{
 }
 .nav-item svg{width:16px;height:16px;flex-shrink:0;opacity:0.8}
 .nav-item.active svg{opacity:1}
-
+ 
 .sidebar-footer{
   padding:16px 20px;border-top:1px solid var(--sidebar-border);
   font-size:11px;color:#444;line-height:2;
 }
-
+ 
 /* ─── MAIN AREA ──────────────────────────────────────────────────────── */
 #main{flex:1;overflow-y:auto;background:var(--bg);display:flex;flex-direction:column;align-items:center}
 .page{display:none;padding:40px 44px;width:100%;max-width:1100px;box-sizing:border-box}
 .page.active{display:block;animation:pageIn 0.22s var(--ease-out) both}
 @keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-
+ 
 #add.page.active{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;max-width:100%;padding:36px 40px}
 #add .page-header{text-align:center;width:100%;max-width:560px}
 #add .card{width:100%;max-width:560px;margin:0}
 #review.page{max-width:760px}
-
+ 
 .page-header{margin-bottom:30px}
 .page-header h1{font-size:27px;font-weight:600;letter-spacing:-0.025em;color:var(--text)}
 .page-header p{font-size:14px;color:var(--text2);margin-top:5px}
-
+ 
 /* ─── STAT CARDS ─────────────────────────────────────────────────────── */
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
 .stat-card{
@@ -205,7 +310,7 @@ body{
 .icon-green{background:var(--green-light)}
 .icon-amber{background:var(--amber-light)}
 .icon-blue{background:var(--blue-light)}
-
+ 
 .stat-clickable{
   cursor:pointer;
   transition:transform var(--duration) var(--ease-out),box-shadow var(--duration),border-color var(--duration);
@@ -216,7 +321,7 @@ body{
   box-shadow:var(--shadow-md);
 }
 .stat-clickable:active{transform:translateY(0);box-shadow:var(--shadow-sm)}
-
+ 
 /* ─── CARDS ──────────────────────────────────────────────────────────── */
 .card{
   background:var(--surface);
@@ -229,13 +334,13 @@ body{
   color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;
   margin-bottom:16px;
 }
-
+ 
 /* ─── MINI STAT CARDS (streak, accuracy, today) ─────────────────────── */
 .mini-stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
 .streak-row{display:flex;align-items:center;gap:9px}
 .streak-num{font-size:30px;font-weight:700;letter-spacing:-0.04em;line-height:1}
 .streak-label{font-size:12.5px;color:var(--text2)}
-
+ 
 /* ─── DUE BANNER ─────────────────────────────────────────────────────── */
 #due-banner{
   background:linear-gradient(125deg,var(--red-dark) 0%,var(--red) 60%,#E05048 100%);
@@ -246,7 +351,7 @@ body{
 }
 #due-banner:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(200,40,30,0.28),var(--shadow-sm)!important}
 #due-banner:active{transform:translateY(0)}
-
+ 
 /* ─── WORD GRID ──────────────────────────────────────────────────────── */
 .word-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .word-tile{
@@ -259,7 +364,7 @@ body{
 .word-tile .zh{font-family:'Noto Serif SC',serif;font-size:22px;font-weight:600;margin-bottom:4px;line-height:1.2}
 .word-tile .py{font-size:11.5px;color:var(--red);margin-bottom:3px;font-weight:500}
 .word-tile .vi{font-size:12px;color:var(--text2)}
-
+ 
 /* ─── HEATMAP ────────────────────────────────────────────────────────── */
 .heatmap-grid{display:flex;gap:4px;flex-wrap:wrap}
 .heatmap-week{display:flex;flex-direction:column;gap:4px}
@@ -273,7 +378,7 @@ body{
 .heatmap-cell.l2{background:#F28B82}
 .heatmap-cell.l3{background:var(--red)}
 .heatmap-cell.l4{background:var(--red-dark)}
-
+ 
 /* ─── REVIEW PAGE ────────────────────────────────────────────────────── */
 .review-progress{
   background:var(--surface3);border-radius:99px;height:4px;
@@ -309,7 +414,7 @@ body{
 .answer-input:focus{border-color:var(--red);box-shadow:var(--shadow-focus)}
 .answer-input.correct{border-color:var(--green);background:var(--green-light);box-shadow:0 0 0 3px rgba(23,122,71,0.12)}
 .answer-input.wrong{border-color:var(--red);background:var(--red-light);box-shadow:var(--shadow-focus)}
-
+ 
 /* Check button */
 .check-btn{
   margin-top:14px;padding:13px 32px;
@@ -325,7 +430,7 @@ body{
 .check-btn:hover{opacity:0.92}
 .check-btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--red-dark),0 1px 6px var(--red-glow)}
 .check-btn:disabled{opacity:0.38;cursor:not-allowed;box-shadow:none;transform:none}
-
+ 
 /* Difficulty buttons */
 .diff-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
 .diff-btn{
@@ -345,7 +450,7 @@ body{
 .diff-btn.hard:hover{border-color:var(--amber-border);background:var(--amber-light)}
 .diff-btn.good:hover{border-color:var(--green-border);background:var(--green-light)}
 .diff-btn.easy:hover{border-color:var(--blue-border);background:var(--blue-light)}
-
+ 
 /* Feedback */
 .feedback-bar{
   padding:12px 18px;border-radius:var(--radius-xs);font-size:14px;font-weight:500;
@@ -356,7 +461,7 @@ body{
 .feedback-bar.wrong{background:var(--red-light);color:var(--red);border:1px solid var(--red-mid);display:block}
 .correct-answer{font-size:14px;color:var(--green);font-weight:500;margin-top:10px}
 .review-pinyin{font-size:14px;color:var(--red);margin-top:6px;font-weight:500;min-height:22px}
-
+ 
 /* ─── ADD FORM ───────────────────────────────────────────────────────── */
 .form-group{margin-bottom:20px}
 .form-group label{display:block;font-size:13px;font-weight:500;color:var(--text2);margin-bottom:7px}
@@ -372,7 +477,7 @@ body{
 }
 .form-group textarea{resize:vertical;min-height:68px;line-height:1.6}
 .pinyin-preview{font-size:13px;color:var(--red);margin-top:5px;font-weight:500;min-height:18px}
-
+ 
 /* Dict lookup */
 .dict-result{margin-top:7px;min-height:20px}
 .dict-chip{
@@ -393,7 +498,7 @@ body{
 }
 .dict-searching{font-size:12px;color:var(--text3);font-style:italic}
 .dict-notfound{font-size:12px;color:var(--text3)}
-
+ 
 /* Submit button */
 .submit-btn{
   padding:12px 28px;
@@ -406,9 +511,9 @@ body{
 }
 .submit-btn:hover{opacity:0.92}
 .submit-btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--red-dark)}
-
+ 
 .optional-tag{font-size:11px;color:var(--text3);font-weight:400;margin-left:4px}
-
+ 
 /* ─── WORD LIST ──────────────────────────────────────────────────────── */
 .wordlist-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .search-input{
@@ -419,7 +524,7 @@ body{
 }
 .search-input:focus{border-color:var(--red);box-shadow:var(--shadow-focus)}
 .search-input::placeholder{color:var(--text4)}
-
+ 
 table{width:100%;border-collapse:collapse;font-size:13.5px}
 thead{position:sticky;top:0;z-index:1}
 th{
@@ -438,20 +543,20 @@ td{
 tr:last-child td{border-bottom:none}
 tbody tr{transition:background 0.12s}
 tbody tr:hover td{background:var(--surface2)}
-
+ 
 .badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600}
 .badge-new{background:var(--green-light);color:var(--green)}
 .badge-learning{background:var(--amber-light);color:var(--amber)}
 .badge-review{background:var(--blue-light);color:var(--blue)}
 .badge-mastered{background:var(--surface3);color:var(--text2)}
-
+ 
 .del-btn{
   background:none;border:none;cursor:pointer;
   color:var(--text4);font-size:15px;padding:4px 8px;border-radius:var(--radius-xs);
   transition:color 0.15s,background 0.15s;
 }
 .del-btn:hover{color:var(--red);background:var(--red-light)}
-
+ 
 .filter-pill{
   display:inline-flex;align-items:center;gap:7px;
   padding:5px 14px;border-radius:99px;font-size:12px;font-weight:600;margin-bottom:14px;
@@ -462,18 +567,18 @@ tbody tr:hover td{background:var(--surface2)}
 .filter-pill.fmastered{background:var(--blue-light);color:var(--blue)}
 .filter-clear{cursor:pointer;opacity:0.55;font-size:13px;transition:opacity 0.15s}
 .filter-clear:hover{opacity:1}
-
+ 
 /* ─── MISC ───────────────────────────────────────────────────────────── */
 .empty-state{text-align:center;padding:64px 20px}
 .empty-state .emoji{font-size:52px;margin-bottom:14px}
 .empty-state h3{font-size:18px;font-weight:600;margin-bottom:7px}
 .empty-state p{font-size:14px;color:var(--text2)}
-
+ 
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px}
 ::-webkit-scrollbar-thumb:hover{background:var(--border3)}
-
+ 
 /* ─── ARTICLE CARDS ─────────────────────────────────────────────────── */
 .article-card{
   background:var(--surface);border:1px solid var(--border);
@@ -493,7 +598,7 @@ tbody tr:hover td{background:var(--surface2)}
   transition:all 0.15s;
 }
 .article-del-btn:hover{color:var(--red);background:var(--red-light)}
-
+ 
 /* highlight effect */
 .word-highlight{
   background:rgba(200,40,30,0.12);
@@ -504,9 +609,9 @@ tbody tr:hover td{background:var(--surface2)}
   transition:background 0.15s;
 }
 .word-highlight:hover{background:rgba(200,40,30,0.2)}
-
+ 
 #selection-popup input::placeholder{color:#666}
-
+ 
 .toast{
   position:fixed;bottom:28px;right:28px;
   background:#111;color:#fff;
@@ -521,16 +626,21 @@ tbody tr:hover td{background:var(--surface2)}
 </style>
 </head>
 <body>
-
+ 
 <div id="sync-bar"></div>
 <div id="sync-pill"><div class="sdot spin" id="sdot"></div><span id="stext">Đang đồng bộ...</span></div>
-
+ 
 <div id="loading">
   <div class="big-logo">字</div>
   <div class="spinner"></div>
   <p>Đang kết nối Firebase...</p>
 </div>
-
+ 
+<button id="menu-btn" aria-label="Menu">
+  <span></span><span></span><span></span>
+</button>
+<div id="sidebar-overlay"></div>
+ 
 <nav id="sidebar">
   <div class="sidebar-logo">
     <div class="logo-icon">字</div>
@@ -562,13 +672,17 @@ tbody tr:hover td{background:var(--surface2)}
     </div>
   </div>
   <div class="sidebar-footer">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <span style="color:#555;font-size:11px">Dark mode</span>
+      <div id="dark-toggle" title="Bật/tắt Dark mode"></div>
+    </div>
     HànZì v2.0<br>
     <span style="color:#3A8A5A">● Firebase Sync</span>
   </div>
 </nav>
-
+ 
 <div id="main">
-
+ 
 <!-- DASHBOARD -->
 <div id="dashboard" class="page active">
   <div class="page-header"><h1>Dashboard</h1><p>Tiến trình học tiếng Trung của bạn</p></div>
@@ -622,7 +736,7 @@ tbody tr:hover td{background:var(--surface2)}
     <div class="word-grid" id="recent-words"></div>
   </div>
 </div>
-
+ 
 <!-- REVIEW -->
 <div id="review" class="page" style="padding:36px 40px">
   <div style="max-width:640px;margin:0 auto">
@@ -630,7 +744,7 @@ tbody tr:hover td{background:var(--surface2)}
     <div id="review-content"></div>
   </div>
 </div>
-
+ 
 <!-- ADD WORD -->
 <div id="add" class="page">
   <div class="page-header"><h1>Thêm từ mới</h1><p>Nhập từ tiếng Trung và nghĩa tiếng Việt</p></div>
@@ -659,7 +773,7 @@ tbody tr:hover td{background:var(--surface2)}
     <button class="submit-btn" id="add-word-btn">+ Thêm từ</button>
   </div>
 </div>
-
+ 
 <!-- WORD LIST -->
 <div id="wordlist" class="page">
   <div class="page-header"><h1>Danh sách từ</h1><p id="wordlist-count">0 từ</p></div>
@@ -674,7 +788,7 @@ tbody tr:hover td{background:var(--surface2)}
     </table>
   </div>
 </div>
-
+ 
 <!-- ARTICLES LIST -->
 <div id="articles" class="page">
   <div class="page-header">
@@ -686,7 +800,7 @@ tbody tr:hover td{background:var(--surface2)}
   </div>
   <div id="articles-list"></div>
 </div>
-
+ 
 <!-- UPLOAD ARTICLE -->
 <div id="upload-article" class="page">
   <div class="page-header"><h1>Upload bài báo</h1><p>Dán nội dung bài báo tiếng Trung vào đây</p></div>
@@ -709,7 +823,7 @@ tbody tr:hover td{background:var(--surface2)}
     </div>
   </div>
 </div>
-
+ 
 <!-- READ ARTICLE -->
 <div id="read-article" class="page">
   <div class="page-header">
@@ -721,18 +835,18 @@ tbody tr:hover td{background:var(--surface2)}
       </div>
     </div>
   </div>
-
-  <div style="display:grid;grid-template-columns:1fr 320px;gap:18px;max-width:1060px">
+ 
+  <div id="article-read-grid" style="display:grid;grid-template-columns:1fr 320px;gap:18px;max-width:1060px">
     <!-- Article text -->
     <div class="card" style="margin:0">
       <div class="card-title" style="margin-bottom:12px">NỘI DUNG — <span style="color:var(--red);font-weight:700">bôi đen từ để thêm vào danh sách học</span></div>
       <div id="article-reader-body" style="font-family:'Noto Sans SC',sans-serif;font-size:16px;line-height:2;color:var(--text);user-select:text;cursor:text"></div>
     </div>
-
+ 
     <!-- Right panel -->
     <div style="display:flex;flex-direction:column;gap:14px">
       <!-- Selection popup will appear here, or use fixed popup -->
-
+ 
       <!-- Manual add from article -->
       <div class="card" style="margin:0">
         <div class="card-title">THÊM TỪ MỚI THỦ CÔNG</div>
@@ -747,7 +861,7 @@ tbody tr:hover td{background:var(--surface2)}
         </div>
         <button class="submit-btn" id="art-add-word-btn" style="width:100%;padding:10px">+ Thêm từ</button>
       </div>
-
+ 
       <!-- Words added from this article -->
       <div class="card" style="margin:0">
         <div class="card-title">TỪ ĐÃ THÊM TỪ BÀI NÀY</div>
@@ -756,7 +870,7 @@ tbody tr:hover td{background:var(--surface2)}
     </div>
   </div>
 </div>
-
+ 
 <!-- SELECTION POPUP (floating) -->
 <div id="selection-popup" style="display:none;position:fixed;z-index:1000;background:#111;color:#fff;border-radius:10px;padding:10px 14px;box-shadow:0 8px 28px rgba(0,0,0,0.3);font-size:13px;font-weight:500;min-width:200px">
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
@@ -769,12 +883,12 @@ tbody tr:hover td{background:var(--surface2)}
     <button id="popup-cancel-btn" style="padding:7px 12px;background:#222;color:#aaa;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif">✕</button>
   </div>
 </div>
-
+ 
 <script type="module">
 import { initializeApp }              from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, doc, getDoc,
          setDoc, onSnapshot }         from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
+ 
 // ─── FIREBASE INIT ────────────────────────────────────────────────────────────
 const firebaseConfig = {
   apiKey:            "AIzaSyCwg68CV50FGXISL-7qEsfUwRnxGCXcLaY",
@@ -787,17 +901,17 @@ const firebaseConfig = {
 const app       = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
 const DB_DOC    = doc(firestore, "hanzi", "data");
-
+ 
 // ─── APP STATE ────────────────────────────────────────────────────────────────
 let db          = { words:[], sessions:{}, correct:0, total:0, articles:[] };
 let reviewQueue = [], currentCard = null, answered = false, saveTimer = null;
 let _wf         = 'all'; // word-list filter
-
-
+ 
+ 
 // ─── DICTIONARY LOOKUP ────────────────────────────────────────────────────────
 let dictData = null;
 let dictLoading = false;
-
+ 
 async function loadDict(){
   if(dictData || dictLoading) return;
   dictLoading = true;
@@ -812,18 +926,18 @@ async function loadDict(){
   }
   dictLoading = false;
 }
-
+ 
 function lookupDict(zh){
   const el = $('dict-result');
   if(!el) return;
   if(!zh.trim()){ el.innerHTML=''; return; }
-
+ 
   if(!dictData){
     el.innerHTML='<span class="dict-searching">Đang tải từ điển...</span>';
     loadDict().then(()=>lookupDict($('inp-zh').value));
     return;
   }
-
+ 
   // Try full word first, then each character
   const found = dictData[zh];
   if(found){
@@ -854,17 +968,17 @@ function lookupDict(zh){
     }
   }
 }
-
+ 
 // ─── SYNC UI ─────────────────────────────────────────────────────────────────
 const syncBar  = document.getElementById('sync-bar');
 const syncPill = document.getElementById('sync-pill');
 const sdot     = document.getElementById('sdot');
 const stext    = document.getElementById('stext');
-
+ 
 function setSyncing(){ syncBar.className='syncing'; sdot.className='sdot spin'; stext.textContent='Đang đồng bộ...'; syncPill.className='show'; }
 function setSynced(){  syncBar.className='synced';  sdot.className='sdot green'; stext.textContent='Đã đồng bộ ✓'; setTimeout(()=>{ syncPill.className=''; syncBar.className=''; }, 2000); }
 function setSyncErr(){ sdot.className='sdot'; sdot.style.background='var(--red)'; stext.textContent='Lỗi kết nối ⚠'; syncPill.className='show'; }
-
+ 
 // ─── SAVE ────────────────────────────────────────────────────────────────────
 function save(){
   // Local backup
@@ -884,7 +998,7 @@ function save(){
     saveTimer = null;
   }, 400);
 }
-
+ 
 // ─── LOAD + REALTIME ─────────────────────────────────────────────────────────
 async function init(){
   try{
@@ -903,11 +1017,11 @@ async function init(){
     else { seedWords(); }
     toast('⚠️ Không kết nối Firebase. Dùng dữ liệu cục bộ.');
   }
-
+ 
   document.getElementById('loading').style.display = 'none';
   renderDashboard();
   setupListeners();
-
+ 
   // Real-time listener — refresh UI when another device makes changes
   onSnapshot(DB_DOC, snap => {
     if(snap.exists() && !saveTimer){
@@ -919,7 +1033,7 @@ async function init(){
     }
   }, err => console.warn('Snapshot error:', err));
 }
-
+ 
 // ─── SEED DATA ────────────────────────────────────────────────────────────────
 function seedWords(){
   [ {zh:'你好', vi:'xin chào',          exZh:'你好，很高兴认识你。',  exVi:'Xin chào, rất vui được gặp bạn.'},
@@ -929,12 +1043,12 @@ function seedWords(){
     {zh:'工作', vi:'làm việc, công việc',exZh:'我的工作很有趣。',       exVi:'Công việc của tôi rất thú vị.'} ]
   .forEach(s => db.words.push({ id:Date.now()+Math.random(), pinyin:getPinyin(s.zh), status:'new', ef:2.5, interval:0, repetitions:0, nextReview:null, lastReview:null, added:Date.now(), ...s }));
 }
-
+ 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 function getPinyin(zh){ return window.pinyinPro ? pinyinPro.pinyin(zh,{toneType:'symbol',type:'string',separator:' '}) : ''; }
 function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2400); }
 function $(id){ return document.getElementById(id); }
-
+ 
 // ─── NAV ─────────────────────────────────────────────────────────────────────
 function nav(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -949,39 +1063,41 @@ function nav(page){
   if(page==='wordlist')  renderWordList('');
   if(page==='articles')  renderArticlesList();
 }
-
+ 
 function navWordlistFilter(f){ _wf=f; nav('wordlist'); }
-
+ 
 // ─── EVENT LISTENERS (replaces inline onclick) ────────────────────────────────
 function setupListeners(){
   // Sidebar nav
   ['dashboard','review','add','wordlist','articles'].forEach(p => { const el=$(`nav-${p}`); if(el) el.addEventListener('click', ()=>nav(p)); });
-
+ 
   // Stat cards → filter word list
   $('card-all').addEventListener('click',     ()=>navWordlistFilter('all'));
   $('card-due').addEventListener('click',     ()=>navWordlistFilter('due'));
   $('card-learned').addEventListener('click', ()=>navWordlistFilter('learned'));
   $('card-mastered').addEventListener('click',()=>navWordlistFilter('mastered'));
-
+ 
   // Due banner → review
   $('due-banner').addEventListener('click', ()=>nav('review'));
-
+ 
   // View all link
   $('view-all-link').addEventListener('click', ()=>nav('wordlist'));
-
+ 
   // Add word form
   $('inp-zh').addEventListener('input', ()=>{ const v=$('inp-zh').value; $('pinyin-preview').textContent = getPinyin(v)||''; lookupDict(v); });
   $('add-word-btn').addEventListener('click', addWord);
   $('inp-vi').addEventListener('keydown', e=>{ if(e.key==='Enter') addWord(); });
-
+ 
   // Article buttons
   $('go-upload-btn').addEventListener('click', ()=>nav('upload-article'));
   $('save-article-btn').addEventListener('click', saveArticle);
   $('cancel-upload-btn').addEventListener('click', ()=>nav('articles'));
   $('back-articles-btn').addEventListener('click', ()=>nav('articles'));
   $('art-inp-zh').addEventListener('input', ()=>{
-    const v=$('art-inp-zh').value;
+    const v=$('art-inp-zh').value.trim();
     $('art-pinyin-preview').textContent = getPinyin(v)||'';
+    // Auto-lookup meaning from dict
+    artLookupDict(v);
   });
   $('art-add-word-btn').addEventListener('click', ()=>{
     const zh=$('art-inp-zh').value.trim(), vi=$('art-inp-vi').value.trim();
@@ -993,11 +1109,11 @@ function setupListeners(){
       if(article) renderArticleAddedWords(article);
     }
   });
-
+ 
   // Word list search
   $('search-input').addEventListener('input', e=>renderWordList(e.target.value));
 }
-
+ 
 // ─── SM-2 ALGORITHM ──────────────────────────────────────────────────────────
 function sm2(w, g){
   let {ef=2.5, interval=0, repetitions=0} = w;
@@ -1016,7 +1132,7 @@ function intLabel(g, w){
   if(g===2) return repetitions===0?'1 ngày':repetitions===1?'4 ngày':`${Math.round(interval*ef)} ngày`;
   return repetitions===0?'4 ngày':`${Math.round(interval*ef*1.3)} ngày`;
 }
-
+ 
 // ─── DASHBOARD ───────────────────────────────────────────────────────────────
 function renderDashboard(){
   const words=db.words, now=Date.now(), today=new Date().toISOString().split('T')[0];
@@ -1027,15 +1143,15 @@ function renderDashboard(){
   $('stat-mastered').textContent = words.filter(w=>w.status==='mastered').length;
   $('stat-today').textContent    = db.sessions[today]||0;
   $('stat-accuracy').textContent = db.total>0 ? Math.round(db.correct/db.total*100) : '—';
-
+ 
   let streak=0, d=new Date();
   while(true){ const k=d.toISOString().split('T')[0]; if((db.sessions[k]||0)>0){ streak++; d.setDate(d.getDate()-1); } else break; }
   $('stat-streak').textContent = streak;
-
+ 
   const banner=$('due-banner');
   if(due.length){ banner.style.display='block'; $('due-banner-text').textContent=`${due.length} từ cần ôn tập ngay!`; }
   else { banner.style.display='none'; }
-
+ 
   // Heatmap
   const hm=$('heatmap'); hm.innerHTML='';
   const td=new Date();
@@ -1050,7 +1166,7 @@ function renderDashboard(){
     }
     hm.appendChild(col);
   }
-
+ 
   // Recent words
   const rw=$('recent-words');
   const recent=[...words].reverse().slice(0,6);
@@ -1059,14 +1175,14 @@ function renderDashboard(){
     : `<div style="color:var(--text3);font-size:14px;grid-column:1/-1">Chưa có từ. <span style="color:var(--red);cursor:pointer" id="add-first-link">Thêm từ đầu tiên!</span></div>`;
   document.getElementById('add-first-link')?.addEventListener('click', ()=>nav('add'));
 }
-
+ 
 // ─── REVIEW ───────────────────────────────────────────────────────────────────
 function startReview(){
   reviewQueue = db.words.filter(w=>!w.nextReview||w.nextReview<=Date.now()).map(w=>({...w})).sort(()=>Math.random()-0.5);
   answered=false;
   renderReviewCard();
 }
-
+ 
 function renderReviewCard(){
   const rc=$('review-content'), rs=$('review-subtitle');
   if(!reviewQueue.length){
@@ -1078,7 +1194,7 @@ function renderReviewCard(){
   currentCard=reviewQueue[0];
   const total=db.words.filter(w=>!w.nextReview||w.nextReview<=Date.now()).length;
   rs.textContent=`Còn ${reviewQueue.length} từ cần ôn`;
-
+ 
   rc.innerHTML=`
     <div class="review-progress"><div class="review-progress-fill" style="width:${Math.max(0,(total-reviewQueue.length)/Math.max(total,1)*100)}%"></div></div>
     <div class="review-card">
@@ -1097,7 +1213,7 @@ function renderReviewCard(){
       <button class="diff-btn good"  data-grade="2"><span class="emoji">🙂</span><span class="label">Được</span><span class="interval" id="i2"></span></button>
       <button class="diff-btn easy"  data-grade="3"><span class="emoji">😎</span><span class="label">Dễ</span><span class="interval" id="i3"></span></button>
     </div>`;
-
+ 
   // Wire up review events
   const inp=$('answer-input');
   inp.focus();
@@ -1107,7 +1223,7 @@ function renderReviewCard(){
   rc.querySelectorAll('.diff-btn').forEach(btn=>btn.addEventListener('click',()=>gradeCard(parseInt(btn.dataset.grade))));
   answered=false;
 }
-
+ 
 function checkAnswer(){
   if(answered) return;
   const inp=$('answer-input');
@@ -1126,13 +1242,13 @@ function checkAnswer(){
   $('check-btn').disabled=true;
   for(let g=0;g<4;g++){ const el=$(`i${g}`); if(el) el.textContent=intLabel(g,currentCard); }
 }
-
+ 
 function gradeCard(g){
   const w=db.words.find(x=>x.id===currentCard.id);
   if(w){ sm2(w,g); save(); }
   reviewQueue.shift(); answered=false; renderReviewCard();
 }
-
+ 
 // ─── ADD WORD ─────────────────────────────────────────────────────────────────
 function addWord(){
   const zh=$('inp-zh').value.trim(), vi=$('inp-vi').value.trim();
@@ -1143,7 +1259,7 @@ function addWord(){
   $('pinyin-preview').textContent='';
   toast(`✓ Đã thêm: ${zh}`);
 }
-
+ 
 // ─── WORD LIST ────────────────────────────────────────────────────────────────
 function renderWordList(q=''){
   q=q.toLowerCase();
@@ -1157,7 +1273,7 @@ function renderWordList(q=''){
   $('wordlist-filter-pill').innerHTML=_wf!=='all'
     ? `<div class="filter-pill f${_wf}">${labels[_wf]} <span class="filter-clear" id="clear-filter">✕</span></div>`:'';
   document.getElementById('clear-filter')?.addEventListener('click',()=>{ _wf='all'; renderWordList($('search-input').value||''); });
-
+ 
   const filtered=base.filter(w=>!q||w.zh.includes(q)||w.vi.toLowerCase().includes(q)||w.pinyin.toLowerCase().includes(q));
   const sl={new:'Mới',learning:'Đang học',review:'Ôn tập',mastered:'Thành thạo'};
   const sb={new:'badge-new',learning:'badge-learning',review:'badge-review',mastered:'badge-mastered'};
@@ -1172,19 +1288,19 @@ function renderWordList(q=''){
         <td><button class="del-btn" data-id="${w.id}">✕</button></td>
       </tr>`).join('')
     : '<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:28px">Không tìm thấy từ nào.</td></tr>';
-
+ 
   tbody.querySelectorAll('.del-btn').forEach(btn=>btn.addEventListener('click',()=>deleteWord(Number(btn.dataset.id))));
 }
-
+ 
 function deleteWord(id){
   if(!confirm('Xoá từ này?')) return;
   db.words=db.words.filter(w=>w.id!==id);
   save(); renderWordList($('search-input')?.value||''); toast('Đã xoá từ.');
 }
-
+ 
 // ─── ARTICLES ─────────────────────────────────────────────────────────────────
 let currentArticleId = null;
-
+ 
 function renderArticlesList(){
   const container = $('articles-list');
   if(!db.articles || !db.articles.length){
@@ -1203,7 +1319,7 @@ function renderArticlesList(){
       </div>
     </div>
   `).join('');
-
+ 
   container.querySelectorAll('.article-card').forEach(card => {
     card.addEventListener('click', e => {
       if(e.target.closest('[data-del]')) return;
@@ -1219,7 +1335,7 @@ function renderArticlesList(){
     });
   });
 }
-
+ 
 function saveArticle(){
   const title = $('article-title-inp').value.trim();
   const body  = $('article-body-inp').value.trim();
@@ -1239,7 +1355,7 @@ function saveArticle(){
   toast(`✓ Đã lưu: ${title}`);
   nav('articles');
 }
-
+ 
 function openArticle(id){
   const article = db.articles.find(a=>a.id===id);
   if(!article) return;
@@ -1252,7 +1368,7 @@ function openArticle(id){
   nav('read-article');
   setupTextSelection();
 }
-
+ 
 function renderArticleAddedWords(article){
   const wordsDiv = $('article-added-words');
   const ids = article.linkedWords||[];
@@ -1266,7 +1382,7 @@ function renderArticleAddedWords(article){
     </div>
   `).join('');
 }
-
+ 
 function addWordFromArticle(zh, vi){
   if(!zh||!vi){ toast('Vui lòng nhập chữ Hán và nghĩa!'); return false; }
   const newWord = { id:Date.now(), zh, vi, pinyin:getPinyin(zh), exZh:'', exVi:'', status:'new', ef:2.5, interval:0, repetitions:0, nextReview:null, lastReview:null, added:Date.now() };
@@ -1283,7 +1399,7 @@ function addWordFromArticle(zh, vi){
   save();
   return newWord;
 }
-
+ 
 function highlightWord(zh){
   const body = $('article-reader-body');
   if(!body || !zh) return;
@@ -1292,12 +1408,12 @@ function highlightWord(zh){
     `<span class="word-highlight" title="${zh}">${zh}</span>`
   );
 }
-
+ 
 function setupTextSelection(){
   const body = $('article-reader-body');
   const popup = $('selection-popup');
   if(!body) return;
-
+ 
   document.addEventListener('mouseup', e => {
     const sel = window.getSelection();
     const text = sel?.toString().trim();
@@ -1310,14 +1426,20 @@ function setupTextSelection(){
     $('popup-word').textContent = text;
     $('popup-pinyin').textContent = getPinyin(text);
     $('popup-vi-inp').value = '';
+    // Auto-fill from dict
+    if(dictData && dictData[text]){
+      $('popup-vi-inp').value = dictData[text].split(';')[0].trim();
+    } else if(!dictData){
+      loadDict().then(()=>{ if(dictData && dictData[text]) $('popup-vi-inp').value = dictData[text].split(';')[0].trim(); });
+    }
     popup.style.display = 'block';
     popup.style.left = Math.min(rect.left + window.scrollX, window.innerWidth - 230) + 'px';
     popup.style.top  = (rect.top + window.scrollY - popup.offsetHeight - 10) + 'px';
     setTimeout(()=>$('popup-vi-inp').focus(), 50);
   });
-
+ 
   $('popup-cancel-btn').addEventListener('click', ()=>{ popup.style.display='none'; window.getSelection()?.removeAllRanges(); });
-
+ 
   $('popup-add-btn').addEventListener('click', ()=>{
     const zh = $('popup-word').textContent.trim();
     const vi = $('popup-vi-inp').value.trim();
@@ -1332,13 +1454,59 @@ function setupTextSelection(){
       toast('Vui lòng nhập nghĩa!');
     }
   });
-
+ 
   $('popup-vi-inp').addEventListener('keydown', e=>{ if(e.key==='Enter') $('popup-add-btn').click(); });
 }
-
+ 
+function artLookupDict(zh){
+  const viInp = $('art-inp-vi');
+  if(!zh){ viInp.style.borderColor=''; viInp.placeholder='e.g. kinh tế'; return; }
+  if(!dictData){
+    loadDict().then(()=>artLookupDict($('art-inp-zh').value.trim()));
+    return;
+  }
+  const found = dictData[zh];
+  if(found){
+    // Auto-fill if user hasn't typed anything
+    if(!viInp.value.trim()){
+      viInp.value = found.split(';')[0].trim();
+      viInp.style.borderColor = 'var(--green)';
+      viInp.style.boxShadow = '0 0 0 3px rgba(23,122,71,0.12)';
+      setTimeout(()=>{ viInp.style.borderColor=''; viInp.style.boxShadow=''; }, 1800);
+    }
+  } else if(zh.length > 1){
+    // Try first char as hint
+    const firstChar = dictData[[...zh][0]];
+    if(firstChar){ viInp.placeholder = '→ ' + firstChar.split(';')[0].trim() + '...'; }
+  }
+}
+ 
+// ─── DARK MODE ───────────────────────────────────────────────────────────────
+function initDarkMode(){
+  if(localStorage.getItem('hanzi_dark')==='1') document.body.classList.add('dark');
+  $('dark-toggle').addEventListener('click', ()=>{
+    document.body.classList.toggle('dark');
+    localStorage.setItem('hanzi_dark', document.body.classList.contains('dark') ? '1' : '0');
+  });
+}
+ 
+// ─── MOBILE MENU ─────────────────────────────────────────────────────────────
+function initMobileMenu(){
+  const btn = $('menu-btn'), sidebar = $('sidebar'), overlay = $('sidebar-overlay');
+  btn.addEventListener('click', ()=>{ sidebar.classList.toggle('open'); overlay.classList.toggle('open'); });
+  overlay.addEventListener('click', ()=>{ sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+  // Close on nav
+  sidebar.querySelectorAll('.nav-item').forEach(item=>{
+    item.addEventListener('click', ()=>{ sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+  });
+}
+ 
 // ─── START ────────────────────────────────────────────────────────────────────
 loadDict(); // preload dictionary in background
+initDarkMode();
+initMobileMenu();
 init();
 </script>
 </body>
 </html>
+ 
