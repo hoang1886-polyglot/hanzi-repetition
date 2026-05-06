@@ -1069,6 +1069,8 @@ let db          = { words:[], sessions:{}, correct:0, total:0, articles:[] };
 let reviewQueue = [], currentCard = null, answered = false, saveTimer = null;
 let _wf         = 'all'; // word-list filter
 let lastSaveAt  = 0;     // timestamp of last local save — blocks snapshot overwrite
+let currentUserId  = null;   // set on login — used for per-user localStorage key
+let listenersReady = false;  // guard: only register DOM listeners once
  
  
 // ─── DICTIONARY LOOKUP ────────────────────────────────────────────────────────
@@ -1144,8 +1146,9 @@ function setSyncErr(){ sdot.className='sdot'; sdot.style.background='var(--red)'
  
 // ─── SAVE ────────────────────────────────────────────────────────────────────
 function save(){
-  // Always persist locally first — this is the source of truth
-  try{ localStorage.setItem('hanzi_bk', JSON.stringify(db)); }catch(e){}
+  // Always persist locally first — key is per-user to prevent data leaking between accounts
+  const lsKey = 'hanzi_bk_' + (currentUserId || 'anon');
+  try{ localStorage.setItem(lsKey, JSON.stringify(db)); }catch(e){}
   lastSaveAt = Date.now(); // block snapshot from overwriting for a window
   // Debounced Firebase write
   clearTimeout(saveTimer);
@@ -1177,7 +1180,7 @@ async function init(){
     }
   } catch(e){
     console.error('Firebase load failed:', e);
-    const bk = localStorage.getItem('hanzi_bk');
+    const bk = localStorage.getItem('hanzi_bk_' + (currentUserId || 'anon'));
     if(bk){ try{ db = JSON.parse(bk); }catch(ex){ seedWords(); } }
     else { seedWords(); }
     toast('⚠️ Không kết nối Firebase. Dùng dữ liệu cục bộ.');
@@ -1185,7 +1188,7 @@ async function init(){
  
   document.getElementById('loading').style.display = 'none';
   renderDashboard();
-  setupListeners();
+  if(!listenersReady){ setupListeners(); listenersReady = true; }
  
   // Real-time listener — refresh UI when another device makes changes
   // Guard: ignore snapshots for 5s after a local save to prevent race overwrite
@@ -1194,8 +1197,8 @@ async function init(){
     if(Date.now() - lastSaveAt < 5000) return; // local write in progress or just finished
     const d = snap.data();
     db = { words:d.words||[], sessions:d.sessions||{}, correct:d.correct||0, total:d.total||0, articles:d.articles||[] };
-    // Also keep localStorage in sync
-    try{ localStorage.setItem('hanzi_bk', JSON.stringify(db)); }catch(e){}
+    // Keep per-user localStorage in sync
+    try{ localStorage.setItem('hanzi_bk_' + (currentUserId || 'anon'), JSON.stringify(db)); }catch(e){}
     const ap = document.querySelector('.page.active')?.id;
     if(ap === 'dashboard') renderDashboard();
     if(ap === 'wordlist')  renderWordList('');
@@ -1950,12 +1953,20 @@ onAuthStateChanged(auth, async user => {
     }
     if(userRow) userRow.style.display = 'flex';
  
+    // Track current user for per-user localStorage isolation
+    currentUserId = user.uid;
+
     // Set per-user Firestore document
     DB_DOC = doc(firestore, 'users', user.uid, 'data', 'main');
+    // Reset in-memory db before loading — prevent stale data from previous session
+    db = { words:[], sessions:{}, correct:0, total:0, articles:[] };
     // Bootstrap the app
     await init();
   } else {
-    // Signed out — show login screen, hide user row
+    // Signed out — reset state, clear user id, show login screen
+    currentUserId = null;
+    DB_DOC = null;
+    db = { words:[], sessions:{}, correct:0, total:0, articles:[] };
     if(loadingScreen) loadingScreen.style.display = 'none';
     if(userRow) userRow.style.display = 'none';
     loginScreen.style.display = 'flex';
