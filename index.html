@@ -684,6 +684,31 @@ tbody tr:hover td{background:var(--surface2)}
   letter-spacing:0.01em;
 }
 @keyframes toastIn{from{transform:translateY(12px) scale(0.95);opacity:0}to{transform:none;opacity:1}}
+
+/* Sort pills */
+.sort-pill{
+  padding:5px 14px;border-radius:99px;font-size:12px;font-weight:600;
+  border:1.5px solid var(--border2);background:var(--surface);color:var(--text2);
+  cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;
+}
+.sort-pill:hover{border-color:var(--border3);color:var(--text)}
+.sort-pill.active{background:var(--red);border-color:var(--red);color:#fff}
+
+/* Article image */
+.article-card-img{
+  width:72px;height:72px;flex-shrink:0;border-radius:var(--radius-xs);
+  object-fit:cover;border:1px solid var(--border);
+}
+
+/* Added words panel — improved readability */
+.added-word-row{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;
+  padding:7px 0;border-bottom:1px solid var(--border);
+  word-break:break-word;
+}
+.added-word-zh{font-family:'Noto Serif SC',serif;font-size:16px;font-weight:600;flex-shrink:0}
+.added-word-py{font-size:11px;color:var(--red);flex-shrink:0}
+.added-word-vi{font-size:12px;color:var(--text2);line-height:1.4;flex:1;min-width:60px}
 </style>
 </head>
 <body>
@@ -882,7 +907,12 @@ tbody tr:hover td{background:var(--surface2)}
     <h1>Bài báo</h1>
     <p>Đọc và học từ mới từ bài báo tiếng Trung</p>
   </div>
-  <div style="display:flex;justify-content:flex-end;margin-bottom:14px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <div style="display:flex;align-items:center;gap:6px">
+      <span style="font-size:12px;color:var(--text3);font-weight:500">Sắp xếp:</span>
+      <button id="sort-newest-btn" class="sort-pill active" onclick="">Mới nhất</button>
+      <button id="sort-oldest-btn" class="sort-pill" onclick="">Cũ nhất</button>
+    </div>
     <button class="submit-btn" id="go-upload-btn" style="padding:10px 22px;font-size:13px">+ Upload bài báo mới</button>
   </div>
   <div id="articles-list"></div>
@@ -899,6 +929,13 @@ tbody tr:hover td{background:var(--surface2)}
     <div class="form-group">
       <label>Nguồn / Tác giả <span class="optional-tag">(tuỳ chọn)</span></label>
       <input type="text" id="article-source-inp" placeholder="e.g. 人民日报, Xinhua...">
+    </div>
+    <div class="form-group">
+      <label>Ảnh đại diện <span class="optional-tag">(tuỳ chọn — dán URL ảnh)</span></label>
+      <input type="url" id="article-image-inp" placeholder="https://example.com/image.jpg">
+      <div id="article-image-preview" style="margin-top:8px;display:none">
+        <img id="article-img-thumb" src="" alt="preview" style="max-height:120px;border-radius:8px;border:1px solid var(--border);object-fit:cover">
+      </div>
     </div>
     <div class="form-group">
       <label>Nội dung bài báo <span style="color:var(--red)">*</span></label>
@@ -1207,6 +1244,29 @@ function setupListeners(){
   $('save-article-btn').addEventListener('click', saveArticle);
   $('cancel-upload-btn').addEventListener('click', ()=>nav('articles'));
   $('back-articles-btn').addEventListener('click', ()=>nav('articles'));
+
+  // Sort buttons
+  $('sort-newest-btn').addEventListener('click', ()=>{
+    articleSortOrder='newest';
+    $('sort-newest-btn').classList.add('active');
+    $('sort-oldest-btn').classList.remove('active');
+    renderArticlesList();
+  });
+  $('sort-oldest-btn').addEventListener('click', ()=>{
+    articleSortOrder='oldest';
+    $('sort-oldest-btn').classList.add('active');
+    $('sort-newest-btn').classList.remove('active');
+    renderArticlesList();
+  });
+
+  // Image URL preview
+  $('article-image-inp').addEventListener('input', ()=>{
+    const url = $('article-image-inp').value.trim();
+    const preview = $('article-image-preview');
+    const thumb   = $('article-img-thumb');
+    if(url){ preview.style.display='block'; thumb.src=url; }
+    else    { preview.style.display='none'; thumb.src=''; }
+  });
   $('art-inp-zh').addEventListener('input', ()=>{
     const v=$('art-inp-zh').value.trim();
     $('art-pinyin-preview').textContent = getPinyin(v)||'';
@@ -1418,14 +1478,18 @@ function deleteWord(id){
 // ─── ARTICLES ─────────────────────────────────────────────────────────────────
 let currentArticleId = null;
  
+let articleSortOrder = 'newest'; // 'newest' | 'oldest'
+
 function renderArticlesList(){
   const container = $('articles-list');
   if(!db.articles || !db.articles.length){
     container.innerHTML = `<div class="empty-state"><div class="emoji">📰</div><h3>Chưa có bài báo nào</h3><p>Upload bài báo tiếng Trung để học từ mới từ ngữ cảnh thực tế!</p></div>`;
     return;
   }
-  container.innerHTML = db.articles.map(a => `
+  const sorted = [...db.articles].sort((a,b) => articleSortOrder==='newest' ? b.added-a.added : a.added-b.added);
+  container.innerHTML = sorted.map(a => `
     <div class="article-card" data-id="${a.id}">
+      ${a.imageUrl ? `<img class="article-card-img" src="${a.imageUrl}" alt="" onerror="this.style.display='none'">` : ''}
       <div style="flex:1;min-width:0">
         <div class="article-card-title">${a.title}</div>
         <div class="article-card-meta">${a.source ? '📰 '+a.source+' · ' : ''}${new Date(a.added).toLocaleDateString('vi-VN')} · ${a.wordCount||0} từ · ${a.addedWords||0} từ đã học</div>
@@ -1460,6 +1524,7 @@ function saveArticle(){
   const article = {
     id: Date.now(), title,
     source: $('article-source-inp').value.trim(),
+    imageUrl: $('article-image-inp').value.trim(),
     body, wordCount: body.length,
     addedWords: 0, added: Date.now()
   };
@@ -1468,6 +1533,7 @@ function saveArticle(){
   save();
   $('article-title-inp').value='';
   $('article-source-inp').value='';
+  $('article-image-inp').value='';
   $('article-body-inp').value='';
   toast(`✓ Đã lưu: ${title}`);
   nav('articles');
@@ -1479,6 +1545,17 @@ function openArticle(id){
   currentArticleId = id;
   $('read-article-title').textContent = article.title;
   $('read-article-source').textContent = article.source || '';
+
+  // Show/hide article image in reader
+  let readerImgEl = $('reader-article-img');
+  if(!readerImgEl){
+    readerImgEl = document.createElement('img');
+    readerImgEl.id = 'reader-article-img';
+    readerImgEl.style.cssText = 'width:100%;max-height:220px;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:16px;border:1px solid var(--border)';
+    $('article-reader-body').parentElement.insertBefore(readerImgEl, $('article-reader-body').parentElement.firstChild.nextSibling);
+  }
+  if(article.imageUrl){ readerImgEl.src=article.imageUrl; readerImgEl.style.display='block'; readerImgEl.onerror=()=>readerImgEl.style.display='none'; }
+  else { readerImgEl.style.display='none'; readerImgEl.src=''; }
  
   // Render body with persistent highlights re-applied
   let html = article.body.replace(/\n/g,'<br>');
@@ -1505,10 +1582,10 @@ function renderArticleAddedWords(article){
   if(!ids.length){ wordsDiv.textContent='Chưa có từ nào.'; return; }
   const words = db.words.filter(w=>ids.includes(w.id));
   wordsDiv.innerHTML = words.map(w=>`
-    <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)">
-      <span style="font-family:'Noto Serif SC',serif;font-size:16px;font-weight:600">${w.zh}</span>
-      <span style="font-size:11px;color:var(--red)">${w.pinyin}</span>
-      <span style="font-size:12px;color:var(--text2);flex:1">${w.vi}</span>
+    <div class="added-word-row">
+      <span class="added-word-zh">${w.zh}</span>
+      <span class="added-word-py">${w.pinyin}</span>
+      <span class="added-word-vi">${w.vi}</span>
     </div>
   `).join('');
 }
@@ -1580,8 +1657,31 @@ function setupTextSelection(){
       loadDict().then(()=>{ if(dictData && dictData[text]) $('popup-vi-inp').value = dictData[text].split(';')[0].trim(); });
     }
     popup.style.display = 'block';
-    popup.style.left = Math.min(rect.left + window.scrollX, window.innerWidth - 230) + 'px';
-    popup.style.top  = (rect.top + window.scrollY - popup.offsetHeight - 10) + 'px';
+    // Position popup smartly: prefer above selection, fallback to below
+    const popupH = popup.offsetHeight || 200;
+    const popupW = popup.offsetWidth  || 280;
+    const margin  = 10;
+    const spaceAbove = rect.top;
+    const spaceBelow = window.innerHeight - rect.bottom;
+    let top;
+    if(spaceAbove >= popupH + margin){
+      // Enough room above — show above
+      top = rect.top + window.scrollY - popupH - margin;
+    } else if(spaceBelow >= popupH + margin){
+      // Show below selection
+      top = rect.bottom + window.scrollY + margin;
+    } else {
+      // Not enough room either side — pick the larger side and clamp
+      top = spaceAbove > spaceBelow
+        ? Math.max(window.scrollY + margin, rect.top + window.scrollY - popupH - margin)
+        : rect.bottom + window.scrollY + margin;
+    }
+    const left = Math.min(
+      Math.max(margin, rect.left + window.scrollX),
+      window.innerWidth - popupW - margin
+    );
+    popup.style.left = left + 'px';
+    popup.style.top  = top  + 'px';
     setTimeout(()=>$('popup-vi-inp').focus(), 50);
   });
  
@@ -1710,4 +1810,3 @@ initMobileMenu();
 </script>
 </body>
 </html>
- 
