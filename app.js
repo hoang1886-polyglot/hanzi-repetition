@@ -130,7 +130,7 @@ function save(){
 async function init(){
   try{
     const snap=await getDoc(DB_DOC);
-    if(snap.exists()){ const d=snap.data(); db={words:d.words||[],sessions:d.sessions||{},correct:d.correct||0,total:d.total||0,articles:d.articles||}; }
+    if(snap.exists()){ const d=snap.data(); db={words:d.words||[],sessions:d.sessions||{},correct:d.correct||0,total:d.total||0,articles:d.articles||[]}; }
     else{ seedWords(); await setDoc(DB_DOC,JSON.parse(JSON.stringify(db))); }
   }catch(e){
     const bk=localStorage.getItem('hanzi_bk_'+(currentUserId||'anon'));
