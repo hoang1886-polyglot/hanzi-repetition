@@ -564,7 +564,8 @@ function openArticle(id){
   linkedWords.forEach(w=>{html=applyWordHighlight(html,w.zh);});
   (article.freeHighlights||[]).forEach(h=>{html=applyFreeHighlight(html,h);});
   $('article-reader-body').innerHTML=html;
-  ['art-inp-zh','art-inp-vi','art-inp-zh-def','art-inp-ex-zh','art-inp-ex-vi'].forEach(id=>$(id).value='');
+  ['art-inp-zh','art-inp-vi','art-inp-zh-def','art-inp-ex-zh','art-inp-ex-vi']
+  .forEach(id => { const el=$(id); if(el) el.value=''; });
   $('art-pinyin-preview').textContent='';
   buildWordTypeSelector('art-word-type-selector','_artSelectedType');window._artSelectedType='';
   renderArticleAddedWords(article);nav('read-article');setupTextSelection();
@@ -641,7 +642,7 @@ function setupTextSelection(){
       // SHORT → vocab popup
       hlPopup.style.display='none';
       $('popup-word').textContent=text;$('popup-pinyin').textContent=getPinyin(text);
-      $('popup-vi-inp').value='';$('popup-zh-def-inp').value='';$('popup-ex-zh-inp').value='';$('popup-ex-vi-inp').value='';
+      if($('popup-zh-def-inp')) $('popup-zh-def-inp').value='';
       resetWordTypeSelector('popup-word-type-selector','_popupSelectedType');
       buildWordTypeSelector('popup-word-type-selector','_popupSelectedType');
       if(dictData&&dictData[text])$('popup-vi-inp').value=dictData[text].split(';')[0].trim();
