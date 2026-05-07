@@ -648,6 +648,12 @@ tbody tr:hover td{background:var(--surface2)}
   transition:all 0.15s;
 }
 .article-del-btn:hover{color:var(--red);background:var(--red-light)}
+.article-edit-btn{
+  background:none;border:none;cursor:pointer;color:var(--text4);
+  font-size:14px;padding:6px 9px;border-radius:var(--radius-xs);
+  transition:all 0.15s;
+}
+.article-edit-btn:hover{color:var(--blue);background:var(--blue-light)}
 
 /* highlight effect */
 .word-highlight{
