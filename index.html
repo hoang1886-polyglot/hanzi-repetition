@@ -331,6 +331,7 @@
     <span style="color:var(--red-mid);font-size:12px" id="popup-pinyin"></span>
   </div>
   <input id="popup-vi-inp" placeholder="Nghĩa tiếng Việt..." style="width:100%;padding:7px 10px;border-radius:6px;border:none;background:#222;color:#fff;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:6px">
+  <input id="popup-zh-def-inp" placeholder="Định nghĩa tiếng Trung..." style="width:100%;padding:6px 10px;border-radius:6px;border:none;background:#1A1A1A;color:#ccc;font-size:12px;font-family:'Noto Sans SC',sans-serif;outline:none;margin-bottom:5px">
   <div style="font-size:10px;color:#555;letter-spacing:0.05em;margin-bottom:5px">VÍ DỤ (tuỳ chọn)</div>
   <input id="popup-ex-zh-inp" placeholder="Câu ví dụ tiếng Trung..." style="width:100%;padding:6px 10px;border-radius:6px;border:none;background:#1A1A1A;color:#ccc;font-size:12px;font-family:'Noto Sans SC',sans-serif;outline:none;margin-bottom:5px">
   <input id="popup-ex-vi-inp" placeholder="Dịch nghĩa..." style="width:100%;padding:6px 10px;border-radius:6px;border:none;background:#1A1A1A;color:#ccc;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:8px">
@@ -339,7 +340,21 @@
     <button id="popup-cancel-btn" style="padding:7px 12px;background:#222;color:#aaa;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif">✕</button>
   </div>
 </div>
-
+<!-- HIGHLIGHT POPUP (floating, for long selections) -->
+<div id="highlight-popup" style="display:none;position:fixed;z-index:1000;background:#111;color:#fff;border-radius:10px;padding:10px 14px;box-shadow:0 8px 28px rgba(0,0,0,0.3);font-size:13px;min-width:220px">
+  <div style="margin-bottom:8px;font-size:12px;color:#aaa" id="hlpopup-text"></div>
+  <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">
+    <button class="hl-color-btn" data-color="yellow" style="width:22px;height:22px;border-radius:50%;background:#EAB308;border:2px solid transparent;cursor:pointer" title="Vàng"></button>
+    <button class="hl-color-btn" data-color="green"  style="width:22px;height:22px;border-radius:50%;background:#16A34A;border:2px solid transparent;cursor:pointer" title="Xanh lá"></button>
+    <button class="hl-color-btn" data-color="blue"   style="width:22px;height:22px;border-radius:50%;background:#0284C7;border:2px solid transparent;cursor:pointer" title="Xanh"></button>
+    <button class="hl-color-btn" data-color="purple" style="width:22px;height:22px;border-radius:50%;background:#9333EA;border:2px solid transparent;cursor:pointer" title="Tím"></button>
+    <button class="hl-color-btn" data-color="orange" style="width:22px;height:22px;border-radius:50%;background:#EA580C;border:2px solid transparent;cursor:pointer" title="Cam"></button>
+  </div>
+  <div style="display:flex;gap:6px">
+    <button id="hlpopup-remove" style="flex:1;padding:6px;background:#333;color:#ccc;border:none;border-radius:6px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif">✕ Bỏ highlight</button>
+    <button id="hlpopup-cancel" style="padding:6px 10px;background:#222;color:#888;border:none;border-radius:6px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif">Huỷ</button>
+  </div>
+</div>
 <script type="module" src="app.js"></script>
 </body>
 </html>
