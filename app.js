@@ -622,43 +622,67 @@ function highlightWord(zh){
 // ─── TEXT SELECTION ───────────────────────────────────────────────────────────
 function setupTextSelection(){
   const body=$('article-reader-body');
+  const choicePopup=$('selection-choice-popup');
   const popup=$('selection-popup');
   const hlPopup=$('highlight-popup');
   if(!body)return;
 
-  // Remove old listeners by cloning
   const newBody=body.cloneNode(true);body.parentNode.replaceChild(newBody,body);
-  // Re-get after clone
   const bd=$('article-reader-body');
 
+  let savedText='', savedRect=null;
+
   document.addEventListener('mouseup',e=>{
-    if(popup.contains(e.target)||hlPopup.contains(e.target))return;
-    const sel=window.getSelection();const text=sel?.toString().trim();
-    if(!text||!bd.contains(sel?.anchorNode)){popup.style.display='none';hlPopup.style.display='none';return;}
-
-    const range=sel.getRangeAt(0),rect=range.getBoundingClientRect();
-
-    if(text.length>=1&&text.length<=10){
-      // SHORT → vocab popup
-      hlPopup.style.display='none';
-      $('popup-word').textContent=text;$('popup-pinyin').textContent=getPinyin(text);
-      if($('popup-zh-def-inp')) $('popup-zh-def-inp').value='';
-      resetWordTypeSelector('popup-word-type-selector','_popupSelectedType');
-      buildWordTypeSelector('popup-word-type-selector','_popupSelectedType');
-      if(dictData&&dictData[text])$('popup-vi-inp').value=dictData[text].split(';')[0].trim();
-      else if(!dictData)loadDict().then(()=>{if(dictData&&dictData[text])$('popup-vi-inp').value=dictData[text].split(';')[0].trim();});
-      positionPopup(popup,rect);popup.style.display='block';
-      setTimeout(()=>$('popup-vi-inp').focus(),50);
-    } else if(text.length>10){
-      // LONG → free highlight popup
+    if(choicePopup.contains(e.target)||popup.contains(e.target)||hlPopup.contains(e.target))return;
+    const sel=window.getSelection();
+    const text=sel?.toString().trim();
+    if(!text||!bd.contains(sel?.anchorNode)){
+      choicePopup.style.display='none';
       popup.style.display='none';
-      $('hlpopup-text').textContent=`"${text.slice(0,28)}${text.length>28?'…':''}"`;
-      hlPopup.dataset.text=text;
-      positionPopup(hlPopup,rect);hlPopup.style.display='block';
+      hlPopup.style.display='none';
+      return;
     }
+    savedText=text;
+    savedRect=sel.getRangeAt(0).getBoundingClientRect();
+    $('choice-selected-text').textContent=`"${text.slice(0,30)}${text.length>30?'…':''}"`;
+    positionPopup(choicePopup,savedRect);
+    choicePopup.style.display='block';
+    popup.style.display='none';
+    hlPopup.style.display='none';
   });
 
-  // highlight color buttons
+  $('choice-cancel-btn').addEventListener('click',()=>{
+    choicePopup.style.display='none';
+    window.getSelection()?.removeAllRanges();
+  });
+
+  $('choice-add-word-btn').addEventListener('click',()=>{
+    if(!savedText)return;
+    choicePopup.style.display='none';
+    $('popup-word').textContent=savedText;
+    $('popup-pinyin').textContent=getPinyin(savedText);
+    $('popup-vi-inp').value='';
+    const zhDef=$('popup-zh-def-inp'); if(zhDef)zhDef.value='';
+    $('popup-ex-zh-inp').value='';$('popup-ex-vi-inp').value='';
+    resetWordTypeSelector('popup-word-type-selector','_popupSelectedType');
+    buildWordTypeSelector('popup-word-type-selector','_popupSelectedType');
+    if(dictData&&dictData[savedText])$('popup-vi-inp').value=dictData[savedText].split(';')[0].trim();
+    else if(!dictData)loadDict().then(()=>{if(dictData&&dictData[savedText])$('popup-vi-inp').value=dictData[savedText].split(';')[0].trim();});
+    positionPopup(popup,savedRect);
+    popup.style.display='block';
+    setTimeout(()=>$('popup-vi-inp').focus(),50);
+  });
+
+  $('choice-highlight-btn').addEventListener('click',()=>{
+    if(!savedText)return;
+    choicePopup.style.display='none';
+    $('hlpopup-text').textContent=`"${savedText.slice(0,28)}${savedText.length>28?'…':''}"`;
+    hlPopup.dataset.text=savedText;
+    positionPopup(hlPopup,savedRect);
+    hlPopup.style.display='block';
+    window.getSelection()?.removeAllRanges();
+  });
+
   $('highlight-popup').querySelectorAll('.hl-color-btn').forEach(btn=>{
     btn.addEventListener('click',()=>{
       const text=hlPopup.dataset.text;if(!text)return;
@@ -675,19 +699,19 @@ function setupTextSelection(){
   $('popup-cancel-btn').addEventListener('click',()=>{popup.style.display='none';window.getSelection()?.removeAllRanges();});
   $('popup-add-btn').addEventListener('click',()=>{
     const zh=$('popup-word').textContent.trim(),vi=$('popup-vi-inp').value.trim();
-    const exZh=$('popup-ex-zh-inp').value.trim(),exVi=$('popup-ex-vi-inp').value.trim(),zhDef=$('popup-zh-def-inp').value.trim();
-    const w=addWordFromArticle(zh,vi,exZh,exVi,zhDef,window._popupSelectedType);
+    const zhDef=$('popup-zh-def-inp'); 
+    const exZh=$('popup-ex-zh-inp').value.trim(),exVi=$('popup-ex-vi-inp').value.trim();
+    const w=addWordFromArticle(zh,vi,exZh,exVi,zhDef?zhDef.value.trim():'',window._popupSelectedType);
     if(w){
       toast(`✓ Đã thêm: ${zh}`);popup.style.display='none';window.getSelection()?.removeAllRanges();
       const article=db.articles.find(a=>a.id===currentArticleId);if(article)renderArticleAddedWords(article);
     }else toast('Vui lòng nhập nghĩa!');
   });
-  $('popup-vi-inp').addEventListener('keydown',e=>{if(e.key==='Enter')$('popup-zh-def-inp').focus();});
-  $('popup-zh-def-inp').addEventListener('keydown',e=>{if(e.key==='Enter')$('popup-ex-zh-inp').focus();});
+  $('popup-vi-inp').addEventListener('keydown',e=>{if(e.key==='Enter'){const d=$('popup-zh-def-inp');d?d.focus():$('popup-ex-zh-inp').focus();}});
+  if($('popup-zh-def-inp'))$('popup-zh-def-inp').addEventListener('keydown',e=>{if(e.key==='Enter')$('popup-ex-zh-inp').focus();});
   $('popup-ex-zh-inp').addEventListener('keydown',e=>{if(e.key==='Enter')$('popup-ex-vi-inp').focus();});
   $('popup-ex-vi-inp').addEventListener('keydown',e=>{if(e.key==='Enter')$('popup-add-btn').click();});
 }
-
 function positionPopup(el,rect){
   el.style.visibility='hidden';el.style.display='block';
   const pH=el.offsetHeight||220,pW=el.offsetWidth||300,margin=10;
