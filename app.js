@@ -211,7 +211,7 @@ function setupListeners(){
   // Article buttons
   $('go-upload-btn').addEventListener('click', ()=>nav('upload-article'));
   $('save-article-btn').addEventListener('click', saveArticle);
-  $('cancel-upload-btn').addEventListener('click', ()=>nav('articles'));
+  $('cancel-upload-btn').addEventListener('click', ()=>{ clearUploadForm(); nav('articles'); });
   $('back-articles-btn').addEventListener('click', ()=>nav('articles'));
 
   // Sort buttons
@@ -582,8 +582,9 @@ function deleteWord(id){
 }
 
 // ─── ARTICLES ─────────────────────────────────────────────────────────────────
-let currentArticleId = null;
-let articleSortOrder = 'newest'; // 'newest' | 'oldest'
+let currentArticleId  = null;
+let articleSortOrder  = 'newest'; // 'newest' | 'oldest'
+let editingArticleId  = null;     // null = tạo mới, number = đang sửa
 
 function renderArticlesList(){
   const container = $('articles-list');
@@ -601,6 +602,7 @@ function renderArticlesList(){
         <div class="article-card-preview">${(a.body||'').slice(0,80)}...</div>
       </div>
       <div class="article-card-actions">
+        <button class="article-edit-btn" data-edit="${a.id}" title="Chỉnh sửa">✏️</button>
         <button class="article-del-btn" data-del="${a.id}" title="Xoá">✕</button>
       </div>
     </div>
@@ -610,6 +612,12 @@ function renderArticlesList(){
     card.addEventListener('click', e => {
       if(e.target.closest('[data-del]')) return;
       openArticle(Number(card.dataset.id));
+    });
+  });
+  container.querySelectorAll('[data-edit]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      openEditArticle(Number(btn.dataset.edit));
     });
   });
   container.querySelectorAll('[data-del]').forEach(btn => {
@@ -626,22 +634,79 @@ function saveArticle(){
   const title = $('article-title-inp').value.trim();
   const body  = $('article-body-inp').value.trim();
   if(!title || !body){ toast('Vui lòng nhập tiêu đề và nội dung!'); return; }
-  const article = {
-    id: Date.now(), title,
-    source: $('article-source-inp').value.trim(),
-    imageUrl: $('article-image-inp').value.trim(),
-    body, wordCount: body.length,
-    addedWords: 0, added: Date.now()
-  };
-  if(!db.articles) db.articles = [];
-  db.articles.push(article);
-  save();
+
+  if(editingArticleId !== null){
+    // ── UPDATE existing article ──
+    const article = db.articles.find(a=>a.id===editingArticleId);
+    if(!article){ toast('Không tìm thấy bài báo!'); return; }
+    article.title    = title;
+    article.source   = $('article-source-inp').value.trim();
+    article.imageUrl = $('article-image-inp').value.trim();
+    article.body     = body;
+    article.wordCount= body.length;
+    article.editedAt = Date.now();
+    editingArticleId = null;
+    save();
+    clearUploadForm();
+    toast(`✓ Đã cập nhật: ${title}`);
+    nav('articles');
+  } else {
+    // ── CREATE new article ──
+    const article = {
+      id: Date.now(), title,
+      source: $('article-source-inp').value.trim(),
+      imageUrl: $('article-image-inp').value.trim(),
+      body, wordCount: body.length,
+      addedWords: 0, added: Date.now()
+    };
+    if(!db.articles) db.articles = [];
+    db.articles.push(article);
+    save();
+    clearUploadForm();
+    toast(`✓ Đã lưu: ${title}`);
+    nav('articles');
+  }
+}
+
+function clearUploadForm(){
   $('article-title-inp').value='';
   $('article-source-inp').value='';
   $('article-image-inp').value='';
   $('article-body-inp').value='';
-  toast(`✓ Đã lưu: ${title}`);
-  nav('articles');
+  $('article-image-preview').style.display='none';
+  $('article-img-thumb').src='';
+  $('upload-article-heading').textContent='Upload bài báo';
+  $('upload-article-subheading').textContent='Dán nội dung bài báo tiếng Trung vào đây';
+  $('save-article-btn').textContent='💾 Lưu bài báo';
+  editingArticleId = null;
+}
+
+function openEditArticle(id){
+  const article = db.articles.find(a=>a.id===id);
+  if(!article) return;
+  editingArticleId = id;
+
+  // Fill form fields
+  $('article-title-inp').value  = article.title   || '';
+  $('article-source-inp').value = article.source  || '';
+  $('article-image-inp').value  = article.imageUrl|| '';
+  $('article-body-inp').value   = article.body    || '';
+
+  // Update image preview
+  if(article.imageUrl){
+    $('article-image-preview').style.display='block';
+    $('article-img-thumb').src = article.imageUrl;
+  } else {
+    $('article-image-preview').style.display='none';
+    $('article-img-thumb').src='';
+  }
+
+  // Update UI labels to "edit mode"
+  $('upload-article-heading').textContent    = 'Chỉnh sửa bài báo';
+  $('upload-article-subheading').textContent = 'Cập nhật nội dung bài báo';
+  $('save-article-btn').textContent          = '💾 Lưu thay đổi';
+
+  nav('upload-article');
 }
 
 function openArticle(id){
