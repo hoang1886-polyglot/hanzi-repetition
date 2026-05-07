@@ -325,7 +325,15 @@
 </div>
 
 <!-- SELECTION POPUP (floating) -->
-<div id="selection-popup" style="display:none;position:fixed;z-index:1000;background:#111;color:#fff;border-radius:10px;padding:10px 14px;box-shadow:0 8px 28px rgba(0,0,0,0.3);font-size:13px;font-weight:500;min-width:240px;max-width:300px">
+<div id="selection-choice-popup" style="display:none;position:fixed;z-index:1001;background:#111;color:#fff;border-radius:10px;padding:10px 14px;box-shadow:0 8px 28px rgba(0,0,0,0.3);">
+  <div id="choice-selected-text" style="font-size:11px;color:#888;margin-bottom:8px;font-family:'Noto Sans SC',sans-serif;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
+  <div style="display:flex;gap:6px;">
+    <button id="choice-add-word-btn" style="flex:1;padding:8px 12px;background:#C8281E;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">✏️ Thêm từ mới</button>
+    <button id="choice-highlight-btn" style="flex:1;padding:8px 12px;background:#333;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">🎨 Highlight</button>
+    <button id="choice-cancel-btn" style="padding:8px 10px;background:#222;color:#888;border:none;border-radius:6px;font-size:12px;cursor:pointer;">✕</button>
+  </div>
+</div>
+  <div id="selection-popup" style="display:none;position:fixed;z-index:1000;background:#111;color:#fff;border-radius:10px;padding:10px 14px;box-shadow:0 8px 28px rgba(0,0,0,0.3);font-size:13px;font-weight:500;min-width:240px;max-width:300px">
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
     <span style="font-family:'Noto Serif SC',serif;font-size:18px;font-weight:700" id="popup-word"></span>
     <span style="color:var(--red-mid);font-size:12px" id="popup-pinyin"></span>
