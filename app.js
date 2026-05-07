@@ -658,6 +658,8 @@ function setupTextSelection(){
 
   $('choice-add-word-btn').addEventListener('click',()=>{
     if(!savedText)return;
+    resetWordTypeSelector('popup-word-type-selector','_popupSelectedType');
+    buildWordTypeSelector('popup-word-type-selector','_popupSelectedType');       
     choicePopup.style.display='none';
     $('popup-word').textContent=savedText;
     $('popup-pinyin').textContent=getPinyin(savedText);
