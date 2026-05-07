@@ -724,3 +724,12 @@ tbody tr:hover td{background:var(--surface2)}
   box-shadow:0 2px 8px rgba(0,0,0,0.15);
 }
 .wtype-vi{font-size:10px;opacity:0.8}
+
+/* Tags nhỏ trong selection popup */
+#popup-word-type-selector .wtype-tag { 
+  padding:3px 8px; 
+  font-size:10px;
+  border-width:1px;
+}
+#popup-word-type-selector .wtype-vi { display:none; }
+#popup-word-type-selector .wtype-tag.active { color:#fff; }
