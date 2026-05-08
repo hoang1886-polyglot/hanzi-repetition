@@ -281,7 +281,11 @@ function renderDashboard(){
   }
   const rw=$('recent-words');const recent=[...words].reverse().slice(0,6);
   rw.innerHTML=recent.length
-    ?recent.map(w=>{const t=w.wordType?getWtInfo(w.wordType):null;return`<div class="word-tile"><div class="zh">${w.zh}</div><div class="py">${w.pinyin}</div><div class="vi">${w.vi}</div>${t?`<div class="tile-wtype" style="background:${t.bg};color:${t.color}">${t.key} ${t.vi}</div>`:''}</div>`;}).join('')
+    ?recent.map(w=>{
+  const wts=(w.wordTypes?.length?w.wordTypes:(w.wordType?[w.wordType]:[]));
+  const badges=wts.map(k=>{const i=getWtInfo(k);return i?`<span style="padding:2px 8px;border-radius:99px;font-size:10px;font-weight:700;background:${i.bg};color:${i.color};display:inline-block">${i.key} ${i.vi}</span>`:''}).join('');
+  return`<div class="word-tile"><div class="zh">${w.zh}</div><div class="py">${w.pinyin}</div><div class="vi">${w.vi}</div>${badges?`<div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:6px">${badges}</div>`:''}</div>`;
+}).join('')
     :`<div style="color:var(--text3);font-size:14px;grid-column:1/-1">Chưa có từ. <span style="color:var(--red);cursor:pointer" id="add-first-link">Thêm từ đầu tiên!</span></div>`;
   document.getElementById('add-first-link')?.addEventListener('click',()=>nav('add'));
 }
