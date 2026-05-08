@@ -477,6 +477,9 @@ function renderWordList(q=''){
       </tr>`;}).join('')
     :'<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:28px">Không tìm thấy từ nào.</td></tr>';
   tbody.querySelectorAll('.del-btn').forEach(btn=>btn.addEventListener('click',()=>deleteWord(Number(btn.dataset.id))));
+         tbody.querySelectorAll('.wt-add-btn').forEach(btn=>btn.addEventListener('click',e=>{
+                  e.stopPropagation();openWordTypeEditor(Number(btn.dataset.id),btn);
+}));
 }
 function deleteWord(id){
   if(!confirm('Xoá từ này?'))return;
