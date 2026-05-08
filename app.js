@@ -464,8 +464,12 @@ function renderWordList(q=''){
   const tbody=$('word-table-body');
   tbody.innerHTML=filtered.length
     ?[...filtered].reverse().map(w=>{
-      const wt=w.wordType?getWtInfo(w.wordType):null;
-      const wtHtml=wt?`<span style="padding:2px 9px;border-radius:99px;font-size:11px;font-weight:600;background:${wt.bg};color:${wt.color};white-space:nowrap">${wt.key} ${wt.vi}</span>`:'<span style="color:var(--text4);font-size:12px">—</span>';
+  const wts=(w.wordTypes?.length?w.wordTypes:(w.wordType?[w.wordType]:[]));
+  const wtBadges=wts.map(k=>{const i=getWtInfo(k);return i?`<span style="padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600;background:${i.bg};color:${i.color};white-space:nowrap;display:inline-block">${i.key} ${i.vi}</span>`:''}).join('');
+  const wtHtml=`<div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center">
+  ${wtBadges||'<span style="color:var(--text4);font-size:12px">—</span>'}
+  <button class="wt-add-btn" data-id="${w.id}" title="Chỉnh loại từ" style="width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#ff6b8a,#e8194b);color:#fff;border:none;cursor:pointer;font-size:14px;font-weight:700;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;margin-left:2px;line-height:1">+</button>
+</div>`;
       return`<tr>
         <td style="font-family:'Noto Serif SC',serif;font-size:19px;font-weight:600">${w.zh}</td>
         <td style="color:var(--red);font-weight:500">${w.pinyin}</td>
