@@ -483,7 +483,43 @@ function deleteWord(id){
   db.words=db.words.filter(w=>w.id!==id);
   save();renderWordList($('search-input')?.value||'');toast('Đã xoá từ.');
 }
+function openWordTypeEditor(wordId, anchorEl){
+  const word=db.words.find(w=>w.id===wordId);if(!word)return;
+  if(!word.wordTypes)word.wordTypes=word.wordType?[word.wordType]:[];
+  const popover=$('wt-editor-popover'),tagsEl=$('wt-editor-tags');
 
+  function renderEditorTags(){
+    tagsEl.innerHTML=WORD_TYPES.map(t=>{
+      const active=word.wordTypes.includes(t.key);
+      return`<button class="wtype-tag${active?' active':''}" data-key="${t.key}"
+        style="--wt-color:${t.color};--wt-bg:${t.bg};padding:3px 8px;font-size:11px">
+        ${t.key}<span class="wtype-vi"> ${t.vi}</span></button>`;
+    }).join('');
+    tagsEl.querySelectorAll('.wtype-tag').forEach(btn=>btn.addEventListener('click',()=>{
+      const k=btn.dataset.key;
+      word.wordTypes=word.wordTypes.includes(k)?word.wordTypes.filter(x=>x!==k):[...word.wordTypes,k];
+      save();renderEditorTags();
+    }));
+  }
+  renderEditorTags();
+
+  const rect=anchorEl.getBoundingClientRect();
+  popover.style.top=(rect.bottom+8)+'px';
+  popover.style.left=Math.min(rect.left,window.innerWidth-270)+'px';
+  popover.style.display='block';
+
+  $('wt-editor-done').onclick=()=>{
+    popover.style.display='none';
+    renderWordList($('search-input')?.value||'');
+  };
+}
+
+document.addEventListener('click',e=>{
+  const p=$('wt-editor-popover');
+  if(p&&p.style.display!=='none'&&!p.contains(e.target)&&!e.target.classList.contains('wt-add-btn')){
+    p.style.display='none';renderWordList($('search-input')?.value||'');
+  }
+});
 // ─── ARTICLES ─────────────────────────────────────────────────────────────────
 let currentArticleId=null,articleSortOrder='newest',editingArticleId=null;
 
