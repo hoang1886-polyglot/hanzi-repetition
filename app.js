@@ -204,7 +204,11 @@ function setupListeners(){
     const url=$('article-image-inp').value.trim(),preview=$('article-image-preview'),thumb=$('article-img-thumb');
     if(url){preview.style.display='block';thumb.src=url;}else{preview.style.display='none';thumb.src='';}
   });
-
+  $('edit-inp-zh').addEventListener('input',()=>{$('edit-pinyin-preview').textContent=getPinyin($('edit-inp-zh').value)||'';});
+  $('edit-save-btn').addEventListener('click',saveWordEdit);
+  $('edit-cancel-btn').addEventListener('click',()=>$('word-edit-overlay').style.display='none');
+  $('edit-close-btn').addEventListener('click',()=>$('word-edit-overlay').style.display='none');
+  $('word-edit-overlay').addEventListener('click',e=>{if(e.target===$('word-edit-overlay'))$('word-edit-overlay').style.display='none';});
   buildWordTypeSelector('art-word-type-selector','_artSelectedType');
   $('art-inp-zh').addEventListener('input',()=>{ const v=$('art-inp-zh').value.trim(); $('art-pinyin-preview').textContent=getPinyin(v)||''; artLookupDict(v); });
   $('art-add-word-btn').addEventListener('click',()=>{
@@ -481,10 +485,14 @@ function renderWordList(q=''){
         <td>${wtHtml}</td>
         <td><span class="badge ${sb[w.status]||'badge-new'}">${sl[w.status]||'Mới'}</span></td>
         <td style="color:var(--text2);font-size:13px">${!w.nextReview?'Ngay bây giờ':new Date(w.nextReview).toLocaleDateString('vi-VN')}</td>
-        <td><button class="del-btn" data-id="${w.id}">✕</button></td>
+        <td style="display:flex;gap:6px;align-items:center">
+           <button class="edit-btn" data-id="${w.id}" title="Sửa" style="background:none;border:none;cursor:pointer;font-size:15px;opacity:0.5;padding:2px 4px" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.5">✏️</button>
+           <button class="del-btn" data-id="${w.id}">✕</button>
+        </td>
       </tr>`;}).join('')
     :'<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:28px">Không tìm thấy từ nào.</td></tr>';
   tbody.querySelectorAll('.del-btn').forEach(btn=>btn.addEventListener('click',()=>deleteWord(Number(btn.dataset.id))));
+         tbody.querySelectorAll('.edit-btn').forEach(btn=>btn.addEventListener('click',()=>openWordEditor(Number(btn.dataset.id))));
          tbody.querySelectorAll('.wt-add-btn').forEach(btn=>btn.addEventListener('click',e=>{
                   e.stopPropagation();openWordTypeEditor(Number(btn.dataset.id),btn);
 }));
@@ -493,6 +501,45 @@ function deleteWord(id){
   if(!confirm('Xoá từ này?'))return;
   db.words=db.words.filter(w=>w.id!==id);
   save();renderWordList($('search-input')?.value||'');toast('Đã xoá từ.');
+}
+function openWordEditor(id){
+  const word=db.words.find(w=>w.id===id);if(!word)return;
+  $('edit-word-id').value=id;
+  $('edit-inp-zh').value=word.zh||'';
+  $('edit-pinyin-preview').textContent=word.pinyin||'';
+  $('edit-inp-vi').value=word.vi||'';
+  $('edit-inp-zhdef').value=word.zhDef||'';
+  $('edit-inp-exzh').value=word.exZh||'';
+  $('edit-inp-exvi').value=word.exVi||'';
+  window._editSelectedTypes=word.wordTypes?.length?[...word.wordTypes]:(word.wordType?[word.wordType]:[]);
+  buildEditTypeSelector();
+  $('word-edit-overlay').style.display='flex';
+  setTimeout(()=>$('edit-inp-zh').focus(),100);
+}
+function buildEditTypeSelector(){
+  const c=$('edit-word-type-selector');if(!c)return;
+  c.innerHTML=WORD_TYPES.map(t=>`<button class="wtype-tag${window._editSelectedTypes.includes(t.key)?' active':''}" data-key="${t.key}" style="--wt-color:${t.color};--wt-bg:${t.bg}">${t.key}<span class="wtype-vi"> ${t.vi}</span></button>`).join('');
+  c.querySelectorAll('.wtype-tag').forEach(btn=>btn.addEventListener('click',()=>{
+    const k=btn.dataset.key;
+    window._editSelectedTypes=window._editSelectedTypes.includes(k)?window._editSelectedTypes.filter(x=>x!==k):[...window._editSelectedTypes,k];
+    buildEditTypeSelector();
+  }));
+}
+function saveWordEdit(){
+  const id=Number($('edit-word-id').value);
+  const zh=$('edit-inp-zh').value.trim(),vi=$('edit-inp-vi').value.trim();
+  if(!zh||!vi){toast('Vui lòng nhập chữ Hán và nghĩa!');return;}
+  const word=db.words.find(w=>w.id===id);if(!word)return;
+  word.zh=zh;word.pinyin=getPinyin(zh);word.vi=vi;
+  word.zhDef=$('edit-inp-zhdef').value.trim();
+  word.exZh=$('edit-inp-exzh').value.trim();
+  word.exVi=$('edit-inp-exvi').value.trim();
+  word.wordTypes=[...window._editSelectedTypes];
+  word.wordType=word.wordTypes[0]||'';
+  save();
+  $('word-edit-overlay').style.display='none';
+  renderWordList($('search-input')?.value||'');
+  toast('✓ Đã lưu thay đổi!');
 }
 function openWordTypeEditor(wordId, anchorEl){
   const word=db.words.find(w=>w.id===wordId);if(!word)return;
