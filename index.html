@@ -383,5 +383,47 @@
     <button id="wt-editor-done" style="font-size:12px;font-weight:600;color:var(--red);background:none;border:none;cursor:pointer;padding:4px 8px;font-family:'DM Sans',sans-serif">✓ Xong</button>
   </div>
 </div>
+<!-- WORD EDIT MODAL -->
+<div id="word-edit-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:3000;align-items:center;justify-content:center">
+  <div style="background:var(--surface);border-radius:16px;padding:28px;width:min(520px,92vw);max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.25)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <h3 style="font-size:18px;font-weight:700;margin:0">✏️ Chỉnh sửa từ</h3>
+      <button id="edit-close-btn" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text3)">✕</button>
+    </div>
+    <input type="hidden" id="edit-word-id">
+    <div class="form-group">
+      <label>Chữ Hán <span style="color:var(--red)">*</span></label>
+      <input type="text" id="edit-inp-zh" style="font-family:'Noto Sans SC',sans-serif">
+      <div id="edit-pinyin-preview" style="font-size:13px;color:var(--red);margin-top:4px;font-weight:500;min-height:18px"></div>
+    </div>
+    <div class="form-group">
+      <label>Nghĩa tiếng Việt <span style="color:var(--red)">*</span></label>
+      <input type="text" id="edit-inp-vi">
+    </div>
+    <div class="form-group">
+      <label>Định nghĩa tiếng Trung <span class="optional-tag">(tuỳ chọn)</span></label>
+      <input type="text" id="edit-inp-zhdef" style="font-family:'Noto Sans SC',sans-serif">
+    </div>
+    <div class="form-group">
+      <label>Loại từ <span class="optional-tag">(tuỳ chọn)</span></label>
+      <div id="edit-word-type-selector" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:4px"></div>
+    </div>
+    <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px">
+      <div style="font-size:13px;font-weight:500;color:var(--text2);margin-bottom:14px">Ví dụ <span class="optional-tag">(tuỳ chọn)</span></div>
+      <div class="form-group">
+        <label>Câu ví dụ (tiếng Trung)</label>
+        <textarea id="edit-inp-exzh" style="font-family:'Noto Sans SC',sans-serif"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Dịch nghĩa (tiếng Việt)</label>
+        <textarea id="edit-inp-exvi"></textarea>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button id="edit-cancel-btn" style="flex:1;padding:12px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">Huỷ</button>
+      <button id="edit-save-btn" style="flex:2;padding:12px;background:var(--red);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">✓ Lưu thay đổi</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
