@@ -206,9 +206,9 @@ function setupListeners(){
   });
   $('edit-inp-zh').addEventListener('input',()=>{$('edit-pinyin-preview').textContent=getPinyin($('edit-inp-zh').value)||'';});
   $('edit-save-btn').addEventListener('click',saveWordEdit);
-  $('edit-cancel-btn').addEventListener('click',()=>$('word-edit-overlay').style.display='none');
-  $('edit-close-btn').addEventListener('click',()=>$('word-edit-overlay').style.display='none');
-  $('word-edit-overlay').addEventListener('click',e=>{if(e.target===$('word-edit-overlay'))$('word-edit-overlay').style.display='none';});
+  $('edit-cancel-btn').addEventListener('click',()=>$('word-edit-overlay').classList.remove('open');
+  $('edit-close-btn').addEventListener('click',()=>$('word-edit-overlay').classList.remove('open');
+  $('word-edit-overlay').addEventListener('click',e=>{if(e.target===$('word-edit-overlay'))$('word-edit-overlay').classList.remove('open');
   buildWordTypeSelector('art-word-type-selector','_artSelectedType');
   $('art-inp-zh').addEventListener('input',()=>{ const v=$('art-inp-zh').value.trim(); $('art-pinyin-preview').textContent=getPinyin(v)||''; artLookupDict(v); });
   $('art-add-word-btn').addEventListener('click',()=>{
@@ -474,9 +474,9 @@ function renderWordList(q=''){
     ?[...filtered].reverse().map(w=>{
   const wts=(w.wordTypes?.length?w.wordTypes:(w.wordType?[w.wordType]:[]));
   const wtBadges=wts.map(k=>{const i=getWtInfo(k);return i?`<span style="padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600;background:${i.bg};color:${i.color};white-space:nowrap;display:inline-block">${i.key} ${i.vi}</span>`:''}).join('');
-  const wtHtml=`<div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center">
-  ${wtBadges||'<span style="color:var(--text4);font-size:12px">—</span>'}
-  <button class="wt-add-btn" data-id="${w.id}" title="Chỉnh loại từ" style="width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#ff6b8a,#e8194b);color:#fff;border:none;cursor:pointer;font-size:14px;font-weight:700;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;margin-left:2px;line-height:1">+</button>
+  const wtHtml=`<div class="wt-cell">
+  <div class="wt-badges">${wtBadges||'<span style="color:var(--text4);font-size:12px">—</span>'}</div>
+  <button class="wt-add-btn" data-id="${w.id}" title="Chỉnh loại từ">+</button>
 </div>`;
       return`<tr>
         <td style="font-family:'Noto Serif SC',serif;font-size:19px;font-weight:600">${w.zh}</td>
@@ -485,9 +485,11 @@ function renderWordList(q=''){
         <td>${wtHtml}</td>
         <td><span class="badge ${sb[w.status]||'badge-new'}">${sl[w.status]||'Mới'}</span></td>
         <td style="color:var(--text2);font-size:13px">${!w.nextReview?'Ngay bây giờ':new Date(w.nextReview).toLocaleDateString('vi-VN')}</td>
-        <td style="display:flex;gap:6px;align-items:center">
-           <button class="edit-btn" data-id="${w.id}" title="Sửa" style="background:none;border:none;cursor:pointer;font-size:15px;opacity:0.5;padding:2px 4px" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.5">✏️</button>
-           <button class="del-btn" data-id="${w.id}">✕</button>
+        <td>
+          <div style="display:flex;gap:6px;align-items:center">
+            <button class="edit-btn" data-id="${w.id}" title="Sửa">✏️</button>
+            <button class="del-btn" data-id="${w.id}">✕</button>
+          </div>
         </td>
       </tr>`;}).join('')
     :'<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:28px">Không tìm thấy từ nào.</td></tr>';
@@ -513,7 +515,7 @@ function openWordEditor(id){
   $('edit-inp-exvi').value=word.exVi||'';
   window._editSelectedTypes=word.wordTypes?.length?[...word.wordTypes]:(word.wordType?[word.wordType]:[]);
   buildEditTypeSelector();
-  $('word-edit-overlay').style.display='flex';
+  $('word-edit-overlay').classList.add('open');
   setTimeout(()=>$('edit-inp-zh').focus(),100);
 }
 function buildEditTypeSelector(){
@@ -537,7 +539,7 @@ function saveWordEdit(){
   word.wordTypes=[...window._editSelectedTypes];
   word.wordType=word.wordTypes[0]||'';
   save();
-  $('word-edit-overlay').style.display='none';
+  $('word-edit-overlay').classList.remove('open');
   renderWordList($('search-input')?.value||'');
   toast('✓ Đã lưu thay đổi!');
 }
