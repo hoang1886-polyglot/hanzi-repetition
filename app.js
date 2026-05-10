@@ -485,10 +485,13 @@ function renderWordList(q=''){
         <td>${wtHtml}</td>
         <td><span class="badge ${sb[w.status]||'badge-new'}">${sl[w.status]||'Mới'}</span></td>
         <td style="color:var(--text2);font-size:13px">${!w.nextReview?'Ngay bây giờ':new Date(w.nextReview).toLocaleDateString('vi-VN')}</td>
-        <td style="display:flex;gap:6px;align-items:center">
-           <button class="edit-btn" data-id="${w.id}" title="Sửa" style="background:none;border:none;cursor:pointer;font-size:15px;opacity:0.5;padding:2px 4px" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.5">✏️</button>
-           <button class="del-btn" data-id="${w.id}">✕</button>
-        </td>
+        <td>
+           <div style="display:flex;gap:6px;align-items:center">
+             <button class="edit-btn" data-id="${w.id}" title="Sửa">✏️</button>
+             <button class="del-btn" data-id="${w.id}">✕</button>
+           </div>
+         </td>
+                 
       </tr>`;}).join('')
     :'<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:28px">Không tìm thấy từ nào.</td></tr>';
   tbody.querySelectorAll('.del-btn').forEach(btn=>btn.addEventListener('click',()=>deleteWord(Number(btn.dataset.id))));
