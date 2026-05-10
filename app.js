@@ -244,13 +244,16 @@ function intLabel(g,w){
   const{ef=2.5,interval=0,repetitions=0}=w;
   if(g===0)return'<10 phút';if(g===1)return`${Math.max(1,Math.round(interval*1.2))} ngày`;
   if(g===2)return repetitions===0?'1 ngày':repetitions===1?'4 ngày':`${Math.round(interval*ef)} ngày`;
-  return repetitions===0?'4 ngày':`${Math.round(interval*ef*1.3)} ngày`;
+  return types.map(k=>{
+    const t=getWtInfo(k);if(!t)return '';
+    return`<span style="display:inline-block;padding:2px 10px;border-radius:99px;font-size:11px;font-weight:700;background:${t.bg};color:${t.color};margin-right:3px">${t.key} ${t.vi}</span>`;
+  }).join('');
 }
-
 // ─── WORD TYPE BADGE HTML ─────────────────────────────────────────────────────
-function wordTypeBadgeHtml(wordType){
-  if(!wordType)return '';
-  const t=getWtInfo(wordType); if(!t)return '';
+function wordTypeBadgeHtml(wordType, wordTypes){
+  const types=wordTypes?.length ? wordTypes : (wordType ? [wordType] : []);
+  if(!types.length) return '';
+  return types.map(k=>{const t=getWtInfo(k);if(!t)return '';
   return `<div style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600;background:${t.bg};color:${t.color};margin-top:8px;border:1px solid ${t.color}33">
     <span style="font-size:13px">${t.key}</span><span style="opacity:0.7;font-size:11px">${t.vi}</span>
   </div>`;
@@ -315,7 +318,7 @@ function renderReviewCard(){
     <div class="review-card">
       <div class="review-vi">NGHĨA TIẾNG VIỆT</div>
       <div class="review-word">${currentCard.vi}</div>
-      ${wordTypeBadgeHtml(currentCard.wordType)}
+      ${wordTypeBadgeHtml(currentCard.wordType, currentCard.wordTypes)}
       ${currentCard.zhDef?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:8px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);text-align:left">🀄 <span style="font-family:'Noto Sans SC',sans-serif">${currentCard.zhDef}</span></div>`:''}
       ${currentCard.exVi?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:11px 16px;background:var(--surface2);border-radius:8px;text-align:left;border:1px solid var(--border)"><div style="font-family:'Noto Sans SC',sans-serif;font-size:14px;margin-bottom:4px">${currentCard.exZh||''}</div><div>${currentCard.exVi}</div></div>`:''}
       <div class="review-pinyin" id="live-pinyin"></div>
@@ -401,7 +404,7 @@ function renderArtReviewCard(){
     <div class="review-card">
       <div class="review-vi">NGHĨA TIẾNG VIỆT</div>
       <div class="review-word">${artReviewCard.vi}</div>
-      ${wordTypeBadgeHtml(artReviewCard.wordType)}
+      ${wordTypeBadgeHtml(artReviewCard.wordType, artReviewCard.wordTypes)}
       ${artReviewCard.zhDef?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:8px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);text-align:left">🀄 <span style="font-family:'Noto Sans SC',sans-serif">${artReviewCard.zhDef}</span></div>`:''}
       ${artReviewCard.exVi?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:11px 16px;background:var(--surface2);border-radius:8px;text-align:left;border:1px solid var(--border)"><div style="font-family:'Noto Sans SC',sans-serif;font-size:14px;margin-bottom:4px">${artReviewCard.exZh||''}</div><div>${artReviewCard.exVi}</div></div>`:''}
       <div class="review-pinyin" id="art-live-pinyin"></div>
