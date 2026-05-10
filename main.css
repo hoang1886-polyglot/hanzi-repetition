@@ -591,6 +591,8 @@ td{
   vertical-align:middle;transition:background 0.12s;
 }
 tr:last-child td{border-bottom:none}
+td { box-sizing:border-box; }
+tbody td:last-child { white-space:nowrap; }
 tbody tr{transition:background 0.12s}
 tbody tr:hover td{background:var(--surface2)}
 
