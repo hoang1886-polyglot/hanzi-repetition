@@ -268,6 +268,7 @@ function wordTypeBadgeHtml(wordType, wordTypes){
   return `<div style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600;background:${t.bg};color:${t.color};margin-top:8px;border:1px solid ${t.color}33">
     <span style="font-size:13px">${t.key}</span><span style="opacity:0.7;font-size:11px">${t.vi}</span>
   </div>`;
+  }).join('');
 }
 
 // ─── DASHBOARD ────────────────────────────────────────────────────────────────
