@@ -128,14 +128,25 @@ function save(){
 
 // ─── LOAD ─────────────────────────────────────────────────────────────────────
 async function init(){
+  // Load local backup immediately so UI can show something fast
+  const bk=localStorage.getItem('hanzi_bk_'+(currentUserId||'anon'));
+  if(bk){ try{ db=JSON.parse(bk); }catch(ex){} }
+
   try{
-    const snap=await getDoc(DB_DOC);
+    // Race getDoc against a 6-second timeout to prevent infinite loading
+    const snap=await Promise.race([
+      getDoc(DB_DOC),
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error('firebase_timeout')),6000))
+    ]);
     if(snap.exists()){ const d=snap.data(); db={words:d.words||[],sessions:d.sessions||{},correct:d.correct||0,total:d.total||0,articles:d.articles||[]}; }
-    else{ seedWords(); await setDoc(DB_DOC,JSON.parse(JSON.stringify(db))); }
+    else{ if(!bk) seedWords(); await setDoc(DB_DOC,JSON.parse(JSON.stringify(db))); }
   }catch(e){
-    const bk=localStorage.getItem('hanzi_bk_'+(currentUserId||'anon'));
-    if(bk){ try{ db=JSON.parse(bk); }catch(ex){ seedWords(); } }else seedWords();
-    toast('⚠️ Không kết nối Firebase. Dùng dữ liệu cục bộ.');
+    if(e.message==='firebase_timeout'){
+      toast('⚠️ Firebase phản hồi chậm. Đang dùng dữ liệu cục bộ.');
+    } else {
+      if(!bk) seedWords();
+      toast('⚠️ Không kết nối Firebase. Dùng dữ liệu cục bộ.');
+    }
   }
   document.getElementById('loading').style.display='none';
   renderDashboard();
@@ -897,7 +908,9 @@ setTimeout(()=>{
   const loginScreen=document.getElementById('login-screen');
   if(loading&&loading.style.display!=='none'){
     loading.style.display='none';
-    if(loginScreen)loginScreen.style.display='flex';
-    console.warn('Firebase timeout - showing login screen');
+    // Only show login if user is NOT logged in
+    // If logged in, init() will complete via timeout and render the app
+    if(!currentUserId&&loginScreen) loginScreen.style.display='flex';
+    console.warn('Firebase safety timeout fired');
   }
 },8000);
