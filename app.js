@@ -310,16 +310,25 @@ function renderDashboard(){
 }
 
 // ─── REVIEW ───────────────────────────────────────────────────────────────────
+let sessionResults = []; // {zh, vi, pinyin, correct: bool}
+let sessionInitialCount = 0;
+
 function startReview(){
   reviewQueue=db.words.filter(w=>!w.nextReview||w.nextReview<=Date.now()).map(w=>({...w})).sort(()=>Math.random()-0.5);
+  sessionResults=[];
+  sessionInitialCount=reviewQueue.length;
   answered=false;renderReviewCard();
 }
 function renderReviewCard(){
   const rc=$('review-content'),rs=$('review-subtitle');
   if(!reviewQueue.length){
     rs.textContent='';
-    rc.innerHTML=`<div class="empty-state"><div class="emoji">🎉</div><h3>Tuyệt vời! Đã hoàn thành!</h3><p>Không có từ cần ôn. Thêm từ mới hoặc quay lại sau!</p></div>`;
-    const btn=document.createElement('button');btn.className='submit-btn';btn.style.marginTop='20px';btn.textContent='+ Thêm từ mới';btn.addEventListener('click',()=>nav('add'));rc.querySelector('.empty-state').appendChild(btn);
+    if(sessionInitialCount===0){
+      rc.innerHTML=`<div class="empty-state"><div class="emoji">🎉</div><h3>Tuyệt vời! Đã hoàn thành!</h3><p>Không có từ cần ôn. Thêm từ mới hoặc quay lại sau!</p></div>`;
+      const btn=document.createElement('button');btn.className='submit-btn';btn.style.marginTop='20px';btn.textContent='+ Thêm từ mới';btn.addEventListener('click',()=>nav('add'));rc.querySelector('.empty-state').appendChild(btn);
+    } else {
+      renderSessionResults(rc);
+    }
     return;
   }
   currentCard=reviewQueue[0];
@@ -356,6 +365,7 @@ function checkAnswer(){
   if(answered)return;const inp=$('answer-input');if(!inp?.value.trim())return;
   answered=true;const ok=inp.value.trim()===currentCard.zh;
   db.total++;if(ok)db.correct++;
+  if(!currentCard._resultLogged){currentCard._resultLogged=true;sessionResults.push({zh:currentCard.zh,vi:currentCard.vi,pinyin:currentCard.pinyin,correct:ok,userAnswer:inp.value.trim()});}
   const today=new Date().toISOString().split('T')[0];
   db.sessions[today]=(db.sessions[today]||0)+1;save();
   const fb=$('feedback-bar'),ca=$('correct-ans');
@@ -367,6 +377,83 @@ function checkAnswer(){
 function gradeCard(g){
   const w=db.words.find(x=>x.id===currentCard.id);if(w){sm2(w,g);save();}
   reviewQueue.shift();answered=false;renderReviewCard();
+}
+
+function renderSessionResults(rc){
+  const total=sessionInitialCount;
+  const wrongList=sessionResults.filter(r=>!r.correct);
+  const correctList=sessionResults.filter(r=>r.correct);
+  const pct=total>0?Math.round(correctList.length/total*100):0;
+  const grade=pct===100?'🏆 Hoàn hảo!':pct>=80?'🎉 Xuất sắc!':pct>=60?'💪 Khá tốt!':pct>=40?'📚 Cần cố thêm!':'😅 Hãy ôn lại nhé!';
+
+  const wrongHtml=wrongList.length===0?'':
+    `<div style="margin-top:24px">
+      <div style="font-size:11px;font-weight:700;color:var(--red);letter-spacing:0.08em;margin-bottom:10px">❌ TỪ TRẢ LỜI SAI (${wrongList.length} từ)</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${wrongList.map(r=>`
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#FEF2F2;border:1px solid #FECACA;border-radius:10px">
+            <div style="flex:0 0 auto;text-align:center;min-width:60px">
+              <div style="font-family:'Noto Serif SC',serif;font-size:22px;font-weight:700;color:var(--red)">${r.zh}</div>
+              <div style="font-size:11px;color:#EF4444;margin-top:1px">${r.pinyin}</div>
+            </div>
+            <div style="flex:1;border-left:2px solid #FECACA;padding-left:12px">
+              <div style="font-size:13px;font-weight:600;color:#374151">${r.vi}</div>
+              ${r.userAnswer?(`<div style="font-size:11px;color:#9CA3AF;margin-top:3px">Bạn nhập: <span style="font-family:'Noto Sans SC',sans-serif;color:#EF4444">${r.userAnswer}</span></div>`):''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+
+  const correctHtml=correctList.length===0?'':
+    `<div style="margin-top:16px">
+      <div style="font-size:11px;font-weight:700;color:var(--green);letter-spacing:0.08em;margin-bottom:10px">✓ TỪ TRẢ LỜI ĐÚNG (${correctList.length} từ)</div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px">
+        ${correctList.map(r=>`
+          <div style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:99px">
+            <span style="font-family:'Noto Serif SC',serif;font-size:15px;font-weight:700;color:var(--green)">${r.zh}</span>
+            <span style="font-size:11px;color:#6B7280">${r.vi}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+
+  rc.innerHTML=`
+    <div style="max-width:560px;margin:0 auto">
+      <div style="text-align:center;padding:28px 20px 20px">
+        <div style="font-size:48px;margin-bottom:10px">${pct===100?'🏆':pct>=60?'🎉':'📖'}</div>
+        <div style="font-size:22px;font-weight:700;letter-spacing:-0.02em;margin-bottom:6px">${grade}</div>
+        <div style="font-size:14px;color:var(--text2)">Phiên ôn tập đã hoàn thành</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:4px">
+        <div style="background:var(--surface2);border-radius:12px;padding:16px 10px;border:1px solid var(--border);text-align:center">
+          <div style="font-size:28px;font-weight:700">${total}</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em">Tổng số từ</div>
+        </div>
+        <div style="background:#F0FDF4;border-radius:12px;padding:16px 10px;border:1px solid #BBF7D0;text-align:center">
+          <div style="font-size:28px;font-weight:700;color:var(--green)">${correctList.length}</div>
+          <div style="font-size:11px;color:var(--green);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em">Trả lời đúng</div>
+        </div>
+        <div style="background:#FEF2F2;border-radius:12px;padding:16px 10px;border:1px solid #FECACA;text-align:center">
+          <div style="font-size:28px;font-weight:700;color:var(--red)">${wrongList.length}</div>
+          <div style="font-size:11px;color:var(--red);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em">Trả lời sai</div>
+        </div>
+      </div>
+      ${wrongHtml}
+      ${correctHtml}
+      <div style="display:flex;gap:10px;margin-top:24px;padding-bottom:8px">
+        <button id="session-review-again" style="flex:1;padding:12px;background:var(--red);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">🔄 Ôn lại từ sai</button>
+        <button id="session-go-dashboard" style="flex:1;padding:12px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">← Dashboard</button>
+      </div>
+    </div>
+  `;
+  $('session-go-dashboard').addEventListener('click',()=>nav('dashboard'));
+  $('session-review-again').addEventListener('click',()=>{
+    if(wrongList.length===0){toast('Bạn đã trả lời đúng tất cả! 🎉');return;}
+    reviewQueue=wrongList.map(r=>db.words.find(w=>w.zh===r.zh)).filter(Boolean).map(w=>({...w})).sort(()=>Math.random()-0.5);
+    sessionResults=[];sessionInitialCount=reviewQueue.length;
+    answered=false;renderReviewCard();
+  });
 }
 
 // ─── ARTICLE REVIEW ───────────────────────────────────────────────────────────
@@ -459,7 +546,7 @@ function addWord(){
   const zh=$('inp-zh').value.trim(),vi=$('inp-vi').value.trim();
   if(!zh||!vi){toast('Vui lòng nhập chữ Hán và nghĩa!');return;}
   db.words.push({id:Date.now(),zh,vi,pinyin:getPinyin(zh),
-    zhDef:$('inp-zh-def')?.value.trim()||'',
+    zhDef:$('inp-zh-def').value.trim(),
     exZh:$('inp-ex-zh').value.trim(),exVi:$('inp-ex-vi').value.trim(),
     wordType:window._selectedType||'',
     status:'new',ef:2.5,interval:0,repetitions:0,nextReview:null,lastReview:null,added:Date.now()});
