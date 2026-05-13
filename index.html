@@ -171,10 +171,6 @@
       <input type="text" id="inp-vi" placeholder="e.g. xin chào">
     </div>
     <div class="form-group">
-      <label>Định nghĩa tiếng Trung <span class="optional-tag">(tuỳ chọn)</span></label>
-      <input type="text" id="inp-zh-def" placeholder="e.g. 武术招式；政治手段" style="font-family:'Noto Sans SC',sans-serif">
-    </div>
-    <div class="form-group">
       <label>Loại từ <span class="optional-tag">(tuỳ chọn)</span></label>
       <div id="word-type-selector" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px"></div>
     </div>
@@ -246,7 +242,23 @@
     </div>
     <div class="form-group">
       <label>Nội dung bài báo <span style="color:var(--red)">*</span></label>
-      <textarea id="article-body-inp" style="min-height:200px;font-family:'Noto Sans SC',sans-serif;font-size:15px;line-height:1.8" placeholder="Dán nội dung tiếng Trung vào đây..."></textarea>
+      <div class="rich-toolbar" id="article-rich-toolbar">
+        <button type="button" class="rtb-btn" data-cmd="bold" title="In đậm (Ctrl+B)"><b>B</b></button>
+        <button type="button" class="rtb-btn" data-cmd="italic" title="In nghiêng (Ctrl+I)"><i>I</i></button>
+        <button type="button" class="rtb-btn" data-cmd="underline" title="Gạch chân (Ctrl+U)"><u>U</u></button>
+        <button type="button" class="rtb-btn" data-cmd="strikeThrough" title="Gạch ngang"><s>S</s></button>
+        <div class="rtb-sep"></div>
+        <button type="button" class="rtb-btn" data-cmd="formatBlock" data-val="H2" title="Tiêu đề lớn">H2</button>
+        <button type="button" class="rtb-btn" data-cmd="formatBlock" data-val="H3" title="Tiêu đề nhỏ">H3</button>
+        <button type="button" class="rtb-btn" data-cmd="formatBlock" data-val="P" title="Đoạn thường">¶</button>
+        <div class="rtb-sep"></div>
+        <button type="button" class="rtb-btn" data-cmd="insertUnorderedList" title="Danh sách • ">• list</button>
+        <button type="button" class="rtb-btn" data-cmd="insertOrderedList" title="Danh sách số">1. list</button>
+      </div>
+      <div id="article-body-inp"
+        contenteditable="true"
+        class="rich-editor"
+        data-placeholder="Dán nội dung tiếng Trung vào đây..."></div>
     </div>
     <div style="display:flex;gap:10px">
       <button class="submit-btn" id="save-article-btn">💾 Lưu bài báo</button>
