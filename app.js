@@ -459,7 +459,7 @@ function addWord(){
   const zh=$('inp-zh').value.trim(),vi=$('inp-vi').value.trim();
   if(!zh||!vi){toast('Vui lòng nhập chữ Hán và nghĩa!');return;}
   db.words.push({id:Date.now(),zh,vi,pinyin:getPinyin(zh),
-    zhDef:$('inp-zh-def').value.trim(),
+    zhDef:$('inp-zh-def')?.value.trim()||'',
     exZh:$('inp-ex-zh').value.trim(),exVi:$('inp-ex-vi').value.trim(),
     wordType:window._selectedType||'',
     status:'new',ef:2.5,interval:0,repetitions:0,nextReview:null,lastReview:null,added:Date.now()});
