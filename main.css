@@ -802,3 +802,14 @@ tbody tr:hover td{background:var(--surface2)}
 .rich-editor ul,.rich-editor ol{padding-left:20px;margin:4px 0;}
 body.dark .rich-editor{background:var(--surface);border-color:var(--border2);}
 body.dark .rich-toolbar{background:var(--surface2);border-color:var(--border2);}
+
+/* ─── NOTE HINT TOGGLE ────────────────────────────────────── */
+#hint-toggle-btn:hover, #art-hint-toggle-btn:hover {
+  background: var(--surface3);
+  border-color: var(--red);
+  color: var(--red);
+}
+#hint-content, #art-hint-content {
+  animation: fadeIn 0.18s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
