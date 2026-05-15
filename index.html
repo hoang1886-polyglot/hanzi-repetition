@@ -185,6 +185,12 @@
         <textarea id="inp-ex-vi" placeholder="e.g. Xin chào, tôi tên là Tiểu Minh."></textarea>
       </div>
     </div>
+    <div style="border-top:1px solid var(--border);padding-top:20px;margin-top:4px">
+      <div class="form-group">
+        <label>Ghi chú cá nhân <span class="optional-tag">(tuỳ chọn)</span></label>
+        <textarea id="inp-note" placeholder="Ghi lại những điều cần nhớ về từ này: cách dùng, ngữ cảnh, mẹo nhớ từ, điểm dễ nhầm lẫn..." style="min-height:100px;resize:vertical"></textarea>
+      </div>
+    </div>
     <button class="submit-btn" id="add-word-btn">+ Thêm từ</button>
   </div>
 </div>
@@ -319,6 +325,10 @@
             <input type="text" id="art-inp-ex-vi" placeholder="e.g. Kinh tế TQ phát triển nhanh">
           </div>
         </div>
+        <div class="form-group" style="margin-bottom:12px">
+          <label>Ghi chú <span style="font-size:11px;color:var(--text3);font-weight:400">(tuỳ chọn)</span></label>
+          <textarea id="art-inp-note" placeholder="Mẹo nhớ từ, ngữ cảnh, điểm dễ nhầm lẫn..." style="min-height:80px;resize:vertical;font-size:13px"></textarea>
+        </div>
         <button class="submit-btn" id="art-add-word-btn" style="width:100%;padding:10px">+ Thêm từ</button>
       </div>
 
@@ -370,7 +380,9 @@
   </div>  
   <div style="font-size:10px;color:#555;letter-spacing:0.05em;margin-bottom:5px">VÍ DỤ (tuỳ chọn)</div>
   <input id="popup-ex-zh-inp" placeholder="Câu ví dụ tiếng Trung..." style="width:100%;padding:6px 10px;border-radius:6px;border:none;background:#1A1A1A;color:#ccc;font-size:12px;font-family:'Noto Sans SC',sans-serif;outline:none;margin-bottom:5px">
-  <input id="popup-ex-vi-inp" placeholder="Dịch nghĩa..." style="width:100%;padding:6px 10px;border-radius:6px;border:none;background:#1A1A1A;color:#ccc;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:8px">
+  <input id="popup-ex-vi-inp" placeholder="Dịch nghĩa..." style="width:100%;padding:6px 10px;border-radius:6px;border:none;background:#1A1A1A;color:#ccc;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:6px">
+  <div style="font-size:10px;color:#555;letter-spacing:0.05em;margin-bottom:5px">GHI CHÚ <span style="font-weight:400;letter-spacing:0">(tuỳ chọn)</span></div>
+  <textarea id="popup-note-inp" placeholder="Mẹo nhớ từ, ngữ cảnh, điểm dễ nhầm lẫn..." style="width:100%;padding:7px 10px;border-radius:6px;border:none;background:#1A1A1A;color:#ccc;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:8px;resize:vertical;min-height:72px;box-sizing:border-box"></textarea>
   <div style="display:flex;gap:6px">
     <button id="popup-add-btn" style="flex:1;padding:7px;background:var(--red);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">+ Thêm vào từ điển</button>
     <button id="popup-cancel-btn" style="padding:7px 12px;background:#222;color:#aaa;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif">✕</button>
@@ -433,6 +445,12 @@
       <div class="form-group">
         <label>Dịch nghĩa (tiếng Việt)</label>
         <textarea id="edit-inp-exvi"></textarea>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px">
+      <div class="form-group">
+        <label>Ghi chú cá nhân <span class="optional-tag">(tuỳ chọn)</span></label>
+        <textarea id="edit-inp-note" placeholder="Mẹo nhớ từ, ngữ cảnh, điểm dễ nhầm lẫn..." style="min-height:100px;resize:vertical"></textarea>
       </div>
     </div>
     <div style="display:flex;gap:10px;margin-top:8px">
