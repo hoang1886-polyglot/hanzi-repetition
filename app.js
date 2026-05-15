@@ -257,9 +257,10 @@ function setupListeners(){
   $('art-add-word-btn').addEventListener('click',()=>{
     const zh=$('art-inp-zh').value.trim(),vi=$('art-inp-vi').value.trim();
     const exZh=$('art-inp-ex-zh').value.trim(),exVi=$('art-inp-ex-vi').value.trim(),zhDef=$('art-inp-zh-def').value.trim();
-    const w=addWordFromArticle(zh,vi,exZh,exVi,zhDef,window._artSelectedType);
+    const note=$('art-inp-note')?.value.trim()||'';
+    const w=addWordFromArticle(zh,vi,exZh,exVi,zhDef,window._artSelectedType,note);
     if(w){
-      ['art-inp-zh','art-inp-vi','art-inp-ex-zh','art-inp-ex-vi','art-inp-zh-def'].forEach(id=>$(id).value='');
+      ['art-inp-zh','art-inp-vi','art-inp-ex-zh','art-inp-ex-vi','art-inp-zh-def','art-inp-note'].forEach(id=>{ const el=$(id); if(el) el.value=''; });
       $('art-pinyin-preview').textContent='';
       resetWordTypeSelector('art-word-type-selector','_artSelectedType');
       toast(`✓ Đã thêm: ${zh}`);
@@ -364,7 +365,7 @@ function renderReviewCard(){
       <div class="review-word">${currentCard.vi}</div>
       ${wordTypeBadgeHtml(currentCard.wordType, currentCard.wordTypes)}
       ${currentCard.zhDef?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:8px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);text-align:left">🀄 <span style="font-family:'Noto Sans SC',sans-serif">${currentCard.zhDef}</span></div>`:''}
-      ${currentCard.exVi?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:11px 16px;background:var(--surface2);border-radius:8px;text-align:left;border:1px solid var(--border)"><div style="font-family:'Noto Sans SC',sans-serif;font-size:14px;margin-bottom:4px">${currentCard.exZh||''}</div><div>${currentCard.exVi}</div></div>`:''}
+      ${currentCard.exVi?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:11px 16px;background:var(--surface2);border-radius:8px;text-align:left;border:1px solid var(--border)"><div style="font-family:'Noto Sans SC',sans-serif;font-size:14px;margin-bottom:4px">${currentCard.exZh||''}</div><div>${currentCard.exVi}</div></div>`:''}\n      ${currentCard.note?`<div style="margin-top:10px"><button id="hint-toggle-btn" style="padding:5px 14px;background:var(--surface2);border:1.5px dashed var(--border2);border-radius:6px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif">💡 Xem gợi ý</button><div id="hint-content" style="display:none;margin-top:8px;padding:12px 16px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap">${currentCard.note}</div></div>`:''}
       <div class="review-pinyin" id="live-pinyin"></div>
       <input type="text" class="answer-input" id="answer-input" placeholder="Nhập chữ Hán...">
       <div class="feedback-bar" id="feedback-bar"></div>
@@ -382,6 +383,8 @@ function renderReviewCard(){
   inp.addEventListener('keydown',e=>{if(e.key==='Enter')checkAnswer();});
   $('check-btn').addEventListener('click',checkAnswer);
   rc.querySelectorAll('.diff-btn').forEach(btn=>btn.addEventListener('click',()=>gradeCard(parseInt(btn.dataset.grade))));
+  const hintBtn=$('hint-toggle-btn');
+  if(hintBtn){hintBtn.addEventListener('click',()=>{const c=$('hint-content');if(c.style.display==='none'){c.style.display='block';hintBtn.textContent='💡 Ẩn gợi ý';}else{c.style.display='none';hintBtn.textContent='💡 Xem gợi ý';}});}
   answered=false;
 }
 function checkAnswer(){
@@ -450,7 +453,7 @@ function renderArtReviewCard(){
       <div class="review-word">${artReviewCard.vi}</div>
       ${wordTypeBadgeHtml(artReviewCard.wordType, artReviewCard.wordTypes)}
       ${artReviewCard.zhDef?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:8px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);text-align:left">🀄 <span style="font-family:'Noto Sans SC',sans-serif">${artReviewCard.zhDef}</span></div>`:''}
-      ${artReviewCard.exVi?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:11px 16px;background:var(--surface2);border-radius:8px;text-align:left;border:1px solid var(--border)"><div style="font-family:'Noto Sans SC',sans-serif;font-size:14px;margin-bottom:4px">${artReviewCard.exZh||''}</div><div>${artReviewCard.exVi}</div></div>`:''}
+      ${artReviewCard.exVi?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:11px 16px;background:var(--surface2);border-radius:8px;text-align:left;border:1px solid var(--border)"><div style="font-family:'Noto Sans SC',sans-serif;font-size:14px;margin-bottom:4px">${artReviewCard.exZh||''}</div><div>${artReviewCard.exVi}</div></div>`:''}\n      ${artReviewCard.note?`<div style="margin-top:10px"><button id="art-hint-toggle-btn" style="padding:5px 14px;background:var(--surface2);border:1.5px dashed var(--border2);border-radius:6px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif">💡 Xem gợi ý</button><div id="art-hint-content" style="display:none;margin-top:8px;padding:12px 16px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap">${artReviewCard.note}</div></div>`:''}
       <div class="review-pinyin" id="art-live-pinyin"></div>
       <input type="text" class="answer-input" id="art-answer-input" placeholder="Nhập chữ Hán...">
       <div class="feedback-bar" id="art-feedback-bar"></div>
@@ -468,6 +471,8 @@ function renderArtReviewCard(){
   inp.addEventListener('keydown',e=>{if(e.key==='Enter')artCheckAnswer();});
   $('art-check-btn').addEventListener('click',artCheckAnswer);
   rc.querySelectorAll('.diff-btn').forEach(btn=>btn.addEventListener('click',()=>artGradeCard(parseInt(btn.dataset.grade))));
+  const artHintBtn=$('art-hint-toggle-btn');
+  if(artHintBtn){artHintBtn.addEventListener('click',()=>{const c=$('art-hint-content');if(c.style.display==='none'){c.style.display='block';artHintBtn.textContent='💡 Ẩn gợi ý';}else{c.style.display='none';artHintBtn.textContent='💡 Xem gợi ý';}});}
   artReviewAnswered=false;
 }
 function artCheckAnswer(){
@@ -493,10 +498,11 @@ function addWord(){
   db.words.push({id:Date.now(),zh,vi,pinyin:getPinyin(zh),
     zhDef:$('inp-zh-def').value.trim(),
     exZh:$('inp-ex-zh').value.trim(),exVi:$('inp-ex-vi').value.trim(),
+    note:$('inp-note')?.value.trim()||'',
     wordType:window._selectedType||'',
     status:'new',ef:2.5,interval:0,repetitions:0,nextReview:null,lastReview:null,added:Date.now()});
   save();
-  ['inp-zh','inp-vi','inp-zh-def','inp-ex-zh','inp-ex-vi'].forEach(id=>$(id).value='');
+  ['inp-zh','inp-vi','inp-zh-def','inp-ex-zh','inp-ex-vi','inp-note'].forEach(id=>{ const el=$(id); if(el) el.value=''; });
   $('pinyin-preview').textContent='';
   resetWordTypeSelector('word-type-selector','_selectedType');
   toast(`✓ Đã thêm: ${zh}`);
@@ -561,6 +567,7 @@ function openWordEditor(id){
   $('edit-inp-zhdef').value=word.zhDef||'';
   $('edit-inp-exzh').value=word.exZh||'';
   $('edit-inp-exvi').value=word.exVi||'';
+  if($('edit-inp-note'))$('edit-inp-note').value=word.note||'';
   window._editSelectedTypes=word.wordTypes?.length?[...word.wordTypes]:(word.wordType?[word.wordType]:[]);
   buildEditTypeSelector();
   $('word-edit-overlay').style.display='flex';
@@ -584,6 +591,7 @@ function saveWordEdit(){
   word.zhDef=$('edit-inp-zhdef').value.trim();
   word.exZh=$('edit-inp-exzh').value.trim();
   word.exVi=$('edit-inp-exvi').value.trim();
+  word.note=$('edit-inp-note')?.value.trim()||'';
   word.wordTypes=[...window._editSelectedTypes];
   word.wordType=word.wordTypes[0]||'';
   save();
@@ -729,14 +737,14 @@ function renderArticleAddedWords(article){
     </div>`;}).join('');
 }
 
-function addWordFromArticle(zh,vi,exZh='',exVi='',zhDef='',wordType=''){
+function addWordFromArticle(zh,vi,exZh='',exVi='',zhDef='',wordType='',note=''){
   if(!zh||!vi){toast('Vui lòng nhập chữ Hán và nghĩa!');return false;}
   const article=db.articles.find(a=>a.id===currentArticleId);
   if(article&&article.linkedWords){
     const already=db.words.find(w=>w.zh===zh&&article.linkedWords.includes(w.id));
     if(already){toast(`"${zh}" đã được thêm rồi`);return false;}
   }
-  const newWord={id:Date.now(),zh,vi,pinyin:getPinyin(zh),zhDef,exZh,exVi,wordType:wordType||'',status:'new',ef:2.5,interval:0,repetitions:0,nextReview:null,lastReview:null,added:Date.now()};
+  const newWord={id:Date.now(),zh,vi,pinyin:getPinyin(zh),zhDef,exZh,exVi,note:note||'',wordType:wordType||'',status:'new',ef:2.5,interval:0,repetitions:0,nextReview:null,lastReview:null,added:Date.now()};
   db.words.push(newWord);
   if(article){
     if(!article.linkedWords)article.linkedWords=[];
@@ -847,7 +855,8 @@ function setupTextSelection(){
     const zh=$('popup-word').textContent.trim(),vi=$('popup-vi-inp').value.trim();
     const zhDef=$('popup-zh-def-inp'); 
     const exZh=$('popup-ex-zh-inp').value.trim(),exVi=$('popup-ex-vi-inp').value.trim();
-    const w=addWordFromArticle(zh,vi,exZh,exVi,zhDef?zhDef.value.trim():'',window._popupSelectedType);
+    const note=$('popup-note-inp')?.value.trim()||'';
+    const w=addWordFromArticle(zh,vi,exZh,exVi,zhDef?zhDef.value.trim():'',window._popupSelectedType,note);
     if(w){
       toast(`✓ Đã thêm: ${zh}`);popup.style.display='none';window.getSelection()?.removeAllRanges();
       const article=db.articles.find(a=>a.id===currentArticleId);if(article)renderArticleAddedWords(article);
