@@ -336,7 +336,7 @@ function renderDashboard(){
     ?recent.map(w=>{
   const wts=(w.wordTypes?.length?w.wordTypes:(w.wordType?[w.wordType]:[]));
   const badges=wts.map(k=>{const i=getWtInfo(k);return i?`<span style="padding:2px 8px;border-radius:99px;font-size:10px;font-weight:700;background:${i.bg};color:${i.color};display:inline-block">${i.key} ${i.vi}</span>`:''}).join('');
-  return`<div class="word-tile"><div class="zh">${w.zh}</div><div class="py">${w.pinyin}</div><div class="vi">${w.vi}</div>${badges?`<div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:6px">${badges}</div>`:''}</div>`;
+  return`<div class="word-tile"><div class="zh">${tr(w.zh)}</div><div class="py">${w.pinyin}</div><div class="vi">${w.vi}</div>${badges?`<div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:6px">${badges}</div>`:''}</div>`;
 }).join('')
     :`<div style="color:var(--text3);font-size:14px;grid-column:1/-1">Chưa có từ. <span style="color:var(--red);cursor:pointer" id="add-first-link">Thêm từ đầu tiên!</span></div>`;
   document.getElementById('add-first-link')?.addEventListener('click',()=>nav('add'));
@@ -451,8 +451,8 @@ function renderReviewCard(){
       <div class="review-vi">NGHĨA TIẾNG VIỆT</div>
       <div class="review-word">${currentCard.vi}</div>
       ${wordTypeBadgeHtml(currentCard.wordType, currentCard.wordTypes)}
-      ${currentCard.zhDef?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:8px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);text-align:left">🀄 <span style="font-family:'Noto Sans SC',sans-serif">${currentCard.zhDef}</span></div>`:''}
-      ${currentCard.exVi?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:11px 16px;background:var(--surface2);border-radius:8px;text-align:left;border:1px solid var(--border)"><div style="font-family:'Noto Sans SC',sans-serif;font-size:14px;margin-bottom:4px">${currentCard.exZh||''}</div><div>${currentCard.exVi}</div></div>`:''}\n      ${currentCard.note?`<div style="margin-top:10px"><button id="hint-toggle-btn" style="padding:5px 14px;background:var(--surface2);border:1.5px dashed var(--border2);border-radius:6px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif">💡 Xem gợi ý</button><div id="hint-content" style="display:none;margin-top:8px;padding:12px 16px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap;text-align:left">${currentCard.note}</div></div>`:''}
+      ${currentCard.zhDef?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:8px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);text-align:left">🀄 <span style="font-family:'Noto Sans SC',sans-serif">${tr(currentCard.zhDef)}</span></div>`:''}
+      ${currentCard.exVi?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:11px 16px;background:var(--surface2);border-radius:8px;text-align:left;border:1px solid var(--border)"><div style="font-family:'Noto Sans SC',sans-serif;font-size:14px;margin-bottom:4px">${tr(currentCard.exZh||'')}</div><div>${currentCard.exVi}</div></div>`:''}\n      ${currentCard.note?`<div style="margin-top:10px"><button id="hint-toggle-btn" style="padding:5px 14px;background:var(--surface2);border:1.5px dashed var(--border2);border-radius:6px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif">💡 Xem gợi ý</button><div id="hint-content" style="display:none;margin-top:8px;padding:12px 16px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap;text-align:left">${currentCard.note}</div></div>`:''}
       <div class="review-pinyin" id="live-pinyin"></div>
       <input type="text" class="answer-input" id="answer-input" placeholder="Nhập chữ Hán...">
       <div class="feedback-bar" id="feedback-bar"></div>
@@ -484,7 +484,7 @@ function checkAnswer(){
   db.sessions[today]=(db.sessions[today]||0)+1;save();
   const fb=$('feedback-bar'),ca=$('correct-ans');
   if(ok){inp.classList.add('correct');fb.className='feedback-bar correct';fb.textContent='✓ Chính xác!';ca.style.display='none';}
-  else{inp.classList.add('wrong');fb.className='feedback-bar wrong';fb.textContent='✗ Sai rồi!';ca.style.display='block';ca.textContent=`Đáp án đúng: ${currentCard.zh} (${currentCard.pinyin})`;}
+  else{inp.classList.add('wrong');fb.className='feedback-bar wrong';fb.textContent='✗ Sai rồi!';ca.style.display='block';ca.textContent=`Đáp án đúng: ${tr(currentCard.zh)} (${currentCard.pinyin})`;}
   $('diff-btns').style.display='grid';$('check-btn').textContent='Chọn mức độ khó →';$('check-btn').disabled=true;
   for(let g=0;g<4;g++){const el=$(`i${g}`);if(el)el.textContent=intLabel(g,currentCard);}
 }
@@ -541,8 +541,8 @@ function renderArtReviewCard(){
       <div class="review-vi">NGHĨA TIẾNG VIỆT</div>
       <div class="review-word">${artReviewCard.vi}</div>
       ${wordTypeBadgeHtml(artReviewCard.wordType, artReviewCard.wordTypes)}
-      ${artReviewCard.zhDef?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:8px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);text-align:left">🀄 <span style="font-family:'Noto Sans SC',sans-serif">${artReviewCard.zhDef}</span></div>`:''}
-      ${artReviewCard.exVi?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:11px 16px;background:var(--surface2);border-radius:8px;text-align:left;border:1px solid var(--border)"><div style="font-family:'Noto Sans SC',sans-serif;font-size:14px;margin-bottom:4px">${artReviewCard.exZh||''}</div><div>${artReviewCard.exVi}</div></div>`:''}\n      ${artReviewCard.note?`<div style="margin-top:10px"><button id="art-hint-toggle-btn" style="padding:5px 14px;background:var(--surface2);border:1.5px dashed var(--border2);border-radius:6px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif">💡 Xem gợi ý</button><div id="art-hint-content" style="display:none;margin-top:8px;padding:12px 16px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap;text-align:left">${artReviewCard.note}</div></div>`:''}
+      ${artReviewCard.zhDef?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:8px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);text-align:left">🀄 <span style="font-family:'Noto Sans SC',sans-serif">${tr(artReviewCard.zhDef)}</span></div>`:''}
+      ${artReviewCard.exVi?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:11px 16px;background:var(--surface2);border-radius:8px;text-align:left;border:1px solid var(--border)"><div style="font-family:'Noto Sans SC',sans-serif;font-size:14px;margin-bottom:4px">${tr(artReviewCard.exZh||'')}</div><div>${artReviewCard.exVi}</div></div>`:''}\n      ${artReviewCard.note?`<div style="margin-top:10px"><button id="art-hint-toggle-btn" style="padding:5px 14px;background:var(--surface2);border:1.5px dashed var(--border2);border-radius:6px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif">💡 Xem gợi ý</button><div id="art-hint-content" style="display:none;margin-top:8px;padding:12px 16px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap;text-align:left">${artReviewCard.note}</div></div>`:''}
       <div class="review-pinyin" id="art-live-pinyin"></div>
       <input type="text" class="answer-input" id="art-answer-input" placeholder="Nhập chữ Hán...">
       <div class="feedback-bar" id="art-feedback-bar"></div>
@@ -571,7 +571,7 @@ function artCheckAnswer(){
   const ok=inp.value.trim()===artReviewCard.zh;if(ok)artReviewCorrect++;
   const fb=$('art-feedback-bar'),ca=$('art-correct-ans');
   if(ok){inp.classList.add('correct');fb.className='feedback-bar correct';fb.textContent='✓ Chính xác!';ca.style.display='none';}
-  else{inp.classList.add('wrong');fb.className='feedback-bar wrong';fb.textContent='✗ Sai rồi!';ca.style.display='block';ca.textContent=`Đáp án đúng: ${artReviewCard.zh} (${artReviewCard.pinyin})`;}
+  else{inp.classList.add('wrong');fb.className='feedback-bar wrong';fb.textContent='✗ Sai rồi!';ca.style.display='block';ca.textContent=`Đáp án đúng: ${tr(artReviewCard.zh)} (${artReviewCard.pinyin})`;}
   $('art-diff-btns').style.display='grid';$('art-check-btn').textContent='Chọn mức độ khó →';$('art-check-btn').disabled=true;
   for(let g=0;g<4;g++){const el=$(`ai${g}`);if(el)el.textContent=intLabel(g,artReviewCard);}
 }
@@ -622,7 +622,7 @@ function renderWordList(q=''){
   <button class="wt-add-btn" data-id="${w.id}" title="Chỉnh loại từ" style="width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#ff6b8a,#e8194b);color:#fff;border:none;cursor:pointer;font-size:14px;font-weight:700;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;margin-left:2px;line-height:1">+</button>
 </div>`;
       return`<tr>
-        <td style="font-family:'Noto Serif SC',serif;font-size:19px;font-weight:600">${w.zh}</td>
+        <td style="font-family:'Noto Serif SC',serif;font-size:19px;font-weight:600">${tr(w.zh)}</td>
         <td style="color:var(--red);font-weight:500">${w.pinyin}</td>
         <td>${w.vi}</td>
         <td>${wtHtml}</td>
@@ -820,7 +820,7 @@ function renderArticleAddedWords(article){
   wordsDiv.innerHTML=words.map(w=>{
     const wt=w.wordType?getWtInfo(w.wordType):null;
     return`<div class="added-word-row">
-      <span class="added-word-zh">${w.zh}</span>
+      <span class="added-word-zh">${tr(w.zh)}</span>
       <span class="added-word-py">${w.pinyin}</span>
       ${wt?`<span style="padding:1px 7px;border-radius:99px;font-size:10px;font-weight:600;background:${wt.bg};color:${wt.color};flex-shrink:0">${wt.key}</span>`:''}
       <span class="added-word-vi">${w.vi}</span>
@@ -997,6 +997,51 @@ function initDarkMode(){
   if(localStorage.getItem('hanzi_dark')==='1')document.body.classList.add('dark');
   $('dark-toggle').addEventListener('click',()=>{document.body.classList.toggle('dark');localStorage.setItem('hanzi_dark',document.body.classList.contains('dark')?'1':'0');});
 }
+
+// ─── TRADITIONAL CHINESE TOGGLE ───────────────────────────────────────────────
+let isTraditional=false;
+let _openccConverter=null;
+
+async function getConverter(){
+  if(_openccConverter)return _openccConverter;
+  _openccConverter=OpenCC.Converter({from:'cn',to:'twp'});
+  return _openccConverter;
+}
+
+// tr(text) → converts to traditional if toggle is on, else returns as-is
+async function trAsync(text){
+  if(!text||!isTraditional)return text;
+  const conv=await getConverter();
+  return conv(text);
+}
+
+// Synchronous version using cached converter (call after converter is warmed up)
+function tr(text){
+  if(!text||!isTraditional||!_openccConverter)return text;
+  return _openccConverter(text);
+}
+
+async function initTradToggle(){
+  isTraditional=localStorage.getItem('hanzi_trad')==='1';
+  const btn=$('trad-toggle');
+  if(isTraditional){document.body.classList.add('trad');await getConverter();}
+  btn.addEventListener('click',async()=>{
+    isTraditional=!isTraditional;
+    localStorage.setItem('hanzi_trad',isTraditional?'1':'0');
+    document.body.classList.toggle('trad',isTraditional);
+    if(isTraditional)await getConverter();
+    const ap=document.querySelector('.page.active')?.id;
+    if(ap==='wordlist')renderWordList($('search-input')?.value||'');
+    if(ap==='dashboard')renderDashboard();
+    if(ap==='review'&&currentCard)renderReviewCard();
+    if(ap==='articles'){
+      const article=db.articles.find(a=>a.id===currentArticleId);
+      if(article)renderArticleAddedWords(article);
+      else renderArticlesList();
+    }
+  });
+}
+
 function initMobileMenu(){
   const btn=$('menu-btn'),sidebar=$('sidebar'),overlay=$('sidebar-overlay');
   btn.addEventListener('click',()=>{sidebar.classList.toggle('open');overlay.classList.toggle('open');});
@@ -1031,7 +1076,7 @@ onAuthStateChanged(auth,async user=>{
   }
 });
 
-loadDict();initDarkMode();initMobileMenu();
+loadDict();initDarkMode();initTradToggle();initMobileMenu();
 
 // ─── SAFETY TIMEOUT ───────────────────────────────────────────────────────────
 // Nếu Firebase không phản hồi sau 8 giây, ẩn loading và hiện màn hình đăng nhập
