@@ -89,6 +89,28 @@ body.dark #popup-vi-inp{background:#1A1A1A;color:#E8E4DC}
 body.dark #dark-toggle{background:var(--red);border-color:var(--red-dark)}
 body.dark #dark-toggle::after{transform:translateX(18px);background:#fff}
 
+/* ─── TRADITIONAL TOGGLE ─────────────────────────────────────────────── */
+#trad-toggle{
+  position:relative;
+  width:40px;height:22px;
+  background:var(--surface3);
+  border:1.5px solid var(--border2);
+  border-radius:99px;
+  cursor:pointer;
+  transition:background 0.25s,border-color 0.25s;
+  flex-shrink:0;
+}
+#trad-toggle::after{
+  content:'';
+  position:absolute;top:2px;left:2px;
+  width:14px;height:14px;
+  border-radius:50%;
+  background:var(--text3);
+  transition:transform 0.25s var(--ease-spring),background 0.25s;
+}
+body.trad #trad-toggle{background:var(--red);border-color:var(--red-dark)}
+body.trad #trad-toggle::after{transform:translateX(18px);background:#fff}
+
 /* ─── MOBILE MENU ────────────────────────────────────────────────────── */
 #menu-btn{
   display:none;
