@@ -347,6 +347,76 @@ function startReview(){
   reviewQueue=db.words.filter(w=>!w.nextReview||w.nextReview<=Date.now()).map(w=>({...w})).sort(()=>Math.random()-0.5);
   answered=false;renderReviewCard();
 }
+// ─── REVIEW DICT LOOKUP (double-click any Chinese text) ──────────────────────
+function setupReviewDictLookup(container){
+  if(!container)return;
+  // Remove old tooltip if any
+  let tip=document.getElementById('review-dict-tip');
+  if(tip)tip.remove();
+  tip=document.createElement('div');
+  tip.id='review-dict-tip';
+  tip.style.cssText=`position:fixed;z-index:9999;background:var(--surface);border:1.5px solid var(--border2);border-radius:10px;padding:10px 14px;box-shadow:0 8px 32px rgba(0,0,0,0.22);min-width:160px;max-width:280px;display:none;pointer-events:none;font-family:'DM Sans',sans-serif;`;
+  document.body.appendChild(tip);
+
+  // Hide on click outside
+  const hide=()=>{tip.style.display='none';};
+  document.addEventListener('click',hide);
+
+  container.addEventListener('dblclick',e=>{
+    // Extract Chinese word from selection or the element's text
+    const sel=window.getSelection();
+    let text=sel?sel.toString().trim():'';
+    // If no selection or non-CJK, try getting the word around cursor
+    if(!text||!/[\u4e00-\u9fff]/.test(text)){
+      // walk up to find a CJK-containing element
+      let el=e.target;
+      while(el&&el!==container){
+        const t=el.textContent||'';
+        if(/[\u4e00-\u9fff]/.test(t)){text=t.trim();break;}
+        el=el.parentElement;
+      }
+    }
+    // strip non-CJK chars, keep only selected/word
+    text=text.replace(/[^\u4e00-\u9fff\u3400-\u4dbf]/g,'');
+    if(!text)return;
+    sel?.removeAllRanges();
+    e.preventDefault();e.stopPropagation();
+
+    const lookup=(dict)=>{
+      const found=dict[text];
+      let html=`<div style="font-family:'Noto Sans SC',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:2px">${text}</div>`;
+      html+=`<div style="font-size:12px;color:var(--text3);margin-bottom:6px;letter-spacing:0.03em">${getPinyin(text)}</div>`;
+      if(found){
+        const defs=found.split(';').map(s=>s.trim()).filter(Boolean).slice(0,4);
+        html+=defs.map(d=>`<div style="font-size:13px;color:var(--text2);line-height:1.5;padding:1px 0">· ${d}</div>`).join('');
+      } else if(text.length>1){
+        // char-by-char
+        const rows=[...text].map(c=>dict[c]?`<div style="font-size:13px;color:var(--text2);padding:1px 0"><span style="font-family:'Noto Sans SC',sans-serif;font-weight:600">${c}</span> · ${dict[c].split(';')[0].trim()}</div>`:null).filter(Boolean);
+        html+=rows.length?rows.join(''):`<div style="font-size:12px;color:var(--text3)">Không tìm thấy</div>`;
+      } else {
+        html+=`<div style="font-size:12px;color:var(--text3)">Không tìm thấy</div>`;
+      }
+      tip.innerHTML=html;
+      // Position near cursor but keep in viewport
+      const vw=window.innerWidth,vh=window.innerHeight;
+      let tx=e.clientX+12,ty=e.clientY+12;
+      tip.style.display='block';
+      const tw=tip.offsetWidth,th=tip.offsetHeight;
+      if(tx+tw>vw-8)tx=e.clientX-tw-12;
+      if(ty+th>vh-8)ty=e.clientY-th-12;
+      tip.style.left=tx+'px';tip.style.top=ty+'px';
+      tip.style.pointerEvents='none';
+    };
+
+    if(dictData){lookup(dictData);}
+    else{
+      tip.innerHTML=`<div style="font-size:12px;color:var(--text3)">Đang tải từ điển...</div>`;
+      tip.style.display='block';tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';
+      loadDict().then(()=>lookup(dictData));
+    }
+  });
+}
+
 function renderReviewCard(){
   const rc=$('review-content'),rs=$('review-subtitle');
   if(!reviewQueue.length){
@@ -385,6 +455,7 @@ function renderReviewCard(){
   rc.querySelectorAll('.diff-btn').forEach(btn=>btn.addEventListener('click',()=>gradeCard(parseInt(btn.dataset.grade))));
   const hintBtn=$('hint-toggle-btn');
   if(hintBtn){hintBtn.addEventListener('click',()=>{const c=$('hint-content');if(c.style.display==='none'){c.style.display='block';hintBtn.textContent='💡 Ẩn gợi ý';}else{c.style.display='none';hintBtn.textContent='💡 Xem gợi ý';}});}
+  setupReviewDictLookup($('review-content'));
   answered=false;
 }
 function checkAnswer(){
@@ -473,6 +544,7 @@ function renderArtReviewCard(){
   rc.querySelectorAll('.diff-btn').forEach(btn=>btn.addEventListener('click',()=>artGradeCard(parseInt(btn.dataset.grade))));
   const artHintBtn=$('art-hint-toggle-btn');
   if(artHintBtn){artHintBtn.addEventListener('click',()=>{const c=$('art-hint-content');if(c.style.display==='none'){c.style.display='block';artHintBtn.textContent='💡 Ẩn gợi ý';}else{c.style.display='none';artHintBtn.textContent='💡 Xem gợi ý';}});}
+  setupReviewDictLookup($('art-review-content'));
   artReviewAnswered=false;
 }
 function artCheckAnswer(){
