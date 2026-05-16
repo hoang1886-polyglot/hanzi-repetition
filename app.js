@@ -343,8 +343,10 @@ function renderDashboard(){
 }
 
 // ─── REVIEW ───────────────────────────────────────────────────────────────────
+let reviewCorrect=0,reviewTotal=0,reviewInitial=0;
 function startReview(){
   reviewQueue=db.words.filter(w=>!w.nextReview||w.nextReview<=Date.now()).map(w=>({...w})).sort(()=>Math.random()-0.5);
+  reviewCorrect=0;reviewTotal=0;reviewInitial=reviewQueue.length;
   answered=false;renderReviewCard();
 }
 // ─── REVIEW DICT LOOKUP (double-click any Chinese text) ──────────────────────
@@ -421,15 +423,30 @@ function renderReviewCard(){
   const rc=$('review-content'),rs=$('review-subtitle');
   if(!reviewQueue.length){
     rs.textContent='';
-    rc.innerHTML=`<div class="empty-state"><div class="emoji">🎉</div><h3>Tuyệt vời! Đã hoàn thành!</h3><p>Không có từ cần ôn. Thêm từ mới hoặc quay lại sau!</p></div>`;
-    const btn=document.createElement('button');btn.className='submit-btn';btn.style.marginTop='20px';btn.textContent='+ Thêm từ mới';btn.addEventListener('click',()=>nav('add'));rc.querySelector('.empty-state').appendChild(btn);
+    const pct=reviewTotal>0?Math.round(reviewCorrect/reviewTotal*100):0;
+    const grade=pct>=90?'🏆 Xuất sắc!':pct>=70?'🎉 Tốt lắm!':pct>=50?'💪 Cần cố thêm!':'📚 Hãy ôn thêm nhé!';
+    rc.innerHTML=`<div class="review-card" style="text-align:center">
+      <div style="font-size:52px;margin-bottom:16px">${pct>=70?'🎉':'📖'}</div>
+      <div style="font-size:22px;font-weight:700;margin-bottom:6px">${grade}</div>
+      <div style="font-size:14px;color:var(--text2);margin-bottom:28px">Bạn đã hoàn thành luyện tập</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:28px">
+        <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:16px 10px;border:1px solid var(--border)"><div style="font-size:28px;font-weight:700">${reviewInitial}</div><div style="font-size:11px;color:var(--text3);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em">Từ đã ôn</div></div>
+        <div style="background:var(--green-light);border-radius:var(--radius-sm);padding:16px 10px;border:1px solid var(--green-border)"><div style="font-size:28px;font-weight:700;color:var(--green)">${reviewCorrect}</div><div style="font-size:11px;color:var(--green);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em">Trả lời đúng</div></div>
+        <div style="background:var(--red-light);border-radius:var(--radius-sm);padding:16px 10px;border:1px solid var(--red-mid)"><div style="font-size:28px;font-weight:700;color:var(--red)">${pct}%</div><div style="font-size:11px;color:var(--red);margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em">Độ chính xác</div></div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center">
+        <button class="submit-btn" id="review-again-btn" style="padding:11px 24px">🔄 Luyện lại</button>
+        <button id="review-home-btn" style="padding:11px 24px;background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">← Trang chủ</button>
+      </div></div>`;
+    $('review-again-btn').addEventListener('click',startReview);
+    $('review-home-btn').addEventListener('click',()=>nav('home'));
     return;
   }
   currentCard=reviewQueue[0];
-  const total=db.words.filter(w=>!w.nextReview||w.nextReview<=Date.now()).length;
-  rs.textContent=`Còn ${reviewQueue.length} từ cần ôn`;
+  const done=reviewInitial-reviewQueue.length;
+  rs.textContent=`${done}/${reviewInitial} từ · ${reviewCorrect} đúng`;
   rc.innerHTML=`
-    <div class="review-progress"><div class="review-progress-fill" style="width:${Math.max(0,(total-reviewQueue.length)/Math.max(total,1)*100)}%"></div></div>
+    <div class="review-progress"><div class="review-progress-fill" style="width:${reviewInitial>0?done/reviewInitial*100:0}%"></div></div>
     <div class="review-card">
       <div class="review-vi">NGHĨA TIẾNG VIỆT</div>
       <div class="review-word">${currentCard.vi}</div>
@@ -461,6 +478,7 @@ function renderReviewCard(){
 function checkAnswer(){
   if(answered)return;const inp=$('answer-input');if(!inp?.value.trim())return;
   answered=true;const ok=inp.value.trim()===currentCard.zh;
+  reviewTotal++;if(ok)reviewCorrect++;
   db.total++;if(ok)db.correct++;
   const today=new Date().toISOString().split('T')[0];
   db.sessions[today]=(db.sessions[today]||0)+1;save();
