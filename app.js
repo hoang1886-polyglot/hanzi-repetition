@@ -787,6 +787,18 @@ function openEditArticle(id){
   $('save-article-btn').textContent='💾 Lưu thay đổi';nav('upload-article');
 }
 
+function renderArticleBody(article){
+  let html=article.body||'';
+  // Convert body to traditional if needed
+  if(isTraditional&&_openccConverter) html=_openccConverter(html);
+  const linkedWords=db.words.filter(w=>(article.linkedWords||[]).includes(w.id));
+  linkedWords.sort((a,b)=>b.zh.length-a.zh.length);
+  // Highlight using tr(w.zh) so we search for the already-converted form in body
+  linkedWords.forEach(w=>{html=applyWordHighlight(html,tr(w.zh));});
+  (article.freeHighlights||[]).forEach(h=>{html=applyFreeHighlight(html,h);});
+  $('article-reader-body').innerHTML=html;
+}
+
 function openArticle(id){
   const article=db.articles.find(a=>a.id===id);if(!article)return;
   currentArticleId=id;
@@ -800,12 +812,7 @@ function openArticle(id){
   }
   if(article.imageUrl){readerImgEl.src=article.imageUrl;readerImgEl.style.display='block';readerImgEl.onerror=()=>readerImgEl.style.display='none';}
   else{readerImgEl.style.display='none';readerImgEl.src='';}
-  let html=article.body||'';
-  const linkedWords=db.words.filter(w=>(article.linkedWords||[]).includes(w.id));
-  linkedWords.sort((a,b)=>b.zh.length-a.zh.length);
-  linkedWords.forEach(w=>{html=applyWordHighlight(html,w.zh);});
-  (article.freeHighlights||[]).forEach(h=>{html=applyFreeHighlight(html,h);});
-  $('article-reader-body').innerHTML=html;
+  renderArticleBody(article);
   ['art-inp-zh','art-inp-vi','art-inp-zh-def','art-inp-ex-zh','art-inp-ex-vi']
   .forEach(id => { const el=$(id); if(el) el.value=''; });
   $('art-pinyin-preview').textContent='';
@@ -858,7 +865,7 @@ function applyFreeHighlight(html,h){
 }
 function highlightWord(zh){
   const body=$('article-reader-body');if(!body||!zh)return;
-  body.innerHTML=applyWordHighlight(body.innerHTML,zh);
+  body.innerHTML=applyWordHighlight(body.innerHTML,tr(zh));
 }
 
 // ─── TEXT SELECTION ───────────────────────────────────────────────────────────
@@ -1035,9 +1042,15 @@ async function initTradToggle(){
     if(ap==='dashboard')renderDashboard();
     if(ap==='review'&&currentCard)renderReviewCard();
     if(ap==='articles'){
-      const article=db.articles.find(a=>a.id===currentArticleId);
-      if(article)renderArticleAddedWords(article);
-      else renderArticlesList();
+      const subPage=['read-article','upload-article','article-review'].find(id=>{
+        const el=$(id); return el&&(el.classList.contains('active')||el.style.display==='block'||el.style.display==='');
+      });
+      if(currentArticleId){
+        // Re-render full article body with converted text + re-highlight
+        const article=db.articles.find(a=>a.id===currentArticleId);
+        if(article) renderArticleBody(article);
+        renderArticleAddedWords(article);
+      } else renderArticlesList();
     }
   });
 }
