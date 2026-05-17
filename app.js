@@ -1041,16 +1041,14 @@ async function initTradToggle(){
     if(ap==='wordlist')renderWordList($('search-input')?.value||'');
     if(ap==='dashboard')renderDashboard();
     if(ap==='review'&&currentCard)renderReviewCard();
-    if(ap==='articles'){
-      const subPage=['read-article','upload-article','article-review'].find(id=>{
-        const el=$(id); return el&&(el.classList.contains('active')||el.style.display==='block'||el.style.display==='');
-      });
-      if(currentArticleId){
-        // Re-render full article body with converted text + re-highlight
+    if(ap==='article-review')renderArtReviewCard();
+    if(ap==='read-article'||ap==='articles'||ap==='upload-article'){
+      if(ap==='read-article'&&currentArticleId){
         const article=db.articles.find(a=>a.id===currentArticleId);
-        if(article) renderArticleBody(article);
-        renderArticleAddedWords(article);
-      } else renderArticlesList();
+        if(article){renderArticleBody(article);renderArticleAddedWords(article);}
+      } else if(ap==='articles'){
+        renderArticlesList();
+      }
     }
   });
 }
