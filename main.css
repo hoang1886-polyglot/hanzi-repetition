@@ -1312,3 +1312,361 @@ body.dark .rich-toolbar{background:var(--surface2);border-color:var(--border2);}
   .hsk-books-grid { grid-template-columns: 1fr; }
   .hsk-words-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   HSK READER — single-word layout
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Top bar */
+.hsk-reader-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.hsk-reader-unit-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text2);
+}
+.hsk-reader-counter {
+  font-size: 13px;
+  color: var(--text3);
+  font-weight: 500;
+}
+
+/* Progress dots */
+.hsk-reader-dots {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.hsk-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border2);
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.hsk-dot.active {
+  background: var(--red);
+  width: 22px;
+  border-radius: 4px;
+}
+.hsk-dot.done {
+  background: var(--green);
+}
+.hsk-dot:hover:not(.active) { background: var(--border3); }
+
+/* Main layout with side arrows */
+.hsk-reader-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+/* Arrow buttons */
+.hsk-arrow-btn {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border2);
+  background: var(--surface);
+  color: var(--text2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s var(--ease-out);
+  box-shadow: var(--shadow-sm);
+  margin-top: 60px; /* aligns with card header */
+}
+.hsk-arrow-btn:hover:not(:disabled) {
+  border-color: var(--red);
+  color: var(--red);
+  box-shadow: var(--shadow-md);
+  transform: scale(1.05);
+}
+.hsk-arrow-btn:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+.hsk-arrow-next {
+  /* visually stronger — primary direction */
+  background: var(--red);
+  border-color: var(--red);
+  color: #fff;
+  box-shadow: 0 3px 10px var(--red-glow);
+}
+.hsk-arrow-next:hover:not(:disabled) {
+  background: var(--red-dark);
+  border-color: var(--red-dark);
+  color: #fff;
+}
+.hsk-arrow-next:disabled {
+  background: var(--surface);
+  border-color: var(--border2);
+  color: var(--text4);
+  box-shadow: none;
+}
+
+/* ── The main card ── */
+.hsk-reader-card {
+  flex: 1;
+  background: #F7FBF8; /* light green-white like PREP */
+  border: 1.5px solid #C6E6D0;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+body.dark .hsk-reader-card {
+  background: #0F1A12;
+  border-color: #1E3A25;
+}
+
+/* Card header (index number + big character) */
+.hsk-card-header {
+  background: linear-gradient(135deg, #E8F5EE 0%, #D4EFE0 100%);
+  border-bottom: 1.5px solid #C6E6D0;
+  padding: 28px 32px;
+  text-align: center;
+  position: relative;
+}
+body.dark .hsk-card-header {
+  background: linear-gradient(135deg, #0A1F10 0%, #0F2818 100%);
+  border-bottom-color: #1E3A25;
+}
+.hsk-card-index {
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #177A47;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hsk-card-zh {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 80px;
+  font-weight: 700;
+  color: #1A3A28;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+body.dark .hsk-card-zh { color: #A8DFC0; }
+.hsk-card-py {
+  font-size: 20px;
+  color: #177A47;
+  font-weight: 600;
+  margin-bottom: 6px;
+  letter-spacing: 0.05em;
+}
+.hsk-card-vi {
+  font-size: 17px;
+  color: #2D5A3D;
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+body.dark .hsk-card-vi { color: #7DBFA0; }
+.hsk-card-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.hsk-srs-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 99px;
+  border: 1px solid;
+  margin-bottom: 10px;
+}
+
+/* Card body: two columns */
+.hsk-card-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.hsk-card-left {
+  padding: 24px 28px;
+  border-right: 1px solid #C6E6D0;
+}
+body.dark .hsk-card-left { border-right-color: #1E3A25; }
+.hsk-card-right {
+  padding: 24px 28px;
+}
+.hsk-card-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #177A47;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+body.dark .hsk-card-section-label { color: #4A9E6A; }
+.hsk-card-hanviet {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  font-family: 'Noto Sans SC', sans-serif;
+}
+.hsk-card-zhdef {
+  font-size: 14px;
+  font-family: 'Noto Sans SC', sans-serif;
+  color: var(--text2);
+  line-height: 1.7;
+  background: rgba(23,122,71,0.07);
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(23,122,71,0.15);
+}
+.hsk-card-tip {
+  font-size: 13.5px;
+  color: var(--text);
+  line-height: 1.75;
+  background: #FFFBEB;
+  border: 1px solid #F0C070;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+body.dark .hsk-card-tip {
+  background: rgba(160,81,13,0.12);
+  border-color: rgba(240,192,112,0.25);
+}
+.hsk-card-ex {
+  background: rgba(23,122,71,0.06);
+  border: 1px solid rgba(23,122,71,0.15);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.hsk-card-ex-zh {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #1A3A28;
+  margin-bottom: 4px;
+}
+body.dark .hsk-card-ex-zh { color: #A8DFC0; }
+.hsk-card-ex-py {
+  font-size: 12px;
+  color: #177A47;
+  margin-bottom: 6px;
+}
+.hsk-card-ex-vi {
+  font-size: 13px;
+  color: var(--text2);
+}
+
+/* Stroke canvas */
+.hsk-stroke-canvas {
+  border: 1.5px solid rgba(23,122,71,0.25);
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+  display: inline-block;
+}
+body.dark .hsk-stroke-canvas {
+  background: #0F0F0F;
+  border-color: rgba(23,122,71,0.3);
+}
+
+/* Admin button */
+.hsk-admin-btn {
+  padding: 8px 16px;
+  background: #141414;
+  color: #F0C070;
+  border: 1.5px solid #F0C070;
+  border-radius: var(--radius-xs);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+.hsk-admin-btn:hover { background: #1E1A00; }
+
+/* Admin form */
+.hsk-admin-form {
+  margin-top: 24px;
+  background: #1A1500;
+  border: 1.5px solid #F0C070;
+  border-radius: var(--radius);
+  padding: 24px;
+}
+body:not(.dark) .hsk-admin-form {
+  background: #FFFBEB;
+  border-color: var(--amber-border);
+}
+.hsk-admin-form-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--amber);
+  margin-bottom: 18px;
+}
+.hsk-admin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.hsk-admin-full { grid-column: 1 / -1; }
+.hsk-admin-field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.hsk-admin-field input,
+.hsk-admin-field textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-xs);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+  box-sizing: border-box;
+  resize: vertical;
+}
+.hsk-admin-field input:focus,
+.hsk-admin-field textarea:focus {
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px rgba(160,81,13,0.12);
+}
+
+/* ── Responsive ── */
+@media(max-width: 768px) {
+  .hsk-reader-layout { gap: 6px; }
+  .hsk-arrow-btn { width: 36px; height: 36px; margin-top: 50px; }
+  .hsk-card-zh { font-size: 56px; }
+  .hsk-card-body { grid-template-columns: 1fr; }
+  .hsk-card-left { border-right: none; border-bottom: 1px solid #C6E6D0; padding: 20px; }
+  .hsk-card-right { padding: 20px; }
+  .hsk-card-header { padding: 22px 18px; }
+  .hsk-admin-grid { grid-template-columns: 1fr; }
+}
+@media(max-width: 480px) {
+  .hsk-card-zh { font-size: 48px; }
+  .hsk-arrow-btn { display: none; }
+}
