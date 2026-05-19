@@ -1084,6 +1084,7 @@ onAuthStateChanged(auth,async user=>{
     db={words:[],sessions:{},correct:0,total:0,articles:[]};await init();
   }else{
     currentUserId=null;DB_DOC=null;db={words:[],sessions:{},correct:0,total:0,articles:[]};
+    try{ Object.keys(localStorage).filter(k=>k.startsWith('hanzi_bk_')).forEach(k=>localStorage.removeItem(k)); }catch(e){}
     if(loadingScreen)loadingScreen.style.display='none';
     if(userRow)userRow.style.display='none';
     loginScreen.style.display='flex';
@@ -1745,13 +1746,17 @@ const HSK_BOOKS = [
 function hskGetBook(id) { return HSK_BOOKS.find(b => b.id === id) || null; }
 
 function hskCountAdded(bookId, unitIndex) {
+  if (!currentUserId) return 0;
   const book = hskGetBook(bookId);
   if (!book) return 0;
   const words = unitIndex != null ? book.units[unitIndex]?.words || [] : book.units.flatMap(u => u.words);
   return words.filter(w => db.words.some(d => d.zh === w.zh)).length;
 }
 
-function hskIsInDict(zh) { return db.words.some(w => w.zh === zh); }
+function hskIsInDict(zh) {
+  if (!currentUserId) return false;
+  return db.words.some(w => w.zh === zh);
+}
 
 function hskGetSRSInfo(zh) {
   const w = db.words.find(x => x.zh === zh);
