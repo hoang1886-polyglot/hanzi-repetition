@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Noto+Sans+SC:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/pinyin-pro@3.26.0/dist/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
 <link rel="stylesheet" href="main.css">
   <script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/full.js"></script>
 </head>
@@ -81,6 +82,11 @@
     <div class="nav-item" data-page="articles" id="nav-articles">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
       Bài báo
+    </div>
+    <div class="nav-item" data-page="hsk-books" id="nav-hsk-books">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="12" y1="6" x2="16" y2="6"/><line x1="12" y1="10" x2="16" y2="10"/></svg>
+      Sách HSK
+      <span class="nav-badge">Mới</span>
     </div>
   </div>
   <div class="sidebar-footer">
@@ -363,7 +369,52 @@
   </div>
 </div>
 
-<!-- SELECTION POPUP (floating) -->
+<!-- HSK BOOKS PAGE -->
+<div id="hsk-books" class="page">
+  <!-- Breadcrumb navigation -->
+  <div id="hsk-breadcrumb" class="hsk-breadcrumb" style="display:none"></div>
+
+  <!-- VIEW: Book list -->
+  <div id="hsk-view-books">
+    <div class="page-header">
+      <h1>📚 Sách HSK</h1>
+      <p>Chọn giáo trình để bắt đầu học từ vựng có hệ thống</p>
+    </div>
+    <div id="hsk-books-grid" class="hsk-books-grid">
+      <div class="hsk-loading"><div class="spinner"></div><p>Đang tải sách...</p></div>
+    </div>
+  </div>
+
+  <!-- VIEW: Unit list -->
+  <div id="hsk-view-units" style="display:none">
+    <div class="page-header">
+      <h1 id="hsk-book-title">HSK 1</h1>
+      <p id="hsk-book-desc"></p>
+    </div>
+    <div id="hsk-units-grid" class="hsk-units-grid"></div>
+  </div>
+
+  <!-- VIEW: Word list in unit -->
+  <div id="hsk-view-words" style="display:none">
+    <div class="page-header">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+        <div>
+          <h1 id="hsk-unit-title">Unit 1</h1>
+          <p id="hsk-unit-desc"></p>
+        </div>
+        <div id="hsk-unit-progress-wrap" class="hsk-unit-progress-wrap"></div>
+      </div>
+    </div>
+    <div id="hsk-words-grid" class="hsk-words-grid"></div>
+  </div>
+
+  <!-- VIEW: Word detail -->
+  <div id="hsk-view-detail" style="display:none">
+    <div id="hsk-detail-content"></div>
+  </div>
+</div>
+
+
 <div id="selection-choice-popup" style="display:none;position:fixed;z-index:1001;background:#111;color:#fff;border-radius:10px;padding:10px 14px;box-shadow:0 8px 28px rgba(0,0,0,0.3);">
   <div id="choice-selected-text" style="font-size:11px;color:#888;margin-bottom:8px;font-family:'Noto Sans SC',sans-serif;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
   <div style="display:flex;gap:6px;">
