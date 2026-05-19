@@ -346,10 +346,10 @@ function renderDashboard(){
 }
 
 // ─── REVIEW ───────────────────────────────────────────────────────────────────
-let reviewCorrect=0,reviewTotal=0,reviewInitial=0;
+let reviewCorrect=0,reviewTotal=0,reviewInitial=0,reviewWrong=[];
 function startReview(){
   reviewQueue=db.words.filter(w=>!w.nextReview||w.nextReview<=Date.now()).map(w=>({...w})).sort(()=>Math.random()-0.5);
-  reviewCorrect=0;reviewTotal=0;reviewInitial=reviewQueue.length;
+  reviewCorrect=0;reviewTotal=0;reviewInitial=reviewQueue.length;reviewWrong=[];
   answered=false;renderReviewCard();
 }
 // ─── REVIEW DICT LOOKUP (double-click any Chinese text) ──────────────────────
@@ -440,7 +440,21 @@ function renderReviewCard(){
       <div style="display:flex;gap:10px;justify-content:center">
         <button class="submit-btn" id="review-again-btn" style="padding:11px 24px">🔄 Luyện lại</button>
         <button id="review-home-btn" style="padding:11px 24px;background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">← Trang chủ</button>
-      </div></div>`;
+      </div>
+      ${reviewWrong.length>0?`
+      <div style="margin-top:24px;text-align:left;border-top:1px solid var(--border);padding-top:18px">
+        <div style="font-size:13px;font-weight:700;color:var(--red);margin-bottom:10px">❌ ${reviewWrong.length} từ trả lời sai:</div>
+        ${reviewWrong.map(w=>`
+        <div style="display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:10px 14px;background:var(--red-light);border-radius:10px;margin-bottom:8px;border:1px solid var(--red-mid)">
+          <span style="font-family:'Noto Sans SC',sans-serif;font-weight:700;font-size:20px;color:var(--text)">${w.zh}</span>
+          <div>
+            <div style="font-size:12px;color:var(--text3);margin-bottom:1px">${w.pinyin}</div>
+            <div style="font-size:13px;color:var(--text2)">${w.vi}</div>
+          </div>
+          <span style="font-size:11px;color:var(--red);font-weight:600;background:var(--red-mid);padding:2px 8px;border-radius:99px">Sai</span>
+        </div>`).join('')}
+      </div>`:''}
+      </div>`;
     $('review-again-btn').addEventListener('click',startReview);
     $('review-home-btn').addEventListener('click',()=>nav('home'));
     return;
@@ -481,7 +495,7 @@ function renderReviewCard(){
 function checkAnswer(){
   if(answered)return;const inp=$('answer-input');if(!inp?.value.trim())return;
   answered=true;const ok=inp.value.trim()===currentCard.zh;
-  reviewTotal++;if(ok)reviewCorrect++;
+  reviewTotal++;if(ok)reviewCorrect++;else if(!reviewWrong.find(x=>x.id===currentCard.id))reviewWrong.push(currentCard);
   db.total++;if(ok)db.correct++;
   const today=new Date().toISOString().split('T')[0];
   db.sessions[today]=(db.sessions[today]||0)+1;save();
