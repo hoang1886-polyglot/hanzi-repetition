@@ -188,7 +188,7 @@ function nav(page){
   if(page==='wordlist')renderWordList('');
   if(page==='articles')renderArticlesList();
   if(page==='add'){ buildWordTypeSelector('word-type-selector','_selectedType'); window._selectedType=''; }
-  if(page==='hsk-books') hskNav(hskState.view || 'books', hskState.bookId, hskState.unitIndex, hskState.wordIndex);
+  if(page==='hsk-books') hskNav(hskState.view==='books'?'books':hskState.view==='units'?'units':'words', hskState.bookId, hskState.unitIndex, hskState.wordIndex);
 }
 function navWordlistFilter(f){ _wf=f; nav('wordlist'); }
 
@@ -1235,15 +1235,14 @@ function hskGetSRSInfo(zh) {
 // ── Nav ───────────────────────────────────────────────────────────────────────
 function hskNav(view, bookId = null, unitIndex = null, wordIndex = null) {
   hskState = { view, bookId, unitIndex, wordIndex };
-  ['hsk-view-books', 'hsk-view-units', 'hsk-view-words', 'hsk-view-detail']
+  ['hsk-view-books', 'hsk-view-units', 'hsk-view-words']
     .forEach(id => { const el = $(id); if (el) el.style.display = 'none'; });
   const viewEl = $(`hsk-view-${view}`);
   if (viewEl) viewEl.style.display = '';
   hskRenderBreadcrumb();
-  if (view === 'books')  hskRenderBooks();
-  if (view === 'units')  hskRenderUnits();
-  if (view === 'words')  hskRenderWords();
-  if (view === 'detail') hskRenderDetail();
+  if (view === 'books') hskRenderBooks();
+  if (view === 'units') hskRenderUnits();
+  if (view === 'words') hskRenderWords();
 }
 
 // ── Breadcrumb ────────────────────────────────────────────────────────────────
@@ -1256,11 +1255,15 @@ function hskRenderBreadcrumb() {
   const book = hskGetBook(bookId);
   const parts = [{ label: '📚 Sách HSK', onclick: () => hskNav('books') }];
   if (book) parts.push({ label: book.title, onclick: () => hskNav('units', bookId) });
-  if (unitIndex != null && book) parts.push({ label: book.units[unitIndex]?.title?.split(':')[0] || `Unit ${unitIndex+1}`, onclick: () => hskNav('words', bookId, unitIndex) });
-  if (view === 'detail') {
-    const word = book?.units[unitIndex]?.words[hskState.wordIndex];
-    if (word) parts.push({ label: word.zh, isCurrent: true });
-  } else { parts[parts.length - 1].isCurrent = true; }
+  if (unitIndex != null && book) {
+    const label = book.units[unitIndex]?.title?.split(':')[0] || `Unit ${unitIndex+1}`;
+    const isCurrent = view === 'words';
+    parts.push({ label, onclick: () => hskNav('words', bookId, unitIndex), isCurrent });
+  } else if (view === 'units') {
+    parts[parts.length-1].isCurrent = true;
+  } else {
+    parts[parts.length-1].isCurrent = true;
+  }
 
   el.innerHTML = parts.map((p, i) => {
     const isLast = i === parts.length - 1;
@@ -1328,173 +1331,255 @@ function hskRenderUnits() {
 
 // ── Word list ─────────────────────────────────────────────────────────────────
 function hskRenderWords() {
+  // "words" view is now a single-word reader — jump straight to word 0
   const book = hskGetBook(hskState.bookId);
   const unit = book?.units[hskState.unitIndex];
   if (!unit) return;
-  $('hsk-unit-title').textContent = unit.title;
-  $('hsk-unit-desc').textContent = `${unit.words.length} từ vựng`;
-  const added = hskCountAdded(book.id, hskState.unitIndex);
-  $('hsk-unit-progress-wrap').innerHTML = `
-    <div class="hsk-unit-big-progress">${added}<span style="font-size:16px;color:var(--text3)">/${unit.words.length}</span></div>
-    <div class="hsk-unit-big-label">từ đã thêm</div>`;
-  const grid = $('hsk-words-grid');
-  grid.innerHTML = unit.words.map((w, i) => {
-    const inDict = hskIsInDict(w.zh);
-    return `
-    <div class="hsk-word-card ${inDict ? 'in-dict' : ''}" data-widx="${i}">
-      <div class="hsk-word-zh">${tr(w.zh)}</div>
-      <div class="hsk-word-py">${getPinyin(w.zh)}</div>
-      <div class="hsk-word-vi">${w.vi}</div>
-    </div>`;
-  }).join('');
-  grid.querySelectorAll('[data-widx]').forEach(card => {
-    card.addEventListener('click', () => hskNav('detail', hskState.bookId, hskState.unitIndex, parseInt(card.dataset.widx)));
-  });
+  hskState.wordIndex = hskState.wordIndex ?? 0;
+  hskRenderWordReader();
 }
 
-// ── Word detail ───────────────────────────────────────────────────────────────
+// ── Single-word reader (replaces old grid + detail views) ─────────────────────
 let _hskWriters = [];
 
-function hskRenderDetail() {
-  const book = hskGetBook(hskState.bookId);
-  const unit = book?.units[hskState.unitIndex];
-  const word = unit?.words[hskState.wordIndex];
+function hskRenderWordReader() {
+  const book  = hskGetBook(hskState.bookId);
+  const unit  = book?.units[hskState.unitIndex];
+  const words = unit?.words || [];
+  const idx   = hskState.wordIndex ?? 0;
+  const word  = words[idx];
   if (!word) return;
 
-  // Clean up previous HanziWriter instances
+  // Clean up old HanziWriter instances
   _hskWriters.forEach(w => { try { w.cancelQuiz(); } catch(e){} });
   _hskWriters = [];
 
-  const inDict = hskIsInDict(word.zh);
-  const srs = hskGetSRSInfo(word.zh);
-  const chars = [...word.zh];
-  const pinyin = getPinyin(word.zh);
-  const hasPrev = hskState.wordIndex > 0;
-  const hasNext = hskState.wordIndex < unit.words.length - 1;
+  const inDict  = hskIsInDict(word.zh);
+  const srs     = hskGetSRSInfo(word.zh);
+  const chars   = [...word.zh];
+  const pinyin  = getPinyin(word.zh);
+  const hasPrev = idx > 0;
+  const hasNext = idx < words.length - 1;
+  const isAdmin = (auth.currentUser?.email === 'hoang1886@gmail.com');
 
-  const addBtnHtml = inDict
-    ? `<button class="hsk-detail-add-btn added" disabled>✓ Đã có trong từ điển</button>`
-    : `<button class="hsk-detail-add-btn" id="hsk-add-btn">＋ Thêm vào từ điển của tôi</button>`;
+  // Progress dots (max 12 shown)
+  const maxDots = Math.min(words.length, 20);
+  const dots = Array.from({length: maxDots}, (_, i) => {
+    const actual = Math.floor(i * words.length / maxDots);
+    const active = actual === idx;
+    const done   = hskIsInDict(words[actual]?.zh);
+    return `<div class="hsk-dot ${active ? 'active' : done ? 'done' : ''}" data-i="${actual}"></div>`;
+  }).join('');
 
-  const srsHtml = srs ? `
-    <div class="hsk-detail-section">
-      <div class="hsk-detail-section-title">📊 Tiến trình ôn tập (SRS)</div>
-      <div class="hsk-srs-status">
-        <div class="hsk-srs-dot" style="background:${srs.color}"></div>
-        <div class="hsk-srs-label">Trạng thái: <strong>${srs.status}</strong></div>
-        <div class="hsk-srs-next">Ôn tiếp: ${srs.next}</div>
-      </div>
-    </div>` : '';
-
-  const exHtml = word.exZh ? `
-    <div class="hsk-detail-section">
-      <div class="hsk-detail-section-title">💬 Ví dụ</div>
-      <div class="hsk-example-item">
-        <div class="hsk-example-zh">${tr(word.exZh)}<span style="color:var(--red);font-size:12px;margin-left:8px">${getPinyin(word.exZh)}</span></div>
-        <div class="hsk-example-vi">${word.exVi || ''}</div>
-      </div>
-    </div>` : '';
-
-  const tipHtml = word.memoryTip ? `
-    <div class="hsk-detail-section">
-      <div class="hsk-detail-section-title">💡 Mẹo nhớ</div>
-      <div class="hsk-memory-tip">${word.memoryTip}</div>
-    </div>` : '';
-
-  const defHtml = word.zhDef ? `
-    <div class="hsk-detail-section">
-      <div class="hsk-detail-section-title">🀄 Định nghĩa tiếng Trung</div>
-      <div class="hsk-zhdef-block">${tr(word.zhDef)}</div>
-    </div>` : '';
-
-  // Stroke order section — one box per character
+  // Stroke boxes
+  const size = chars.length === 1 ? 160 : 110;
   const strokeBoxes = chars.map((c, i) => `
     <div class="hsk-stroke-box">
-      <div id="hsk-stroke-${i}" style="border:1.5px solid var(--border);border-radius:10px;background:var(--surface2);overflow:hidden"></div>
+      <div id="hsk-stroke-${i}" class="hsk-stroke-canvas"></div>
       ${chars.length > 1 ? `<div class="hsk-stroke-char-label">${c}</div>` : ''}
     </div>`).join('');
 
-  $('hsk-detail-content').innerHTML = `
-    <div class="hsk-detail-header">
-      <div class="hsk-detail-zh">${tr(word.zh)}</div>
-      <div class="hsk-detail-py">${pinyin}</div>
-      <div class="hsk-detail-vi">${word.vi}</div>
-      ${addBtnHtml}
-    </div>
+  // SRS badge
+  const srsBadge = srs
+    ? `<span class="hsk-srs-badge" style="background:${srs.color}22;color:${srs.color};border-color:${srs.color}44">${srs.status} · ôn ${srs.next}</span>`
+    : '';
 
-    <div class="hsk-detail-section">
-      <div class="hsk-detail-section-title">✏️ Thứ tự nét bút (Stroke Order)</div>
-      <div id="hsk-stroke-container">${strokeBoxes}</div>
-      <div class="hsk-stroke-controls">
-        <button class="hsk-stroke-btn primary" id="hsk-stroke-animate">▶ Xem animation</button>
-        <button class="hsk-stroke-btn" id="hsk-stroke-quiz">✏️ Luyện viết</button>
-        <button class="hsk-stroke-btn" id="hsk-stroke-reset">↺ Reset</button>
+  // Admin add-word button
+  const adminBtn = isAdmin
+    ? `<button class="hsk-admin-btn" id="hsk-admin-add-btn">⚙️ Thêm từ mới vào unit</button>`
+    : '';
+
+  const reader = $('hsk-word-reader');
+  reader.innerHTML = `
+    <!-- Top bar: unit name + progress -->
+    <div class="hsk-reader-topbar">
+      <div class="hsk-reader-unit-name">${unit.title}</div>
+      <div class="hsk-reader-counter">${idx + 1} / ${words.length}</div>
+    </div>
+    <div class="hsk-reader-dots">${dots}</div>
+
+    <!-- Main layout: prev arrow | card | next arrow -->
+    <div class="hsk-reader-layout">
+      <button class="hsk-arrow-btn hsk-arrow-prev" id="hsk-arr-prev" ${hasPrev ? '' : 'disabled'} title="Từ trước">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+
+      <div class="hsk-reader-card">
+        <!-- Header: số thứ tự + chữ lớn -->
+        <div class="hsk-card-header">
+          <div class="hsk-card-index">${idx + 1}</div>
+          <div class="hsk-card-zh">${tr(word.zh)}</div>
+          <div class="hsk-card-py">${pinyin}</div>
+          <div class="hsk-card-vi">${word.vi}</div>
+          ${srsBadge}
+          <div class="hsk-card-actions">
+            ${inDict
+              ? `<button class="hsk-detail-add-btn added" disabled>✓ Đã có trong từ điển</button>`
+              : `<button class="hsk-detail-add-btn" id="hsk-add-btn">＋ Thêm vào từ điển</button>`}
+            ${adminBtn}
+          </div>
+        </div>
+
+        <!-- Body: two-column PREP style -->
+        <div class="hsk-card-body">
+          <!-- Left col -->
+          <div class="hsk-card-left">
+            <div class="hsk-card-section-label">ÂM HÁN VIỆT</div>
+            <div class="hsk-card-hanviet">${word.hanViet || '—'}</div>
+
+            <div class="hsk-card-section-label" style="margin-top:20px">BÚT THUẬN (STROKE ORDER)</div>
+            <div id="hsk-stroke-container">${strokeBoxes}</div>
+            <div class="hsk-stroke-controls">
+              <button class="hsk-stroke-btn primary" id="hsk-stroke-animate">▶ Animation</button>
+              <button class="hsk-stroke-btn" id="hsk-stroke-quiz">✏️ Luyện viết</button>
+              <button class="hsk-stroke-btn" id="hsk-stroke-reset">↺ Reset</button>
+            </div>
+          </div>
+
+          <!-- Right col -->
+          <div class="hsk-card-right">
+            ${word.zhDef ? `
+            <div class="hsk-card-section-label">ĐỊNH NGHĨA TIẾNG TRUNG</div>
+            <div class="hsk-card-zhdef">${tr(word.zhDef)}</div>` : ''}
+
+            ${word.memoryTip ? `
+            <div class="hsk-card-section-label" style="margin-top:20px">💡 MẸO NHỚ</div>
+            <div class="hsk-card-tip">${word.memoryTip.replace(/\n/g,'<br>')}</div>` : ''}
+
+            ${word.exZh ? `
+            <div class="hsk-card-section-label" style="margin-top:20px">💬 VÍ DỤ</div>
+            <div class="hsk-card-ex">
+              <div class="hsk-card-ex-zh">${tr(word.exZh)}</div>
+              <div class="hsk-card-ex-py">${getPinyin(word.exZh)}</div>
+              <div class="hsk-card-ex-vi">${word.exVi || ''}</div>
+            </div>` : ''}
+          </div>
+        </div>
       </div>
+
+      <button class="hsk-arrow-btn hsk-arrow-next" id="hsk-arr-next" ${hasNext ? '' : 'disabled'} title="Từ tiếp theo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
     </div>
 
-    ${tipHtml}
-    ${defHtml}
-    ${exHtml}
-    ${srsHtml}
+    <!-- Admin: add word form (hidden by default) -->
+    ${isAdmin ? `<div id="hsk-admin-form" class="hsk-admin-form" style="display:none">
+      <div class="hsk-admin-form-title">⚙️ Thêm từ mới vào "${unit.title}"</div>
+      <div class="hsk-admin-grid">
+        <div class="hsk-admin-field"><label>Chữ Hán *</label><input id="adm-zh" placeholder="e.g. 学习" style="font-family:'Noto Sans SC',sans-serif"></div>
+        <div class="hsk-admin-field"><label>Nghĩa tiếng Việt *</label><input id="adm-vi" placeholder="e.g. học tập"></div>
+        <div class="hsk-admin-field"><label>Âm Hán Việt</label><input id="adm-hanviet" placeholder="e.g. học tập"></div>
+        <div class="hsk-admin-field"><label>Định nghĩa tiếng Trung</label><input id="adm-zhdef" style="font-family:'Noto Sans SC',sans-serif"></div>
+        <div class="hsk-admin-field hsk-admin-full"><label>Mẹo nhớ</label><textarea id="adm-tip" rows="3" placeholder="Giải thích, mẹo nhớ..."></textarea></div>
+        <div class="hsk-admin-field"><label>Ví dụ (tiếng Trung)</label><input id="adm-exzh" style="font-family:'Noto Sans SC',sans-serif"></div>
+        <div class="hsk-admin-field"><label>Ví dụ (tiếng Việt)</label><input id="adm-exvi"></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="hsk-stroke-btn primary" id="adm-save-btn" style="padding:10px 24px">💾 Lưu từ mới</button>
+        <button class="hsk-stroke-btn" id="adm-cancel-btn" style="padding:10px 20px">Huỷ</button>
+      </div>
+    </div>` : ''}
+  `;
 
-    <div class="hsk-word-nav">
-      <button class="hsk-word-nav-btn" id="hsk-prev-btn" ${hasPrev ? '' : 'disabled'}>← Từ trước</button>
-      <button class="hsk-word-nav-btn" style="flex:2;font-weight:600;color:var(--text)" id="hsk-back-unit-btn">≡ Danh sách unit</button>
-      <button class="hsk-word-nav-btn" id="hsk-next-btn" ${hasNext ? '' : 'disabled'}>Từ tiếp →</button>
-    </div>`;
-
-  // Init HanziWriter for each character
-  const size = chars.length === 1 ? 180 : 120;
+  // Init HanziWriter
   chars.forEach((c, i) => {
     try {
       const writer = HanziWriter.create(`hsk-stroke-${i}`, c, {
-        width: size, height: size,
-        padding: 8,
-        strokeColor: '#C8281E',
-        outlineColor: '#E8E5DF',
-        drawingColor: '#177A47',
-        drawingWidth: 4,
-        showCharacter: true,
-        showOutline: true,
-        strokeAnimationSpeed: 0.8,
-        delayBetweenStrokes: 300,
-        delayBetweenLoops: 1500,
+        width: size, height: size, padding: 6,
+        strokeColor: '#C8281E', outlineColor: 'rgba(200,200,200,0.5)',
+        drawingColor: '#177A47', drawingWidth: 4,
+        showCharacter: true, showOutline: true,
+        strokeAnimationSpeed: 0.8, delayBetweenStrokes: 280,
       });
       _hskWriters.push(writer);
-    } catch(e) {
-      console.warn('HanziWriter error for', c, e);
-    }
+    } catch(e) {}
   });
 
   // Stroke controls
-  $('hsk-stroke-animate')?.addEventListener('click', () => {
-    _hskWriters.forEach(w => w.animateCharacter());
-  });
-  $('hsk-stroke-quiz')?.addEventListener('click', () => {
-    _hskWriters.forEach(w => w.quiz({
-      onComplete: () => toast('✓ Hoàn thành! Viết rất tốt!')
-    }));
-  });
-  $('hsk-stroke-reset')?.addEventListener('click', () => {
-    _hskWriters.forEach(w => { w.cancelQuiz(); w.showCharacter(); });
-  });
+  $('hsk-stroke-animate')?.addEventListener('click', () => _hskWriters.forEach(w => w.animateCharacter()));
+  $('hsk-stroke-quiz')?.addEventListener('click', () => _hskWriters.forEach(w => w.quiz({ onComplete: () => toast('✓ Viết xong rồi!') })));
+  $('hsk-stroke-reset')?.addEventListener('click', () => _hskWriters.forEach(w => { w.cancelQuiz(); w.showCharacter(); }));
 
   // Add to dict
-  $('hsk-add-btn')?.addEventListener('click', () => {
-    hskAddWordToDict(word);
+  $('hsk-add-btn')?.addEventListener('click', () => hskAddWordToDict(word));
+
+  // Arrow navigation
+  $('hsk-arr-prev')?.addEventListener('click', () => {
+    if (hasPrev) { hskState.wordIndex = idx - 1; hskRenderWordReader(); scrollToReader(); }
+  });
+  $('hsk-arr-next')?.addEventListener('click', () => {
+    if (hasNext) { hskState.wordIndex = idx + 1; hskRenderWordReader(); scrollToReader(); }
   });
 
-  // Navigation
-  $('hsk-prev-btn')?.addEventListener('click', () => {
-    if (hasPrev) hskNav('detail', hskState.bookId, hskState.unitIndex, hskState.wordIndex - 1);
+  // Dot navigation
+  reader.querySelectorAll('.hsk-dot[data-i]').forEach(dot => {
+    dot.addEventListener('click', () => {
+      hskState.wordIndex = parseInt(dot.dataset.i);
+      hskRenderWordReader(); scrollToReader();
+    });
   });
-  $('hsk-next-btn')?.addEventListener('click', () => {
-    if (hasNext) hskNav('detail', hskState.bookId, hskState.unitIndex, hskState.wordIndex + 1);
-  });
-  $('hsk-back-unit-btn')?.addEventListener('click', () => {
-    hskNav('words', hskState.bookId, hskState.unitIndex);
-  });
+
+  // Keyboard navigation
+  reader._keyHandler && document.removeEventListener('keydown', reader._keyHandler);
+  reader._keyHandler = (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight' && hasNext) { hskState.wordIndex = idx + 1; hskRenderWordReader(); scrollToReader(); }
+    if (e.key === 'ArrowLeft'  && hasPrev) { hskState.wordIndex = idx - 1; hskRenderWordReader(); scrollToReader(); }
+  };
+  document.addEventListener('keydown', reader._keyHandler);
+
+  // Admin form
+  if (isAdmin) {
+    $('hsk-admin-add-btn')?.addEventListener('click', () => {
+      const f = $('hsk-admin-form');
+      f.style.display = f.style.display === 'none' ? 'block' : 'none';
+    });
+    $('adm-cancel-btn')?.addEventListener('click', () => { $('hsk-admin-form').style.display = 'none'; });
+    $('adm-save-btn')?.addEventListener('click', () => hskAdminSaveWord(book, hskState.unitIndex));
+  }
 }
+
+function scrollToReader() {
+  $('hsk-word-reader')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── Admin: save new word to book data ────────────────────────────────────────
+function hskAdminSaveWord(book, unitIndex) {
+  const zh = $('adm-zh')?.value.trim();
+  const vi = $('adm-vi')?.value.trim();
+  if (!zh || !vi) { toast('⚠️ Vui lòng nhập Chữ Hán và nghĩa!'); return; }
+  const newWord = {
+    zh, vi,
+    hanViet: $('adm-hanviet')?.value.trim() || '',
+    zhDef:   $('adm-zhdef')?.value.trim() || '',
+    memoryTip: $('adm-tip')?.value.trim() || '',
+    exZh:    $('adm-exzh')?.value.trim() || '',
+    exVi:    $('adm-exvi')?.value.trim() || '',
+  };
+  book.units[unitIndex].words.push(newWord);
+  // Also save to Firestore under a shared 'hsk_data' document
+  hskSaveAdminData(book);
+  $('hsk-admin-form').style.display = 'none';
+  ['adm-zh','adm-vi','adm-hanviet','adm-zhdef','adm-tip','adm-exzh','adm-exvi'].forEach(id => { const el=$(id); if(el) el.value=''; });
+  hskState.wordIndex = book.units[unitIndex].words.length - 1;
+  hskRenderWordReader();
+  toast(`✓ Đã thêm từ "${zh}" vào unit!`);
+}
+
+async function hskSaveAdminData(book) {
+  if (!DB_DOC || !currentUserId) return;
+  try {
+    const { doc: fsDoc, setDoc: fsSetDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const bookDocRef = fsDoc(firestore, 'hsk_books', book.id);
+    await fsSetDoc(bookDocRef, { units: book.units }, { merge: true });
+    toast('☁️ Đã đồng bộ dữ liệu sách lên Firebase!');
+  } catch(e) {
+    console.warn('HSK admin save error:', e);
+    toast('⚠️ Lưu local thành công, Firebase sync thất bại.');
+  }
+}
+
+
 
 // ── Add word to SRS dict ──────────────────────────────────────────────────────
 function hskAddWordToDict(hskWord) {
@@ -1520,8 +1605,7 @@ function hskAddWordToDict(hskWord) {
   db.words.push(newWord);
   save();
   toast(`✓ Đã thêm "${hskWord.zh}" vào từ điển!`);
-  // Re-render detail to update button state
-  hskRenderDetail();
+  hskRenderWordReader();
 }
 
 // ── Init HSK nav ──────────────────────────────────────────────────────────────
