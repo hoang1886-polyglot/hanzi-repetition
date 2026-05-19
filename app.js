@@ -182,11 +182,13 @@ function nav(page){
   document.getElementById(page).classList.add('active');
   const navEl=document.getElementById(`nav-${page}`); if(navEl)navEl.classList.add('active');
   if(['upload-article','read-article','article-review'].includes(page))document.getElementById('nav-articles').classList.add('active');
+  if(page!=='hsk-books') hskState={view:'books',bookId:null,unitIndex:null,wordIndex:null};
   if(page==='dashboard')renderDashboard();
   if(page==='review')startReview();
   if(page==='wordlist')renderWordList('');
   if(page==='articles')renderArticlesList();
   if(page==='add'){ buildWordTypeSelector('word-type-selector','_selectedType'); window._selectedType=''; }
+  if(page==='hsk-books') hskNav(hskState.view || 'books', hskState.bookId, hskState.unitIndex, hskState.wordIndex);
 }
 function navWordlistFilter(f){ _wf=f; nav('wordlist'); }
 
@@ -225,6 +227,7 @@ function setupListeners(){
   }
   // ─────────────────────────────────────────────────────────────────────
   ['dashboard','review','add','wordlist','articles'].forEach(p=>{ const el=$(`nav-${p}`); if(el)el.addEventListener('click',()=>nav(p)); });
+  initHskNav();
   $('card-all').addEventListener('click',()=>navWordlistFilter('all'));
   $('card-due').addEventListener('click',()=>navWordlistFilter('due'));
   $('card-learned').addEventListener('click',()=>navWordlistFilter('learned'));
@@ -1102,3 +1105,427 @@ setTimeout(()=>{
     console.warn('Firebase safety timeout fired');
   }
 },8000);
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// HSK BOOKS MODULE
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ── HSK State ─────────────────────────────────────────────────────────────────
+let hskState = {
+  view: 'books',   // 'books' | 'units' | 'words' | 'detail'
+  bookId: null,
+  unitIndex: null,
+  wordIndex: null,
+};
+
+// ── HSK Data (embedded — no extra Firestore reads needed for sample data) ──────
+// Structure: books → units → words
+// In a production version, load this from Firestore or a JSON file.
+const HSK_BOOKS = [
+  {
+    id: 'hsk1',
+    title: 'HSK 1',
+    level: 1,
+    icon: '🌱',
+    desc: '150 từ cơ bản nhất — dành cho người mới bắt đầu',
+    units: [
+      {
+        title: 'Unit 1: Chào hỏi & Giới thiệu',
+        words: [
+          { zh:'你好', vi:'xin chào', zhDef:'问候语，表示问好', memoryTip:'你 (nǐ) = bạn + 好 (hǎo) = tốt → "Bạn tốt không?" → Xin chào!\nHình ảnh: Hai người gặp nhau, giơ tay vẫy chào.', exZh:'你好！很高兴认识你。', exVi:'Xin chào! Rất vui được gặp bạn.' },
+          { zh:'谢谢', vi:'cảm ơn', zhDef:'表示感谢', memoryTip:'谢 có bộ 言 (lời nói) + 射 (bắn). Hình ảnh: "bắn ra lời cảm ơn" từ miệng.', exZh:'谢谢你的帮助！', exVi:'Cảm ơn sự giúp đỡ của bạn!' },
+          { zh:'不客气', vi:'không có gì / không sao', zhDef:'回应感谢的礼貌用语', memoryTip:'不 (không) + 客气 (khách sáo) → "Đừng khách sáo" → Không có gì!', exZh:'—谢谢！—不客气！', exVi:'—Cảm ơn! —Không có gì!' },
+          { zh:'对不起', vi:'xin lỗi', zhDef:'表示道歉', memoryTip:'对不起 = không xứng với (đối diện với) ai → cảm giác có lỗi. Đọc: duìbuqǐ.', exZh:'对不起，我迟到了。', exVi:'Xin lỗi, tôi bị muộn.' },
+          { zh:'没关系', vi:'không sao', zhDef:'表示原谅，没有问题', memoryTip:'没 (không) + 关系 (liên quan/quan hệ) → "Không có vấn đề gì" → Không sao!', exZh:'—对不起！—没关系！', exVi:'—Xin lỗi! —Không sao!' },
+          { zh:'再见', vi:'tạm biệt', zhDef:'告别用语', memoryTip:'再 (lại/một lần nữa) + 见 (gặp) → "Gặp lại nhé!" Giống "See you again" trong tiếng Anh.', exZh:'再见，明天见！', exVi:'Tạm biệt, mai gặp lại!' },
+          { zh:'请', vi:'làm ơn / mời', zhDef:'表示礼貌的请求或邀请', memoryTip:'请 có bộ 言 (lời nói) + 青 (xanh). Mỗi khi nói "làm ơn", hãy nghĩ đến bầu trời xanh — lịch sự và dễ chịu!', exZh:'请坐，请喝茶。', exVi:'Mời ngồi, mời uống trà.' },
+          { zh:'是', vi:'là / đúng', zhDef:'表示肯定或判断', memoryTip:'是 (shì) — chữ này rất đơn giản! Dùng như "is/am/are" trong câu A是B = A là B.', exZh:'我是学生。', exVi:'Tôi là học sinh.' },
+        ]
+      },
+      {
+        title: 'Unit 2: Con số & Thời gian',
+        words: [
+          { zh:'一', vi:'một', zhDef:'数字1', memoryTip:'Một nét ngang = số 1. Đơn giản nhất trong tiếng Trung!', exZh:'我有一个苹果。', exVi:'Tôi có một quả táo.' },
+          { zh:'二', vi:'hai', zhDef:'数字2', memoryTip:'Hai nét ngang chồng lên = số 2. Trực quan!', exZh:'我有两个朋友。', exVi:'Tôi có hai người bạn.' },
+          { zh:'三', vi:'ba', zhDef:'数字3', memoryTip:'Ba nét ngang = số 3. Dễ nhớ nhất tiếng Trung!', exZh:'今天是三月。', exVi:'Hôm nay là tháng ba.' },
+          { zh:'今天', vi:'hôm nay', zhDef:'指当前这一天', memoryTip:'今 (hôm nay) + 天 (ngày/trời). 天 trông giống người đứng dang tay dưới bầu trời.', exZh:'今天天气很好。', exVi:'Hôm nay thời tiết rất đẹp.' },
+          { zh:'明天', vi:'ngày mai', zhDef:'指下一天', memoryTip:'明 (sáng/rõ) = 日 (mặt trời) + 月 (mặt trăng). Khi mặt trời và trăng cùng chiếu → ngày rực rỡ = ngày mai tươi sáng!', exZh:'明天我去北京。', exVi:'Ngày mai tôi đến Bắc Kinh.' },
+          { zh:'年', vi:'năm', zhDef:'时间单位，一年有12个月', memoryTip:'年 (nián) — hình ảnh: người đang gánh lúa về sau một năm thu hoạch.', exZh:'今年是2025年。', exVi:'Năm nay là năm 2025.' },
+        ]
+      },
+      {
+        title: 'Unit 3: Gia đình',
+        words: [
+          { zh:'妈妈', vi:'mẹ', zhDef:'母亲的口语叫法', memoryTip:'妈 = 女 (nữ) + 马 (ngựa, âm mã). Âm thanh: "māmā" giống hầu hết mọi ngôn ngữ — đây là từ toàn cầu!', exZh:'我妈妈很漂亮。', exVi:'Mẹ tôi rất xinh đẹp.' },
+          { zh:'爸爸', vi:'bố/ba', zhDef:'父亲的口语叫法', memoryTip:'"bābā" — âm thanh của trẻ con gọi cha trên toàn thế giới. 爸 = 父 (cha) + 巴 (âm ba).', exZh:'我爸爸是老师。', exVi:'Bố tôi là giáo viên.' },
+          { zh:'家', vi:'nhà / gia đình', zhDef:'家庭或住所', memoryTip:'家 = 宀 (mái nhà) + 豕 (lợn). Ngày xưa có nhà là có lợn nuôi → nhà = gia đình!', exZh:'我家有三口人。', exVi:'Nhà tôi có ba người.' },
+          { zh:'朋友', vi:'bạn bè', zhDef:'关系亲密的人', memoryTip:'朋 = 两个月 (hai mặt trăng) → cùng nhau sáng lên. 友 = tay giơ lên giúp đỡ. Bạn bè = cùng sáng, cùng giúp nhau!', exZh:'他是我的好朋友。', exVi:'Anh ấy là bạn tốt của tôi.' },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'hsk2',
+    title: 'HSK 2',
+    level: 2,
+    icon: '🌿',
+    desc: '300 từ — giao tiếp hàng ngày cơ bản',
+    units: [
+      {
+        title: 'Unit 1: Mua sắm & Giá cả',
+        words: [
+          { zh:'买', vi:'mua', zhDef:'用钱换取商品', memoryTip:'买 (mǎi) — phần trên là 头 biến dạng, phần dưới là 贝 (tiền/vỏ sò xưa làm tiền). Có tiền (贝) thì mua được hàng!', exZh:'我想买一件衣服。', exVi:'Tôi muốn mua một cái áo.' },
+          { zh:'卖', vi:'bán', zhDef:'收钱给出商品', memoryTip:'卖 (mài) — giống 买 nhưng thêm phần trên (xuất/cho ra). Đưa hàng ra → bán. Tip: 买 thấp = mua vào; 卖 cao = bán ra.', exZh:'他卖水果。', exVi:'Anh ấy bán hoa quả.' },
+          { zh:'多少钱', vi:'bao nhiêu tiền', zhDef:'询问价格的常用语', memoryTip:'多少 (bao nhiêu) + 钱 (tiền). Câu hỏi giá quan trọng nhất khi đi chợ Trung Quốc!', exZh:'这件衣服多少钱？', exVi:'Cái áo này bao nhiêu tiền?' },
+          { zh:'便宜', vi:'rẻ', zhDef:'价格低', memoryTip:'便宜 (piányí) — 便 có bộ 人 (người). Hình ảnh: người đi chợ thấy giá thấp, rất tiện lợi và rẻ!', exZh:'这里的东西很便宜。', exVi:'Đồ ở đây rất rẻ.' },
+          { zh:'贵', vi:'đắt', zhDef:'价格高', memoryTip:'贵 (guì) có bộ 贝 (tiền) ở dưới. Nhiều tiền mới mua được → đắt! Còn có nghĩa là "quý giá".', exZh:'这个太贵了！', exVi:'Cái này đắt quá!' },
+        ]
+      },
+      {
+        title: 'Unit 2: Thức ăn & Đồ uống',
+        words: [
+          { zh:'吃', vi:'ăn', zhDef:'把食物放入口中', memoryTip:'吃 (chī) có bộ 口 (miệng) ở bên trái. Miệng + hành động = ăn. Đơn giản!', exZh:'我想吃米饭。', exVi:'Tôi muốn ăn cơm.' },
+          { zh:'喝', vi:'uống', zhDef:'将液体喝入口中', memoryTip:'喝 (hē) cũng có bộ 口 (miệng). Miệng mở to (口) + hành động khác = uống. Cả ăn và uống đều có 口!', exZh:'你想喝什么？', exVi:'Bạn muốn uống gì?' },
+          { zh:'好吃', vi:'ngon', zhDef:'形容食物味道好', memoryTip:'好 (tốt/ngon) + 吃 (ăn) = ăn ngon. Logic hoàn toàn! Tương tự: 好喝 = ngon (nước uống).', exZh:'这个菜很好吃！', exVi:'Món này rất ngon!' },
+          { zh:'水', vi:'nước', zhDef:'无色无味的液体', memoryTip:'水 (shuǐ) — chữ tượng hình dòng chảy của nước. Ba nét bên phải giống làn sóng nhỏ.', exZh:'请给我一杯水。', exVi:'Làm ơn cho tôi một cốc nước.' },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'hsk3',
+    title: 'HSK 3',
+    level: 3,
+    icon: '🌳',
+    desc: '600 từ — giao tiếp xã hội tự tin',
+    units: [
+      {
+        title: 'Unit 1: Cảm xúc & Trạng thái',
+        words: [
+          { zh:'高兴', vi:'vui mừng / vui vẻ', zhDef:'心情好，感到愉快', memoryTip:'高 (cao) + 兴 (hứng thú). Khi vui, cảm xúc "lên cao" và hứng khởi!', exZh:'见到你我很高兴。', exVi:'Tôi rất vui khi gặp bạn.' },
+          { zh:'担心', vi:'lo lắng', zhDef:'对某事感到忧虑', memoryTip:'担 (gánh/mang) + 心 (tâm/tim). Hình ảnh: trái tim đang "gánh" nặng nỗi lo.', exZh:'妈妈很担心我。', exVi:'Mẹ rất lo lắng cho tôi.' },
+          { zh:'希望', vi:'hy vọng', zhDef:'期待某件事发生', memoryTip:'希 (hiếm/mong muốn) + 望 (nhìn xa). Đứng nhìn xa → mong điều gì đó đến = hy vọng!', exZh:'我希望明天天气好。', exVi:'Tôi hy vọng ngày mai thời tiết đẹp.' },
+        ]
+      }
+    ]
+  }
+];
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function hskGetBook(id) { return HSK_BOOKS.find(b => b.id === id) || null; }
+
+function hskCountAdded(bookId, unitIndex) {
+  const book = hskGetBook(bookId);
+  if (!book) return 0;
+  const words = unitIndex != null ? book.units[unitIndex]?.words || [] : book.units.flatMap(u => u.words);
+  return words.filter(w => db.words.some(d => d.zh === w.zh)).length;
+}
+
+function hskIsInDict(zh) { return db.words.some(w => w.zh === zh); }
+
+function hskGetSRSInfo(zh) {
+  const w = db.words.find(x => x.zh === zh);
+  if (!w) return null;
+  const sl = { new:'Mới', learning:'Đang học', review:'Ôn tập', mastered:'Thành thạo' };
+  const sc = { new:'#A09D96', learning:'#0284C7', review:'#9333EA', mastered:'#177A47' };
+  const nextReview = w.nextReview ? new Date(w.nextReview).toLocaleDateString('vi-VN') : 'Ngay bây giờ';
+  return { status: sl[w.status] || 'Mới', color: sc[w.status] || '#A09D96', next: nextReview };
+}
+
+// ── Nav ───────────────────────────────────────────────────────────────────────
+function hskNav(view, bookId = null, unitIndex = null, wordIndex = null) {
+  hskState = { view, bookId, unitIndex, wordIndex };
+  ['hsk-view-books', 'hsk-view-units', 'hsk-view-words', 'hsk-view-detail']
+    .forEach(id => { const el = $(id); if (el) el.style.display = 'none'; });
+  const viewEl = $(`hsk-view-${view}`);
+  if (viewEl) viewEl.style.display = '';
+  hskRenderBreadcrumb();
+  if (view === 'books')  hskRenderBooks();
+  if (view === 'units')  hskRenderUnits();
+  if (view === 'words')  hskRenderWords();
+  if (view === 'detail') hskRenderDetail();
+}
+
+// ── Breadcrumb ────────────────────────────────────────────────────────────────
+function hskRenderBreadcrumb() {
+  const el = $('hsk-breadcrumb');
+  if (!el) return;
+  const { view, bookId, unitIndex } = hskState;
+  if (view === 'books') { el.style.display = 'none'; return; }
+  el.style.display = 'flex';
+  const book = hskGetBook(bookId);
+  const parts = [{ label: '📚 Sách HSK', onclick: () => hskNav('books') }];
+  if (book) parts.push({ label: book.title, onclick: () => hskNav('units', bookId) });
+  if (unitIndex != null && book) parts.push({ label: book.units[unitIndex]?.title?.split(':')[0] || `Unit ${unitIndex+1}`, onclick: () => hskNav('words', bookId, unitIndex) });
+  if (view === 'detail') {
+    const word = book?.units[unitIndex]?.words[hskState.wordIndex];
+    if (word) parts.push({ label: word.zh, isCurrent: true });
+  } else { parts[parts.length - 1].isCurrent = true; }
+
+  el.innerHTML = parts.map((p, i) => {
+    const isLast = i === parts.length - 1;
+    const sep = i > 0 ? `<span class="hsk-breadcrumb-sep">›</span>` : '';
+    if (isLast || p.isCurrent) {
+      return `${sep}<span class="hsk-breadcrumb-current">${p.label}</span>`;
+    }
+    return `${sep}<span class="hsk-breadcrumb-item" data-bc="${i}">${p.label}</span>`;
+  }).join('');
+  el.querySelectorAll('[data-bc]').forEach(btn => {
+    const i = parseInt(btn.dataset.bc);
+    btn.addEventListener('click', parts[i].onclick);
+  });
+}
+
+// ── Book list ─────────────────────────────────────────────────────────────────
+function hskRenderBooks() {
+  const grid = $('hsk-books-grid');
+  if (!grid) return;
+  grid.innerHTML = HSK_BOOKS.map(book => {
+    const total = book.units.flatMap(u => u.words).length;
+    const added = hskCountAdded(book.id, null);
+    const pct = total > 0 ? Math.round(added / total * 100) : 0;
+    return `
+    <div class="hsk-book-card level-${book.level}" data-book="${book.id}" style="cursor:pointer">
+      <span class="hsk-book-icon">${book.icon}</span>
+      <div class="hsk-book-name">${book.title}</div>
+      <div class="hsk-book-meta">${book.units.length} units · ${total} từ vựng</div>
+      <div class="hsk-book-progress-bar">
+        <div class="hsk-book-progress-fill" style="width:${pct}%"></div>
+      </div>
+      <div class="hsk-book-progress-text">${added}/${total} từ đã thêm vào từ điển (${pct}%)</div>
+    </div>`;
+  }).join('');
+  grid.querySelectorAll('[data-book]').forEach(card => {
+    card.addEventListener('click', () => hskNav('units', card.dataset.book));
+  });
+}
+
+// ── Unit list ─────────────────────────────────────────────────────────────────
+function hskRenderUnits() {
+  const book = hskGetBook(hskState.bookId);
+  if (!book) return;
+  $('hsk-book-title').textContent = `${book.icon} ${book.title}`;
+  $('hsk-book-desc').textContent = book.desc;
+  const grid = $('hsk-units-grid');
+  grid.innerHTML = book.units.map((unit, i) => {
+    const total = unit.words.length;
+    const added = hskCountAdded(book.id, i);
+    const addedBadge = added > 0 ? `<span class="hsk-unit-added-badge">✓ ${added}/${total} từ</span>` : `<span style="font-size:11px;color:var(--text4)">${total} từ</span>`;
+    return `
+    <div class="hsk-unit-card" data-unit="${i}">
+      <div class="hsk-unit-number">${i + 1}</div>
+      <div class="hsk-unit-info">
+        <div class="hsk-unit-name">${unit.title}</div>
+        <div class="hsk-unit-count">${addedBadge}</div>
+      </div>
+      <span class="hsk-unit-arrow">›</span>
+    </div>`;
+  }).join('');
+  grid.querySelectorAll('[data-unit]').forEach(card => {
+    card.addEventListener('click', () => hskNav('words', hskState.bookId, parseInt(card.dataset.unit)));
+  });
+}
+
+// ── Word list ─────────────────────────────────────────────────────────────────
+function hskRenderWords() {
+  const book = hskGetBook(hskState.bookId);
+  const unit = book?.units[hskState.unitIndex];
+  if (!unit) return;
+  $('hsk-unit-title').textContent = unit.title;
+  $('hsk-unit-desc').textContent = `${unit.words.length} từ vựng`;
+  const added = hskCountAdded(book.id, hskState.unitIndex);
+  $('hsk-unit-progress-wrap').innerHTML = `
+    <div class="hsk-unit-big-progress">${added}<span style="font-size:16px;color:var(--text3)">/${unit.words.length}</span></div>
+    <div class="hsk-unit-big-label">từ đã thêm</div>`;
+  const grid = $('hsk-words-grid');
+  grid.innerHTML = unit.words.map((w, i) => {
+    const inDict = hskIsInDict(w.zh);
+    return `
+    <div class="hsk-word-card ${inDict ? 'in-dict' : ''}" data-widx="${i}">
+      <div class="hsk-word-zh">${tr(w.zh)}</div>
+      <div class="hsk-word-py">${getPinyin(w.zh)}</div>
+      <div class="hsk-word-vi">${w.vi}</div>
+    </div>`;
+  }).join('');
+  grid.querySelectorAll('[data-widx]').forEach(card => {
+    card.addEventListener('click', () => hskNav('detail', hskState.bookId, hskState.unitIndex, parseInt(card.dataset.widx)));
+  });
+}
+
+// ── Word detail ───────────────────────────────────────────────────────────────
+let _hskWriters = [];
+
+function hskRenderDetail() {
+  const book = hskGetBook(hskState.bookId);
+  const unit = book?.units[hskState.unitIndex];
+  const word = unit?.words[hskState.wordIndex];
+  if (!word) return;
+
+  // Clean up previous HanziWriter instances
+  _hskWriters.forEach(w => { try { w.cancelQuiz(); } catch(e){} });
+  _hskWriters = [];
+
+  const inDict = hskIsInDict(word.zh);
+  const srs = hskGetSRSInfo(word.zh);
+  const chars = [...word.zh];
+  const pinyin = getPinyin(word.zh);
+  const hasPrev = hskState.wordIndex > 0;
+  const hasNext = hskState.wordIndex < unit.words.length - 1;
+
+  const addBtnHtml = inDict
+    ? `<button class="hsk-detail-add-btn added" disabled>✓ Đã có trong từ điển</button>`
+    : `<button class="hsk-detail-add-btn" id="hsk-add-btn">＋ Thêm vào từ điển của tôi</button>`;
+
+  const srsHtml = srs ? `
+    <div class="hsk-detail-section">
+      <div class="hsk-detail-section-title">📊 Tiến trình ôn tập (SRS)</div>
+      <div class="hsk-srs-status">
+        <div class="hsk-srs-dot" style="background:${srs.color}"></div>
+        <div class="hsk-srs-label">Trạng thái: <strong>${srs.status}</strong></div>
+        <div class="hsk-srs-next">Ôn tiếp: ${srs.next}</div>
+      </div>
+    </div>` : '';
+
+  const exHtml = word.exZh ? `
+    <div class="hsk-detail-section">
+      <div class="hsk-detail-section-title">💬 Ví dụ</div>
+      <div class="hsk-example-item">
+        <div class="hsk-example-zh">${tr(word.exZh)}<span style="color:var(--red);font-size:12px;margin-left:8px">${getPinyin(word.exZh)}</span></div>
+        <div class="hsk-example-vi">${word.exVi || ''}</div>
+      </div>
+    </div>` : '';
+
+  const tipHtml = word.memoryTip ? `
+    <div class="hsk-detail-section">
+      <div class="hsk-detail-section-title">💡 Mẹo nhớ</div>
+      <div class="hsk-memory-tip">${word.memoryTip}</div>
+    </div>` : '';
+
+  const defHtml = word.zhDef ? `
+    <div class="hsk-detail-section">
+      <div class="hsk-detail-section-title">🀄 Định nghĩa tiếng Trung</div>
+      <div class="hsk-zhdef-block">${tr(word.zhDef)}</div>
+    </div>` : '';
+
+  // Stroke order section — one box per character
+  const strokeBoxes = chars.map((c, i) => `
+    <div class="hsk-stroke-box">
+      <div id="hsk-stroke-${i}" style="border:1.5px solid var(--border);border-radius:10px;background:var(--surface2);overflow:hidden"></div>
+      ${chars.length > 1 ? `<div class="hsk-stroke-char-label">${c}</div>` : ''}
+    </div>`).join('');
+
+  $('hsk-detail-content').innerHTML = `
+    <div class="hsk-detail-header">
+      <div class="hsk-detail-zh">${tr(word.zh)}</div>
+      <div class="hsk-detail-py">${pinyin}</div>
+      <div class="hsk-detail-vi">${word.vi}</div>
+      ${addBtnHtml}
+    </div>
+
+    <div class="hsk-detail-section">
+      <div class="hsk-detail-section-title">✏️ Thứ tự nét bút (Stroke Order)</div>
+      <div id="hsk-stroke-container">${strokeBoxes}</div>
+      <div class="hsk-stroke-controls">
+        <button class="hsk-stroke-btn primary" id="hsk-stroke-animate">▶ Xem animation</button>
+        <button class="hsk-stroke-btn" id="hsk-stroke-quiz">✏️ Luyện viết</button>
+        <button class="hsk-stroke-btn" id="hsk-stroke-reset">↺ Reset</button>
+      </div>
+    </div>
+
+    ${tipHtml}
+    ${defHtml}
+    ${exHtml}
+    ${srsHtml}
+
+    <div class="hsk-word-nav">
+      <button class="hsk-word-nav-btn" id="hsk-prev-btn" ${hasPrev ? '' : 'disabled'}>← Từ trước</button>
+      <button class="hsk-word-nav-btn" style="flex:2;font-weight:600;color:var(--text)" id="hsk-back-unit-btn">≡ Danh sách unit</button>
+      <button class="hsk-word-nav-btn" id="hsk-next-btn" ${hasNext ? '' : 'disabled'}>Từ tiếp →</button>
+    </div>`;
+
+  // Init HanziWriter for each character
+  const size = chars.length === 1 ? 180 : 120;
+  chars.forEach((c, i) => {
+    try {
+      const writer = HanziWriter.create(`hsk-stroke-${i}`, c, {
+        width: size, height: size,
+        padding: 8,
+        strokeColor: '#C8281E',
+        outlineColor: '#E8E5DF',
+        drawingColor: '#177A47',
+        drawingWidth: 4,
+        showCharacter: true,
+        showOutline: true,
+        strokeAnimationSpeed: 0.8,
+        delayBetweenStrokes: 300,
+        delayBetweenLoops: 1500,
+      });
+      _hskWriters.push(writer);
+    } catch(e) {
+      console.warn('HanziWriter error for', c, e);
+    }
+  });
+
+  // Stroke controls
+  $('hsk-stroke-animate')?.addEventListener('click', () => {
+    _hskWriters.forEach(w => w.animateCharacter());
+  });
+  $('hsk-stroke-quiz')?.addEventListener('click', () => {
+    _hskWriters.forEach(w => w.quiz({
+      onComplete: () => toast('✓ Hoàn thành! Viết rất tốt!')
+    }));
+  });
+  $('hsk-stroke-reset')?.addEventListener('click', () => {
+    _hskWriters.forEach(w => { w.cancelQuiz(); w.showCharacter(); });
+  });
+
+  // Add to dict
+  $('hsk-add-btn')?.addEventListener('click', () => {
+    hskAddWordToDict(word);
+  });
+
+  // Navigation
+  $('hsk-prev-btn')?.addEventListener('click', () => {
+    if (hasPrev) hskNav('detail', hskState.bookId, hskState.unitIndex, hskState.wordIndex - 1);
+  });
+  $('hsk-next-btn')?.addEventListener('click', () => {
+    if (hasNext) hskNav('detail', hskState.bookId, hskState.unitIndex, hskState.wordIndex + 1);
+  });
+  $('hsk-back-unit-btn')?.addEventListener('click', () => {
+    hskNav('words', hskState.bookId, hskState.unitIndex);
+  });
+}
+
+// ── Add word to SRS dict ──────────────────────────────────────────────────────
+function hskAddWordToDict(hskWord) {
+  if (hskIsInDict(hskWord.zh)) { toast('Từ này đã có trong từ điển rồi!'); return; }
+  const book = hskGetBook(hskState.bookId);
+  const newWord = {
+    id: Date.now() + Math.random(),
+    zh: hskWord.zh,
+    vi: hskWord.vi,
+    pinyin: getPinyin(hskWord.zh),
+    zhDef: hskWord.zhDef || '',
+    exZh: hskWord.exZh || '',
+    exVi: hskWord.exVi || '',
+    note: hskWord.memoryTip || '',
+    wordType: '',
+    wordTypes: [],
+    source: `${book?.id || 'hsk'}-unit${hskState.unitIndex + 1}`,
+    status: 'new',
+    ef: 2.5, interval: 0, repetitions: 0,
+    nextReview: null, lastReview: null,
+    added: Date.now()
+  };
+  db.words.push(newWord);
+  save();
+  toast(`✓ Đã thêm "${hskWord.zh}" vào từ điển!`);
+  // Re-render detail to update button state
+  hskRenderDetail();
+}
+
+// ── Init HSK nav ──────────────────────────────────────────────────────────────
+function initHskNav() {
+  const navEl = $('nav-hsk-books');
+  if (navEl) navEl.addEventListener('click', () => nav('hsk-books'));
+}
