@@ -1,0 +1,6946 @@
+{
+  "id": "hsk2",
+  "title": "HSK 2",
+  "level": 2,
+  "icon": "🌿",
+  "desc": "772 từ sơ-trung cấp — phiên bản HSK 3.0",
+  "units": [
+    {
+      "title": "Unit 1: 📖 Phần 1",
+      "words": [
+        {
+          "zh": "啊",
+          "vi": "A, à",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你来了啊！",
+          "exVi": "Bạn đến rồi à!"
+        },
+        {
+          "zh": "爱情",
+          "vi": "Tình yêu, tình cảm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他们的爱情很美好。",
+          "exVi": "Tình yêu của họ rất đẹp."
+        },
+        {
+          "zh": "爱人",
+          "vi": "Người yêu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他的爱人是医生。",
+          "exVi": "Người yêu của anh ấy là bác sĩ."
+        },
+        {
+          "zh": "安静",
+          "vi": "Yên tĩnh",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请安静一点儿！",
+          "exVi": "Xin hãy yên lặng một chút!"
+        },
+        {
+          "zh": "安全",
+          "vi": "An toàn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "晚上一个人走路不太安全。",
+          "exVi": "Đi bộ một mình vào buổi tối sẽ không an toàn lắm."
+        },
+        {
+          "zh": "白色",
+          "vi": "Màu trắng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢白色的衣服。",
+          "exVi": "Tôi thích quần áo màu trắng."
+        },
+        {
+          "zh": "班长",
+          "vi": "Lớp trưởng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们班的班长很聪明。",
+          "exVi": "Lớp trưởng của lớp chúng tôi rất thông minh."
+        },
+        {
+          "zh": "办",
+          "vi": "Làm, xử lý",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我去办签证。",
+          "exVi": "Tôi đi làm visa."
+        },
+        {
+          "zh": "办法",
+          "vi": "Cách làm, biện pháp",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你有办法吗？",
+          "exVi": "Bạn có cách nào không?"
+        },
+        {
+          "zh": "办公室",
+          "vi": "Phòng làm việc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "老师在办公室工作。",
+          "exVi": "Giáo viên đang làm việc ở văn phòng."
+        },
+        {
+          "zh": "半夜",
+          "vi": "Nửa đêm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他半夜还在看书。",
+          "exVi": "Nửa đêm rồi mà anh ấy vẫn đang đọc sách."
+        },
+        {
+          "zh": "帮助",
+          "vi": "Giúp đỡ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我需要你的(tô đỏ帮助)。",
+          "exVi": "Tôi cần sự giúp đỡ của bạn"
+        },
+        {
+          "zh": "饱",
+          "vi": "No",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我吃饱了。",
+          "exVi": "Tôi ăn no rồi."
+        },
+        {
+          "zh": "报名",
+          "vi": "Đăng ký",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你报名参加比赛了吗？",
+          "exVi": "Bạn đã đăng ký tham gia cuộc thi chưa?"
+        },
+        {
+          "zh": "报纸",
+          "vi": "Báo, tờ báo",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我爸爸每天早上都看报纸。",
+          "exVi": "Mỗi buổi sáng ba tôi đều đọc báo."
+        },
+        {
+          "zh": "北方",
+          "vi": "Phương bắc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "中国北方的冬天很冷。",
+          "exVi": "Mùa đông ở miền Bắc Trung Quốc rất lạnh."
+        },
+        {
+          "zh": "背",
+          "vi": "Cõng, mang vác\n\nbó",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他背小孩走过山坡。\n\n一背柴火足够用了。",
+          "exVi": "Anh ấy cõng đứa bé đi qua sườn núi.\n\nMột bó củi là đủ dùng rồi."
+        },
+        {
+          "zh": "比如",
+          "vi": "Ví dụ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢运动，比如跑步和游泳。",
+          "exVi": "Tôi thích thể thao, ví dụ như chạy bộ và bơi lội."
+        },
+        {
+          "zh": "比如说",
+          "vi": "Ví dụ, chẳng hạn như",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这里有很多好吃的，比如说北京烤鸭和饺子。",
+          "exVi": "Ở đây có nhiều món ngon, ví dụ như vịt quay Bắc Kinh và sủi cảo."
+        },
+        {
+          "zh": "笔",
+          "vi": "Bút",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我的笔呢？",
+          "exVi": "Cây bút của tôi đâu rồi?"
+        },
+        {
+          "zh": "笔记",
+          "vi": "Ghi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "上课时要认真做笔记。",
+          "exVi": "Trong lớp học phải ghi chép cẩn thận."
+        },
+        {
+          "zh": "笔记本",
+          "vi": "Sổ ghi chép",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我买了一个新的笔记本。",
+          "exVi": "Tôi đã mua một quyển sổ ghi chép mới."
+        },
+        {
+          "zh": "必须",
+          "vi": "Cần, phải",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你必须每天练习说汉语。",
+          "exVi": "Bạn cần phải luyện tập nói tiếng Trung mỗi ngày."
+        },
+        {
+          "zh": "边",
+          "vi": "Bên, bên cạnh",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他坐在窗边看书。",
+          "exVi": "Anh ấy ngồi bên cửa sổ đọc sách."
+        },
+        {
+          "zh": "变",
+          "vi": "Biến đổi, thay đổi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "天气变冷了。",
+          "exVi": "Thời tiết trở lạnh rồi."
+        },
+        {
+          "zh": "变成",
+          "vi": "Trở thành, biến thành",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这些种子都变成花了。",
+          "exVi": "Những hạt giống này đều biến thành hoa."
+        },
+        {
+          "zh": "遍",
+          "vi": "Lần",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这本书我看了三遍。",
+          "exVi": "Quyển sách này tôi đã đọc ba lần."
+        },
+        {
+          "zh": "表",
+          "vi": "Bảng, đồng hồ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我的手表坏了。",
+          "exVi": "Đồng hồ của tôi bị hỏng rồi."
+        },
+        {
+          "zh": "表示",
+          "vi": "Biểu thị, bày tỏ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他点头表示同意。",
+          "exVi": "Anh ấy gật đầu để bày tỏ sự đồng ý."
+        },
+        {
+          "zh": "不错",
+          "vi": "Không tệ, khá tốt",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "人家待你可真不错。",
+          "exVi": "Mọi người đối xử với anh khá tốt."
+        },
+        {
+          "zh": "不但",
+          "vi": "Không những, không chỉ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她不但会唱歌，还会跳舞。",
+          "exVi": "Cô ấy không chỉ biết hát, mà còn biết nhảy."
+        },
+        {
+          "zh": "不够",
+          "vi": "Không đủ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他的态度不够认真。",
+          "exVi": "Thái độ của anh ấy chưa đủ nghiêm túc."
+        },
+        {
+          "zh": "不过",
+          "vi": "Nhưng, tuy nhiên",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这件衣服很好看，不过太贵了。",
+          "exVi": "Bộ quần áo này rất đẹp, nhưng mà nó mắc quá."
+        },
+        {
+          "zh": "不太",
+          "vi": "Không quá,  không lắm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我的英语不太好。",
+          "exVi": "Tiếng Anh của tôi không tốt lắm."
+        },
+        {
+          "zh": "不要",
+          "vi": "Đừng, không được",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "不要在教室里大声说话。",
+          "exVi": "Đừng nói chuyện lớn tiếng trong lớp học."
+        },
+        {
+          "zh": "不好意思",
+          "vi": "Ngại, xấu hổ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我迟到了，真不好意思。",
+          "exVi": "Tôi đến muộn rồi, thật ngại quá."
+        },
+        {
+          "zh": "不久",
+          "vi": "Không lâu, chẳng bao lâu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们不久就会再见面。",
+          "exVi": "Chúng ta sẽ sớm gặp lại nhau."
+        },
+        {
+          "zh": "不满",
+          "vi": "Bất mãn, không hài lòng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她对服务态度不满。",
+          "exVi": "Cô ấy không hài lòng với thái độ phục vụ."
+        },
+        {
+          "zh": "不如",
+          "vi": "Không bằng\n\nchi bằng, thà rằng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我的中文不如他的好。\n\n与其看电视，不如读一本好书。",
+          "exVi": "Tiếng Trung của anh ấy không giỏi bằng tôi.\n\nThay vì xem tivi, chi bằng đọc một quyển sách hay."
+        },
+        {
+          "zh": "不少",
+          "vi": "Không ít",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他有不少中国朋友。",
+          "exVi": "Anh ấy có khá nhiều bạn người Trung Quốc."
+        },
+        {
+          "zh": "不同",
+          "vi": "Không giống, khác nhau",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们的想法不同。",
+          "exVi": "Suy nghĩ của chúng tôi không giống nhau."
+        },
+        {
+          "zh": "不行",
+          "vi": "Không được, không ổn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这样做不行。",
+          "exVi": "Làm như vậy không được đâu."
+        },
+        {
+          "zh": "不一定",
+          "vi": "Không nhất định, chưa chắc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他不一定会来。",
+          "exVi": "Anh ấy chưa chắc sẽ đến."
+        },
+        {
+          "zh": "不一会儿",
+          "vi": "Chẳng bao lâu, không lâu sau",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我刚给他发短信，不一会儿他就回复了。",
+          "exVi": "Tôi vừa nhắn tin cho anh ấy, chẳng bao lâu sau anh ấy đã trả lời."
+        },
+        {
+          "zh": "部分",
+          "vi": "Phần, bộ phận",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这本书的第一部分很有趣。",
+          "exVi": "Phần đầu của quyển sách này rất thú vị."
+        },
+        {
+          "zh": "才",
+          "vi": "Mới, vừa mới",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他昨天才回来。",
+          "exVi": "Anh ấy mới về hôm qua."
+        },
+        {
+          "zh": "菜单",
+          "vi": "Thực đơn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请给我菜单。",
+          "exVi": "Xin vui lòng đưa cho tôi thực đơn."
+        },
+        {
+          "zh": "参观",
+          "vi": "Tham quan",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们明天去参观博物馆。",
+          "exVi": "Ngày mai chúng tôi sẽ đi tham quan bảo tàng."
+        },
+        {
+          "zh": "参加",
+          "vi": "Tham gia",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今天我们一起参加游泳比赛。",
+          "exVi": "Hôm nay chúng tôi cùng nhau tham gia một cuộc thi bơi lội."
+        },
+        {
+          "zh": "草",
+          "vi": "Cỏ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "牛牛喜欢吃草。",
+          "exVi": "Con bò thích ăn cỏ."
+        },
+        {
+          "zh": "草地",
+          "vi": "Bãi cỏ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "孩子们在草地上玩耍。",
+          "exVi": "Bọn trẻ đang chơi trên bãi cỏ."
+        },
+        {
+          "zh": "层",
+          "vi": "Tầng (lầu)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我住在第五层。",
+          "exVi": "Tôi sống ở tầng năm."
+        },
+        {
+          "zh": "查",
+          "vi": "Tra cứu, kiểm tra",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请查一下这个单词的意思。",
+          "exVi": "Hãy tra nghĩa của từ này."
+        },
+        {
+          "zh": "差不多",
+          "vi": "Gần như, xấp xỉ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这两个城市的天气差不多。",
+          "exVi": "Thời tiết của hai thành phố này gần như giống nhau."
+        },
+        {
+          "zh": "长",
+          "vi": "Dài",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这条裤子很长。",
+          "exVi": "Cái quần này rất dài."
+        },
+        {
+          "zh": "常见",
+          "vi": "Thường thấy",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这种花在公园里很常见。",
+          "exVi": "Loài hoa này rất thường thấy trong công viên."
+        },
+        {
+          "zh": "常用",
+          "vi": "Thường dùng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这是一本常用的词典。",
+          "exVi": "Đây là một cuốn từ điển thông dụng."
+        },
+        {
+          "zh": "场",
+          "vi": "Sân, bãi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们在体育场看比赛。",
+          "exVi": "Chúng tôi xem trận đấu ở sân vận động."
+        },
+        {
+          "zh": "超过",
+          "vi": "Vượt qua",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他的身高超过了一米八。",
+          "exVi": "Chiều cao của anh ấy vượt quá 1m8."
+        },
+        {
+          "zh": "超市",
+          "vi": "Siêu thị",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我去超市买点水果。",
+          "exVi": "Tôi đi siêu thị mua ít trái cây."
+        },
+        {
+          "zh": "车辆",
+          "vi": "Xe cộ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这条路上的车辆很多。",
+          "exVi": "Có rất nhiều xe cộ trên con đường này."
+        },
+        {
+          "zh": "称（动）",
+          "vi": "Gọi là, xưng là",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他被称为最优秀的医生。",
+          "exVi": "Anh ấy được gọi là bác sĩ xuất sắc nhất."
+        },
+        {
+          "zh": "成（动）",
+          "vi": "Trở thành",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他希望将来能成为一名医生。",
+          "exVi": "Anh ấy hy vọng tương lai có thể trở thành bác sĩ."
+        },
+        {
+          "zh": "成绩",
+          "vi": "Thành tích",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他这次考试成绩很好。",
+          "exVi": "Thành tích kỳ thi lần này của anh ấy rất tốt."
+        },
+        {
+          "zh": "成为",
+          "vi": "Trở thành",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她已经成为了一名老师。",
+          "exVi": "Cô ấy đã trở thành một giáo viên."
+        },
+        {
+          "zh": "重复",
+          "vi": "Lặp lại",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请不要重复你的问题。",
+          "exVi": "Vui lòng đừng lặp lại câu hỏi của bạn."
+        },
+        {
+          "zh": "重新",
+          "vi": "Làm lại từ đầu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他决定重新开始。",
+          "exVi": "Anh ấy quyết định bắt đầu lại từ đầu."
+        },
+        {
+          "zh": "出发",
+          "vi": "Xuất phát",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们早上八点出发。",
+          "exVi": "Chúng tôi xuất phát lúc 8 giờ sáng."
+        },
+        {
+          "zh": "出国",
+          "vi": "Ra nước ngoài",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他明年要出国留学。",
+          "exVi": "Năm sau anh ấy sẽ đi du học nước ngoài."
+        },
+        {
+          "zh": "出口",
+          "vi": "Lối ra",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个商场的出口在哪里？",
+          "exVi": "Lối ra của trung tâm thương mại này ở đâu?"
+        },
+        {
+          "zh": "出门",
+          "vi": "Ra ngoài",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我今天早上七点出门。",
+          "exVi": "Sáng nay tôi ra ngoài lúc 7 giờ."
+        },
+        {
+          "zh": "出生",
+          "vi": "Sinh ra",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他出生于北京。",
+          "exVi": "Anh ấy sinh ra ở Bắc Kinh."
+        },
+        {
+          "zh": "出现",
+          "vi": "Xuất hiện",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "天空中出现了一道彩虹。",
+          "exVi": "Trên bầu trời xuất hiện một cầu vồng."
+        },
+        {
+          "zh": "出院",
+          "vi": "Xuất viện",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "奶奶明天就能出院了。",
+          "exVi": "Ngày mai bà có thể xuất viện rồi."
+        },
+        {
+          "zh": "出租",
+          "vi": "Cho thuê",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这套房子正在出租。",
+          "exVi": "Căn nhà này đang cho thuê."
+        },
+        {
+          "zh": "出租车",
+          "vi": "Xe taxi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他坐出租车去机场。",
+          "exVi": "Anh ấy ngồi taxi đến sân bay."
+        },
+        {
+          "zh": "船",
+          "vi": "Thuyền",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢坐船。",
+          "exVi": "Tôi thích ngồi thuyền."
+        },
+        {
+          "zh": "吹",
+          "vi": "Thổi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "风吹得很大。",
+          "exVi": "Gió thổi rất mạnh."
+        },
+        {
+          "zh": "春节",
+          "vi": "Tết nguyên đán",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "春节是中国最重要的节日。",
+          "exVi": "Tết Nguyên Đán là ngày lễ quan trọng nhất của Trung Quốc."
+        },
+        {
+          "zh": "春天",
+          "vi": "Mùa xuân",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "春天来了，花都开了。",
+          "exVi": "Mùa xuân đến rồi, hoa đều nở."
+        },
+        {
+          "zh": "词",
+          "vi": "Từ, lời, lời văn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个词是什么意思？",
+          "exVi": "Từ này có nghĩa gì?"
+        },
+        {
+          "zh": "词典",
+          "vi": "Từ điển",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这是一本汉越词典。",
+          "exVi": "Đây là quyển từ điển Hán - Việt."
+        },
+        {
+          "zh": "词语",
+          "vi": "Từ ngữ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个词语的意思是什么？",
+          "exVi": "Nghĩa của từ này là gì?"
+        },
+        {
+          "zh": "从小",
+          "vi": "Từ nhỏ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我从小就喜欢画画。",
+          "exVi": "Tôi thích vẽ tranh từ nhỏ."
+        },
+        {
+          "zh": "答应",
+          "vi": "Đồng ý, hứa",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他答应了。",
+          "exVi": "Anh ấy đã đồng ý rồi."
+        },
+        {
+          "zh": "打工",
+          "vi": "Làm việc (bán thời gian)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他在一家咖啡店打工。",
+          "exVi": "Anh ấy làm việc bán thời gian ở một quán cà phê."
+        },
+        {
+          "zh": "打算",
+          "vi": "Dự định, kế hoạch",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你打算什么时候去中国？",
+          "exVi": "Bạn dự định khi nào đi Trung Quốc?"
+        },
+        {
+          "zh": "打印",
+          "vi": "In ấn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请帮我打印这份文件。",
+          "exVi": "Xin hãy giúp tôi in tài liệu này."
+        },
+        {
+          "zh": "大部分",
+          "vi": "Phần lớn, đa số",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "大部分学生都完成了作业。",
+          "exVi": "Phần lớn học sinh đã hoàn thành bài tập về nhà."
+        },
+        {
+          "zh": "大大",
+          "vi": "Rất, cực kỳ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她有一双大大的眼睛，很可爱。",
+          "exVi": "Bé có đôi mắt to và rất dễ thương."
+        },
+        {
+          "zh": "大海",
+          "vi": "Đại dương, biển lớn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这片大海真美。",
+          "exVi": "Biển này đẹp thật."
+        },
+        {
+          "zh": "大多数",
+          "vi": "Đại đa số, phần lớn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "大多数人都喜欢吃甜食。",
+          "exVi": "Phần lớn mọi người đều thích ăn đồ ngọt."
+        },
+        {
+          "zh": "大家",
+          "vi": "Mọi người",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "大家好！欢迎来到我们的学校。",
+          "exVi": "Xin chào mọi người! Chào mừng đến với trường của chúng tôi."
+        },
+        {
+          "zh": "大量",
+          "vi": "Số lượng lớn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这家工厂需要大量的工人。",
+          "exVi": "Nhà máy này cần một số lượng lớn công nhân."
+        },
+        {
+          "zh": "大门",
+          "vi": "Cổng lớn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "学校的大门每天七点开门。",
+          "exVi": "Cổng trường mở lúc 7 giờ mỗi ngày."
+        },
+        {
+          "zh": "大人",
+          "vi": "Người lớn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "小孩子应该听大人的话。",
+          "exVi": "Trẻ con nên nghe lời người lớn."
+        },
+        {
+          "zh": "大声",
+          "vi": "Nói to, giọng to",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请不要大声说话。",
+          "exVi": "Xin đừng nói chuyện lớn tiếng."
+        },
+        {
+          "zh": "大小",
+          "vi": "Kích thước, lớn nhỏ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这双鞋的大小正合适。",
+          "exVi": "Đôi giày này có kích thước vừa vặn."
+        },
+        {
+          "zh": "大衣",
+          "vi": "Áo khoác dài",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "冬天我会穿厚大衣。",
+          "exVi": "Mùa đông tôi sẽ mặc áo khoác dày."
+        },
+        {
+          "zh": "大自然",
+          "vi": "Thiên nhiên",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们要保护大自然。",
+          "exVi": "Chúng ta cần bảo vệ thiên nhiên."
+        },
+        {
+          "zh": "带",
+          "vi": "Mang, đem theo",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请记得带雨伞。",
+          "exVi": "Xin nhớ mang theo ô."
+        },
+        {
+          "zh": "带来",
+          "vi": "Mang đến",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "汉语给我带来了很多工作机会。",
+          "exVi": "Tiếng Trung mang lại cho tôi rất nhiều cơ hội việc làm."
+        },
+        {
+          "zh": "单位",
+          "vi": "Đơn vị (công tác)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他的工作单位在市中心。",
+          "exVi": "Đơn vị công tác của anh ấy ở trung tâm thành phố."
+        },
+        {
+          "zh": "但",
+          "vi": "Nhưng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我想去旅行，但是没有时间。",
+          "exVi": "Tôi muốn đi du lịch, nhưng không có thời gian."
+        },
+        {
+          "zh": "但是",
+          "vi": "Nhưng mà",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "",
+          "exVi": ""
+        },
+        {
+          "zh": "蛋",
+          "vi": "Trứng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢吃鸡蛋。",
+          "exVi": "Tôi thích ăn trứng gà."
+        },
+        {
+          "zh": "当",
+          "vi": "Làm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他长大后想当医生。",
+          "exVi": "Lớn lên anh ấy muốn trở thành bác sĩ."
+        },
+        {
+          "zh": "当时",
+          "vi": "Lúc đó, thời điểm đó",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "当时我也没想那么多。",
+          "exVi": "Lức đó, tôi cũng không có nghĩ nhiều đến vậy."
+        },
+        {
+          "zh": "倒",
+          "vi": "Ngã, đổ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "风太大，把树都吹倒了。",
+          "exVi": "Gió quá mạnh, làm cây đổ hết."
+        },
+        {
+          "zh": "到处",
+          "vi": "Khắp nơi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "公园里到处都是花。",
+          "exVi": "Trong công viên, hoa ở khắp nơi."
+        },
+        {
+          "zh": "倒",
+          "vi": "Ngã, đổ, lật đổ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "火车到回去了。",
+          "exVi": "Chuyến tàu đã quay trở lại."
+        },
+        {
+          "zh": "道",
+          "vi": "Con đường, lối đi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这条道路很宽。",
+          "exVi": "Con đường này rất rộng."
+        },
+        {
+          "zh": "道理",
+          "vi": "Đạo lý, lý lẽ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他说的话很有道理。",
+          "exVi": "Những lời anh ấy nói rất có lý."
+        },
+        {
+          "zh": "得",
+          "vi": "Được, đạt được",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他得了第一名。",
+          "exVi": "Anh ấy đạt giải nhất."
+        },
+        {
+          "zh": "得出",
+          "vi": "Rút ra (kết luận)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们可以从实验中得出结论。",
+          "exVi": "Chúng ta có thể rút ra kết luận từ thí nghiệm."
+        },
+        {
+          "zh": "的话",
+          "vi": "Nếu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "如果有问题的话，请联系我。",
+          "exVi": "Nếu có vấn đề, xin hãy liên hệ với tôi."
+        },
+        {
+          "zh": "得",
+          "vi": "Được, có thể, đến",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他跑得很快。",
+          "exVi": "Anh ấy chạy rất nhanh."
+        },
+        {
+          "zh": "灯",
+          "vi": "Đèn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "教室里的灯开着呢。",
+          "exVi": "Đèn trong lớp vẫn còn bật."
+        },
+        {
+          "zh": "等",
+          "vi": "Vân vân; v.v (liệt kê)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢吃苹果、香蕉、橘子等等。",
+          "exVi": "Tôi thích ăn táo, chuối, cam, v.v."
+        },
+        {
+          "zh": "等到",
+          "vi": "Đợi đến lúc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "等到明天，我们再决定吧。",
+          "exVi": "Đợi đến ngày mai, chúng ta hãy quyết định."
+        },
+        {
+          "zh": "等于",
+          "vi": "Bằng với, tương đương",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "二加二等于四。",
+          "exVi": "Hai cộng hai bằng bốn."
+        },
+        {
+          "zh": "低",
+          "vi": "Thấp",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这里的温度很低。",
+          "exVi": "Nhiệt độ ở đây rất thấp."
+        },
+        {
+          "zh": "地球",
+          "vi": "Trái đất",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "地球是我们的家园。",
+          "exVi": "Trái đất là ngôi nhà của chúng ta."
+        },
+        {
+          "zh": "地铁",
+          "vi": "Tàu điện ngầm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我每天坐地铁上班。",
+          "exVi": "Tôi đi làm bằng tàu điện ngầm mỗi ngày."
+        },
+        {
+          "zh": "地铁站",
+          "vi": "Ga tàu điện ngầm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "最近的地铁站在哪里？",
+          "exVi": "Ga tàu điện ngầm gần nhất ở đâu?"
+        },
+        {
+          "zh": "点头",
+          "vi": "Gật đầu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她微笑着点头。",
+          "exVi": "Cô ấy mỉm cười và gật đầu."
+        },
+        {
+          "zh": "店",
+          "vi": "Cửa hàng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这家店很有名。",
+          "exVi": "Cửa hàng này rất nổi tiếng."
+        },
+        {
+          "zh": "掉",
+          "vi": "Rơi, rớt",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我的手机掉了。",
+          "exVi": "Điện thoại của tôi bị rơi mất rồi."
+        },
+        {
+          "zh": "东北",
+          "vi": "Đông bắc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他们都是东北人。",
+          "exVi": "Họ đều người Đông Bắc."
+        },
+        {
+          "zh": "东方",
+          "vi": "Phương đông, hướng đông",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "太阳从东方升起。",
+          "exVi": "Mặt trời mọc từ hướng Đông."
+        },
+        {
+          "zh": "东南",
+          "vi": "Đông nam",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我家在东南方向。",
+          "exVi": "Nhà tôi ở hướng Đông Nam."
+        },
+        {
+          "zh": "冬天",
+          "vi": "Mùa đông",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "冬天很冷，你多穿点衣服。",
+          "exVi": "Mùa đông rất lạnh, bạn nên mặc nhiều quần áo vào."
+        },
+        {
+          "zh": "懂",
+          "vi": "Hiểu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我不懂这是什么意思。",
+          "exVi": "Tôi không hiểu cái này có ý nghĩa gì."
+        },
+        {
+          "zh": "懂得",
+          "vi": "Hiểu rõ, biết",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她终于懂得怎么去珍惜时间。",
+          "exVi": "Cuối cùng cô ấy đã học được cách trân trọng thời gian."
+        },
+        {
+          "zh": "动物",
+          "vi": "Động vật",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你喜欢什么动物？",
+          "exVi": "Bạn thích động vật nào?"
+        },
+        {
+          "zh": "动物园",
+          "vi": "Sở thú",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "周末我们去动物园吧。",
+          "exVi": "Cuối tuần chúng ta đi sở thú nhé."
+        },
+        {
+          "zh": "读音",
+          "vi": "Cách phát âm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个字的读音是什么？",
+          "exVi": "Cách phát âm của chữ này là gì?"
+        },
+        {
+          "zh": "度",
+          "vi": "Độ, mức độ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今天气温三十度。",
+          "exVi": "Hôm nay nhiệt độ là 30 độ."
+        },
+        {
+          "zh": "短",
+          "vi": "Ngắn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这条裤子太短了。",
+          "exVi": "Chiếc quần này quá ngắn."
+        },
+        {
+          "zh": "短信",
+          "vi": "Tin nhắn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你可以给我发短信。",
+          "exVi": "Bạn có thể gửi tin nhắn cho tôi."
+        },
+        {
+          "zh": "段",
+          "vi": "Đoạn, khúc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请读这段话。",
+          "exVi": "Vui lòng đọc đoạn văn này."
+        },
+        {
+          "zh": "队",
+          "vi": "Đội, nhóm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他是我们队的成员。",
+          "exVi": "Anh ấy là thành viên trong nhóm của chúng tôi."
+        },
+        {
+          "zh": "队长",
+          "vi": "Đội trưởng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他是足球队的队长。",
+          "exVi": "Anh ấy là đội trưởng đội bóng đá."
+        },
+        {
+          "zh": "对",
+          "vi": "Về, đối với",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他对这个工作很有信心。",
+          "exVi": "Anh ấy đối với công việc này rất có tự tin."
+        },
+        {
+          "zh": "对话",
+          "vi": "Đối thoại",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这些句子都是日常的对话。",
+          "exVi": "Những câu này được lấy từ các cuộc trò chuyện hàng ngày."
+        },
+        {
+          "zh": "对面",
+          "vi": "Đối diện",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "银行在学校对面。",
+          "exVi": "Ngân hàng ở đối diện trường học."
+        },
+        {
+          "zh": "多",
+          "vi": "Nhiều, nhiều hơn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今天比昨天多了几个人。",
+          "exVi": "Hôm nay có nhiều người hơn hôm qua một chút."
+        },
+        {
+          "zh": "多久",
+          "vi": "Bao lâu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你学汉语学了多久了？",
+          "exVi": "Bạn học tiếng Trung bao lâu rồi?"
+        },
+        {
+          "zh": "多么",
+          "vi": "Biết bao, bao nhiêu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个地方多么漂亮啊！",
+          "exVi": "Nơi đây đẹp biết bao!"
+        },
+        {
+          "zh": "多数",
+          "vi": "Đa số, số đông",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "大多数人都喜欢去旅行。",
+          "exVi": "Đa số mọi người đều thích đi du lịch."
+        },
+        {
+          "zh": "多云",
+          "vi": "Nhiều mây",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢多云的天空。",
+          "exVi": "Tôi thích bầu trời nhiều mây."
+        },
+        {
+          "zh": "而且",
+          "vi": "Hơn nữa, mà còn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她不仅聪明，而且很努力。",
+          "exVi": "Cô ấy không chỉ thông minh, hơn nữa còn rất chăm chỉ."
+        },
+        {
+          "zh": "发",
+          "vi": "Phát ra, gửi đi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今天发货，明天送达。",
+          "exVi": "Gửi hàng hôm nay, giao hàng ngày mai."
+        },
+        {
+          "zh": "发现",
+          "vi": "Phát hiện",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我发现了一个很美的地方。",
+          "exVi": "Tôi phát hiện anh ấy không có ở nhà."
+        },
+        {
+          "zh": "饭馆",
+          "vi": "Nhà hàng, quán ăn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这家饭馆的菜很好吃。",
+          "exVi": "Tôi đã tìm thấy một nơi tuyệt đẹp."
+        },
+        {
+          "zh": "方便",
+          "vi": "Tiện lợi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这里的交通很方便。",
+          "exVi": "Giao thông ở đây rất thuận tiện."
+        },
+        {
+          "zh": "方便面",
+          "vi": "Mì ăn liền",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢吃方便面。",
+          "exVi": "Tôi thích ăn mì ăn liền."
+        },
+        {
+          "zh": "方法",
+          "vi": "Phương pháp",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个方法很好。",
+          "exVi": "Phương pháp này rất tốt."
+        },
+        {
+          "zh": "方面",
+          "vi": "Phương diện, khía cạnh",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他在数学方面很有天赋。",
+          "exVi": "Anh ấy có năng khiếu về toán học."
+        }
+      ]
+    },
+    {
+      "title": "Unit 2: ✏️ Phần 2",
+      "words": [
+        {
+          "zh": "方向",
+          "vi": "Phương hướng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你走错方向了。",
+          "exVi": "Bạn đi sai hướng rồi."
+        },
+        {
+          "zh": "放下",
+          "vi": "Đặt xuống",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请放下手中的笔。",
+          "exVi": "Hãy đặt bút xuống."
+        },
+        {
+          "zh": "放心",
+          "vi": "Yên tâm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "放心吧，我会帮你的。",
+          "exVi": "Hãy yên tâm, tôi sẽ giúp bạn."
+        },
+        {
+          "zh": "分开",
+          "vi": "Tách ra, phân ly",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们俩不会分开的。",
+          "exVi": "Hai chúng ta sẽ không xa nhau đâu."
+        },
+        {
+          "zh": "分数",
+          "vi": "Điểm số",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这次考试的分数很高。",
+          "exVi": "Điểm kỳ thi lần này rất cao."
+        },
+        {
+          "zh": "分钟",
+          "vi": "Phút",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "休息五分钟吧。",
+          "exVi": "Nghỉ ngơi năm phút đi."
+        },
+        {
+          "zh": "份",
+          "vi": "Phần, suất",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我点了一份炒饭。",
+          "exVi": "Tôi đã gọi một phần cơm rang."
+        },
+        {
+          "zh": "封",
+          "vi": "Bức, phong (thư)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他给我写了一封信。",
+          "exVi": "Anh ấy đã viết cho tôi một bức thư."
+        },
+        {
+          "zh": "服务",
+          "vi": "Sự phục vụ, dịch vụ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这家餐厅的服务很好。",
+          "exVi": "Dịch vụ của nhà hàng này rất tốt."
+        },
+        {
+          "zh": "复习",
+          "vi": "Ôn tập",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "考试前要认真复习。",
+          "exVi": "Trước kỳ thi phải ôn tập chăm chỉ."
+        },
+        {
+          "zh": "该",
+          "vi": "Nên, cần",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你该去休息了。",
+          "exVi": "Bạn nên đi nghỉ ngơi rồi."
+        },
+        {
+          "zh": "改",
+          "vi": "Sửa, thay đổi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他决定改掉这个坏习惯。",
+          "exVi": "Anh ấy quyết định sửa thói quen xấu này."
+        },
+        {
+          "zh": "改变",
+          "vi": "Thay đổi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他有了很大的改变。",
+          "exVi": "Anh ấy đã thay đổi rất nhiều."
+        },
+        {
+          "zh": "干杯",
+          "vi": "Cạn ly",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "为我们的友谊干杯！",
+          "exVi": "Cạn ly vì tình bạn của chúng ta!"
+        },
+        {
+          "zh": "感到",
+          "vi": "Cảm thấy",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我感到很高兴。",
+          "exVi": "Tôi cảm thấy rất vui."
+        },
+        {
+          "zh": "感动",
+          "vi": "Cảm động, xúc động",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他的故事让我很感动。",
+          "exVi": "Câu chuyện của anh ấy khiến tôi rất cảm động."
+        },
+        {
+          "zh": "感觉",
+          "vi": "Cảm giác, cảm thấy",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我感觉有点儿冷。",
+          "exVi": "Tôi cảm thấy có chút lạnh."
+        },
+        {
+          "zh": "感谢",
+          "vi": "Cảm ơn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "非常感谢你的帮助。",
+          "exVi": "Rất cảm ơn sự giúp đỡ của bạn."
+        },
+        {
+          "zh": "干活儿",
+          "vi": "Làm việc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他们正在干活儿。",
+          "exVi": "Họ đang làm việc."
+        },
+        {
+          "zh": "刚",
+          "vi": "Vừa mới",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我刚到家。",
+          "exVi": "Tôi vừa về đến nhà."
+        },
+        {
+          "zh": "刚才",
+          "vi": "Lúc nãy",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "(刚才 tô đỏ)你去哪儿了？",
+          "exVi": "Vừa nãy bạn đi đâu thế?"
+        },
+        {
+          "zh": "刚刚",
+          "vi": "Vừa mới",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他刚刚出门。",
+          "exVi": "Anh ấy vừa mới ra ngoài."
+        },
+        {
+          "zh": "高级",
+          "vi": "Cao cấp",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这是一家高级酒店。",
+          "exVi": "Đây là một khách sạn cao cấp."
+        },
+        {
+          "zh": "高中",
+          "vi": "Cấp 3, trung học phổ thông",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这是一所很有名的高中。",
+          "exVi": "Đây là một trường trung học rất nổi tiếng."
+        },
+        {
+          "zh": "个子",
+          "vi": "Vóc dáng, chiều cao",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他个子很高。",
+          "exVi": "Anh ấy có dáng người cao ráo."
+        },
+        {
+          "zh": "更",
+          "vi": "Hơn, càng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今天比昨天更冷。",
+          "exVi": "Hôm nay lạnh hơn hôm qua."
+        },
+        {
+          "zh": "公共汽车",
+          "vi": "Xe buýt công cộng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我每天坐公共汽车上班。",
+          "exVi": "Tôi đi làm bằng xe buýt mỗi ngày."
+        },
+        {
+          "zh": "公交车",
+          "vi": "Xe buýt",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这辆公交车很拥挤。",
+          "exVi": "Chiếc xe buýt này rất đông người."
+        },
+        {
+          "zh": "公斤",
+          "vi": "Kilogram",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个西瓜有两公斤。",
+          "exVi": "Quả dưa hấu này nặng hai kg."
+        },
+        {
+          "zh": "公里",
+          "vi": "Kilomet",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我家离公司有五公里。",
+          "exVi": "Nhà tôi cách công ty 5 km."
+        },
+        {
+          "zh": "公路",
+          "vi": "Đường quốc lộ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这条公路很宽。",
+          "exVi": "Con đường này rất rộng."
+        },
+        {
+          "zh": "公平",
+          "vi": "Công bằng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这次比赛很公平。",
+          "exVi": "Trận đấu lần này rất công bằng."
+        },
+        {
+          "zh": "公司",
+          "vi": "Công ty",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我在一家外资公司工作。",
+          "exVi": "Tôi làm việc tại một công ty vốn nước ngoài."
+        },
+        {
+          "zh": "公园",
+          "vi": "Công viên",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们去公园散步吧。",
+          "exVi": "Chúng ta đi dạo công viên nhé."
+        },
+        {
+          "zh": "狗",
+          "vi": "Chó",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这只小狗很可爱。",
+          "exVi": "Con chó này rất đáng yêu."
+        },
+        {
+          "zh": "够",
+          "vi": "Đủ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这些钱不够买车。",
+          "exVi": "Số tiền này không đủ mua xe."
+        },
+        {
+          "zh": "故事",
+          "vi": "Câu chuyện",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个故事很有趣。",
+          "exVi": "Câu chuyện này rất thú vị."
+        },
+        {
+          "zh": "故意",
+          "vi": "Cố ý",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他是故意迟到的。",
+          "exVi": "Anh ấy cố tình đến muộn."
+        },
+        {
+          "zh": "顾客",
+          "vi": "Khách hàng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "顾客是上帝。",
+          "exVi": "Khách hàng là thượng đế."
+        },
+        {
+          "zh": "关机",
+          "vi": "Tắt máy",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你关机了吗？",
+          "exVi": "Bạn đã tắt máy chưa?"
+        },
+        {
+          "zh": "关心",
+          "vi": "Quan tâm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他很关心我的健康。",
+          "exVi": "Anh ấy rất quan tâm đến sức khỏe của tôi."
+        },
+        {
+          "zh": "观点",
+          "vi": "Quan điểm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你的观点很正确。",
+          "exVi": "Quan điểm của bạn rất đúng."
+        },
+        {
+          "zh": "广场",
+          "vi": "Quảng trường",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他们在广场上跳舞。",
+          "exVi": "Họ đang nhảy múa trên quảng trường."
+        },
+        {
+          "zh": "广告",
+          "vi": "Quảng cáo",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个广告很有创意。",
+          "exVi": "Quảng cáo này rất sáng tạo."
+        },
+        {
+          "zh": "国际",
+          "vi": "Quốc tế",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他是国际学生。",
+          "exVi": "Anh ấy là du học sinh quốc tế."
+        },
+        {
+          "zh": "过来",
+          "vi": "Qua đây, đến đây",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请你过来一下。",
+          "exVi": "Bạn qua đây một chút."
+        },
+        {
+          "zh": "过年",
+          "vi": "Đón tết, đón năm mới",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我打算回老家过年。",
+          "exVi": "Tôi định sẽ về quê để đón năm mới."
+        },
+        {
+          "zh": "过去",
+          "vi": "Quá khứ, đã qua",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "过去的事情不要再想了。",
+          "exVi": "Những chuyện đã qua đừng nghĩ nữa."
+        },
+        {
+          "zh": "过",
+          "vi": "Qua, đi qua",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们昨天去过那个地方。",
+          "exVi": "Hôm qua chúng tôi đã từng đến nơi đó."
+        },
+        {
+          "zh": "海",
+          "vi": "Biển",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这片大海很美丽。",
+          "exVi": "Biển này rất đẹp."
+        },
+        {
+          "zh": "海边",
+          "vi": "Bờ biển",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢在海边散步。",
+          "exVi": "Tôi thích đi dạo bên bờ biển."
+        },
+        {
+          "zh": "喊",
+          "vi": "Hét, hô, gọi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他大声喊了我的名字。",
+          "exVi": "Anh ấy lớn tiếng gọi tên tôi."
+        },
+        {
+          "zh": "好",
+          "vi": "Tốt, giỏi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我身体很好。",
+          "exVi": "Sức khoẻ của tôi rất tốt."
+        },
+        {
+          "zh": "好处",
+          "vi": "Điểm tốt, lợi ích",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "多喝热水对身体有好处。",
+          "exVi": "Uống nhiều nước nóng tốt cho sức khỏe."
+        },
+        {
+          "zh": "好多",
+          "vi": "Rất nhiều",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他家里有好多书。",
+          "exVi": "Nhà anh ấy có rất nhiều sách."
+        },
+        {
+          "zh": "好久",
+          "vi": "Rất lâu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们好久没见了。",
+          "exVi": "Chúng ta lâu rồi không gặp."
+        },
+        {
+          "zh": "好人",
+          "vi": "Người tốt",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她是一个好人。",
+          "exVi": "Cô ấy là một người tốt."
+        },
+        {
+          "zh": "好事",
+          "vi": "Việc tốt",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这真是一件好事。",
+          "exVi": "Đây thật sự là một việc tốt."
+        },
+        {
+          "zh": "好像",
+          "vi": "Hình như, dường như",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你今天好像很高兴。",
+          "exVi": "Hôm nay bạn có vẻ rất vui."
+        },
+        {
+          "zh": "合适",
+          "vi": "Phù hợp",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这件衣服很合适。",
+          "exVi": "Bộ quần áo này rất phù hợp."
+        },
+        {
+          "zh": "河",
+          "vi": "Sông",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "那条河很长。",
+          "exVi": "Con sông đó rất dài."
+        },
+        {
+          "zh": "黑",
+          "vi": "Đen",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "天黑了，我们回家吧。",
+          "exVi": "Trời tối rồi, chúng ta về nhà thôi."
+        },
+        {
+          "zh": "黑板",
+          "vi": "Bảng đen",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "黑板上写着你的名字。",
+          "exVi": "Trên bảng đen có viết tên bạn."
+        },
+        {
+          "zh": "黑色",
+          "vi": "Màu đen",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这条裙子是黑色的。",
+          "exVi": "Chiếc váy này có màu đen."
+        },
+        {
+          "zh": "红",
+          "vi": "Đỏ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "鲜红的花朵很美丽。",
+          "exVi": "Những bông hoa đỏ tươi rất đẹp."
+        },
+        {
+          "zh": "红色",
+          "vi": "Màu đỏ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他的衣服是红色的。",
+          "exVi": "Quần áo của anh ấy là màu đỏ."
+        },
+        {
+          "zh": "后来",
+          "vi": "Sau này, về sau",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "后来他去了北京。",
+          "exVi": "Sau này anh ấy đã đi Bắc Kinh."
+        },
+        {
+          "zh": "忽然",
+          "vi": "Đột nhiên, bỗng nhiên",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "天气忽然变冷了。",
+          "exVi": "Thời tiết đột nhiên trở lạnh."
+        },
+        {
+          "zh": "湖",
+          "vi": "Hồ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "湖里的水很清。",
+          "exVi": "Nước trong hồ rất trong."
+        },
+        {
+          "zh": "护照",
+          "vi": "Hộ chiếu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我要去办护照。",
+          "exVi": "Tôi phải đi làm hộ chiếu."
+        },
+        {
+          "zh": "花",
+          "vi": "Hoa, bông hoa",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们在花园里散步。",
+          "exVi": "Chúng tôi đi dạo trong vườn hoa."
+        },
+        {
+          "zh": "花园",
+          "vi": "Vườn hoa",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "",
+          "exVi": ""
+        },
+        {
+          "zh": "画",
+          "vi": "Vẽ, phác họa",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你画得真好看啊!",
+          "exVi": "Bạn vẽ đẹp quá đi!"
+        },
+        {
+          "zh": "画家",
+          "vi": "Họa sĩ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个画家很有名。",
+          "exVi": "Họa sĩ này rất nổi tiếng."
+        },
+        {
+          "zh": "画儿",
+          "vi": "Tranh vẽ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她喜欢画画儿。",
+          "exVi": "Cô ấy thích vẽ tranh."
+        },
+        {
+          "zh": "坏处",
+          "vi": "Điều xấu, tác hại",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "吸烟对身体有坏处。",
+          "exVi": "Hút thuốc có hại cho sức khỏe."
+        },
+        {
+          "zh": "坏人",
+          "vi": "Người xấu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他不是坏人。",
+          "exVi": "Anh ấy không phải người xấu."
+        },
+        {
+          "zh": "欢迎",
+          "vi": "Hoan nghênh, chào mừng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "欢迎你来我家玩。",
+          "exVi": "Chào mừng bạn đến nhà tôi chơi."
+        },
+        {
+          "zh": "换",
+          "vi": "Đổi, thay đổi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你要换衣服吗？",
+          "exVi": "Bạn có muốn thay quần áo không?"
+        },
+        {
+          "zh": "黄",
+          "vi": "Màu vàng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她穿了一条黄色的群子。",
+          "exVi": "Cô ấy mặc một chiếc váy màu vàng."
+        },
+        {
+          "zh": "黄色",
+          "vi": "Màu vàng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "",
+          "exVi": ""
+        },
+        {
+          "zh": "回",
+          "vi": "Quay lại, trở về",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我明天要回老家了。",
+          "exVi": "Ngày mai tôi sẽ về quê."
+        },
+        {
+          "zh": "回国",
+          "vi": "Về nước",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他昨天回国了。",
+          "exVi": "Hôm qua anh ấy đã về nước."
+        },
+        {
+          "zh": "会",
+          "vi": "Có thể, biết",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你会说汉语吗？",
+          "exVi": "Bạn biết nói tiếng Trung không?"
+        },
+        {
+          "zh": "活动",
+          "vi": "Hoạt động, sự kiện",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个活动很有意思。",
+          "exVi": "Hoạt động này rất thú vị."
+        },
+        {
+          "zh": "或",
+          "vi": "Hoặc, hay",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们可以坐地铁或者打车去。",
+          "exVi": "Chúng ta có thể đi tàu điện ngầm hoặc bắt taxi."
+        },
+        {
+          "zh": "或者",
+          "vi": "Hoặc là, hay là",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "",
+          "exVi": ""
+        },
+        {
+          "zh": "机会",
+          "vi": "Cơ hội",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他得到一个很好的工作机会。",
+          "exVi": "Anh ấy có một cơ hội việc làm rất tốt."
+        },
+        {
+          "zh": "鸡",
+          "vi": "Gà",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我家有两只小鸡。",
+          "exVi": "Nhà tôi có hai con gà con."
+        },
+        {
+          "zh": "级",
+          "vi": "Cấp bậc, trình độ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他是二年级学生。",
+          "exVi": "Cậu ấy là học sinh lớp hai."
+        },
+        {
+          "zh": "急",
+          "vi": "Gấp, khẩn cấp",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你别太着急！",
+          "exVi": "Bạn đừng quá lo lắng!"
+        },
+        {
+          "zh": "计划",
+          "vi": "Kế hoạch",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们有一个新计划。",
+          "exVi": "Chúng tôi có một kế hoạch mới."
+        },
+        {
+          "zh": "计算机",
+          "vi": "Máy tính",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我买了一台计算机。",
+          "exVi": "Tôi đã mua một chiếc máy tính."
+        },
+        {
+          "zh": "加",
+          "vi": "Cộng, thêm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请给我加点水。",
+          "exVi": "Xin cho tôi thêm một chút nước."
+        },
+        {
+          "zh": "加油",
+          "vi": "Cố lên, tiếp nhiên liệu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "加油！你一定会成功的！",
+          "exVi": "Cố lên! Bạn sẽ thành công thôi!"
+        },
+        {
+          "zh": "家（科学家）",
+          "vi": "Nhà (nhà khoa học)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他想成为科学家。",
+          "exVi": "Anh ấy muốn trở thành nhà khoa học."
+        },
+        {
+          "zh": "家庭",
+          "vi": "Gia đình",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我的家庭很幸福。",
+          "exVi": "Gia đình tôi rất hạnh phúc."
+        },
+        {
+          "zh": "家长",
+          "vi": "Phụ huynh",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "家长在学校开会。",
+          "exVi": "Phụ huynh họp tại trường học."
+        },
+        {
+          "zh": "假",
+          "vi": "Giả",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这是假的。",
+          "exVi": "Này là giả đó."
+        },
+        {
+          "zh": "假期",
+          "vi": "Kỳ nghỉ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们的假期很长。",
+          "exVi": "Kỳ nghỉ của chúng tôi rất dài."
+        },
+        {
+          "zh": "检查",
+          "vi": "Kiểm tra",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "老师每天都检查我们的作业。",
+          "exVi": "Giáo viên kiểm tra bài tập về nhà của chúng tôi mỗi ngày."
+        },
+        {
+          "zh": "见面",
+          "vi": "Gặp mặt",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们明天见面吧。",
+          "exVi": "Chúng ta gặp nhau vào ngày mai nhé."
+        },
+        {
+          "zh": "见过",
+          "vi": "Đã gặp qua",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我见过他很多次。",
+          "exVi": "Tôi đã gặp anh ấy nhiều lần."
+        },
+        {
+          "zh": "牛",
+          "vi": "Bò",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "田里有很多牛。",
+          "exVi": "Trong ruộng có rất nhiều bò."
+        },
+        {
+          "zh": "健康",
+          "vi": "Khỏe mạnh, sức khỏe",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "运动让身体更健康。",
+          "exVi": "Tập thể dục giúp cơ thể khỏe mạnh hơn."
+        },
+        {
+          "zh": "讲",
+          "vi": "Nói, giảng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "老师讲得很清楚。",
+          "exVi": "Thầy giáo giảng rất rõ ràng."
+        },
+        {
+          "zh": "讲话",
+          "vi": "Nói chuyện",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他喜欢在课上讲话。",
+          "exVi": "Cậu ấy thích nói chuyện trong lớp."
+        },
+        {
+          "zh": "交",
+          "vi": "Giao, kết giao",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请把书交给我。",
+          "exVi": "Xin đưa quyển sách cho tôi."
+        },
+        {
+          "zh": "交给",
+          "vi": "Giao cho",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "",
+          "exVi": ""
+        },
+        {
+          "zh": "交朋友",
+          "vi": "Kết bạn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢交朋友。",
+          "exVi": "Tôi thích kết bạn."
+        },
+        {
+          "zh": "交通",
+          "vi": "Giao thông",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这里的交通很方便。",
+          "exVi": "Giao thông ở đây rất thuận tiện."
+        },
+        {
+          "zh": "角",
+          "vi": "Góc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "桌子有四个角。",
+          "exVi": "Cái bàn có bốn góc."
+        },
+        {
+          "zh": "角度",
+          "vi": "Góc độ, quan điểm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你换个角度看问题吧。",
+          "exVi": "Bạn hãy nhìn vấn đề theo một góc độ khác."
+        },
+        {
+          "zh": "饺子",
+          "vi": "Sủi cảo",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我很喜欢吃饺子。",
+          "exVi": "Tôi rất thích ăn sủi cảo."
+        },
+        {
+          "zh": "脚",
+          "vi": "Chân",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我的脚有点疼。",
+          "exVi": "Chân tôi hơi đau."
+        },
+        {
+          "zh": "叫作",
+          "vi": "Gọi là",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这种水果叫作苹果。",
+          "exVi": "Loại trái cây này gọi là táo."
+        },
+        {
+          "zh": "教师",
+          "vi": "Giáo viên",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我的妈妈是教师。",
+          "exVi": "Mẹ tôi là giáo viên."
+        },
+        {
+          "zh": "教室",
+          "vi": "Phòng học",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们在教室里学习。",
+          "exVi": "Chúng tôi học tập trong lớp học."
+        },
+        {
+          "zh": "教学",
+          "vi": "Giảng dạy",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他的教学方法很好。",
+          "exVi": "Phương pháp giảng dạy của anh ấy rất tốt."
+        },
+        {
+          "zh": "教育",
+          "vi": "Giáo dục",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "教育对孩子很重要。",
+          "exVi": "Giáo dục rất quan trọng đối với trẻ em."
+        },
+        {
+          "zh": "接",
+          "vi": "Nhận, tiếp đón, đón",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我去机场接你。",
+          "exVi": "Tôi ra sân bay đón bạn."
+        },
+        {
+          "zh": "接到",
+          "vi": "Nhận được",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他刚接到一个很重要的电话。",
+          "exVi": "Anh ấy vừa nhận được một cuộc gọi rất quan trọng."
+        },
+        {
+          "zh": "接受",
+          "vi": "Chấp nhận, tiếp nhận",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他正在接受访问。",
+          "exVi": "Anh ấy đang được phỏng vấn."
+        },
+        {
+          "zh": "接下来",
+          "vi": "Tiếp theo",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "接下来我们做什么？",
+          "exVi": "Tiếp theo chúng ta làm gì?"
+        },
+        {
+          "zh": "接着",
+          "vi": "Tiếp tục",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们接着做吧。",
+          "exVi": "Chúng ta tiếp tục làm đi."
+        },
+        {
+          "zh": "街",
+          "vi": "Phố, đường phố",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这条街很热闹。",
+          "exVi": "Con phố này rất nhộn nhịp."
+        },
+        {
+          "zh": "节",
+          "vi": "đoạn (bài học)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这是课文里的第三节。",
+          "exVi": "Đây là phần thứ ba trong bài."
+        },
+        {
+          "zh": "节目",
+          "vi": "Chương trình",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个节目很有趣。",
+          "exVi": "Chương trình này rất thú vị."
+        },
+        {
+          "zh": "节日",
+          "vi": "Ngày lễ, ngày hội",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "春节是中国的重要节日。",
+          "exVi": "Tết Nguyên đán là một lễ hội quan trọng ở Trung Quốc."
+        },
+        {
+          "zh": "结果",
+          "vi": "Kết quả",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们等了很久，结果还没出来。",
+          "exVi": "Chúng tôi đợi rất lâu, kết quả vẫn chưa có."
+        },
+        {
+          "zh": "借",
+          "vi": "Mượn, vay",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我借了一本书。",
+          "exVi": "Tôi đã mượn một quyển sách."
+        },
+        {
+          "zh": "斤",
+          "vi": "Cân",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我买了两斤苹果。",
+          "exVi": "Tôi mua một cân táo."
+        },
+        {
+          "zh": "今后",
+          "vi": "Từ nay về sau",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今后我要努力学汉语。",
+          "exVi": "Từ nay về sau tôi sẽ cố gắng học tiếng Trung."
+        },
+        {
+          "zh": "进入",
+          "vi": "Tiến vào, đi vào",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们很快就进入了新的学年。",
+          "exVi": "Chúng ta sẽ nhanh chóng bước vào năm học mới."
+        },
+        {
+          "zh": "进行",
+          "vi": "Tiến hành",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他们正在进行考试。",
+          "exVi": "Họ đang tiến hành kỳ thi."
+        },
+        {
+          "zh": "近",
+          "vi": "Gần",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他家离学校很近。",
+          "exVi": "Nhà anh ấy rất gần trường."
+        },
+        {
+          "zh": "经常",
+          "vi": "Thường xuyên",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我经常去公园跑步。",
+          "exVi": "Tôi thường đến công viên để chạy bộ."
+        },
+        {
+          "zh": "经过",
+          "vi": "Đi qua, trải qua",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "经过商店时，他买了一些水果。",
+          "exVi": "Khi đi qua cửa hàng, anh ấy mua một ít trái cây."
+        },
+        {
+          "zh": "经理",
+          "vi": "Giám đốc, quản lý",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他是我们的经理。",
+          "exVi": "Anh ấy là giám đốc của chúng tôi."
+        },
+        {
+          "zh": "酒",
+          "vi": "Rượu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我不喝酒。",
+          "exVi": "Tôi không uống rượu."
+        },
+        {
+          "zh": "酒店",
+          "vi": "Khách sạn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这家酒店很大。",
+          "exVi": "Khách sạn này rất lớn."
+        },
+        {
+          "zh": "就要",
+          "vi": "Sắp (làm gì đó)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他就要回来了。",
+          "exVi": "Anh ấy sắp về rồi."
+        },
+        {
+          "zh": "举",
+          "vi": "Nâng, giơ (tay)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请举手回答问题。",
+          "exVi": "Vui lòng giơ tay trả lời câu hỏi."
+        },
+        {
+          "zh": "举手",
+          "vi": "Giơ tay",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "",
+          "exVi": ""
+        },
+        {
+          "zh": "举行",
+          "vi": "Tổ chức (họp, hoạt động)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "学校举行了唱歌比赛。",
+          "exVi": "Một cuộc thi ca hát đã được tổ chức ở trường."
+        },
+        {
+          "zh": "句",
+          "vi": "Câu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请读这个句子。",
+          "exVi": "Hãy đọc câu này nhé!"
+        },
+        {
+          "zh": "句子",
+          "vi": "Câu (ngữ pháp)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "",
+          "exVi": ""
+        },
+        {
+          "zh": "卡",
+          "vi": "Thẻ, card",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我的银行卡丢了。",
+          "exVi": "Thẻ ngân hàng của tôi bị mất rồi."
+        },
+        {
+          "zh": "开机",
+          "vi": "Bật máy",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "电脑开机了。",
+          "exVi": "Máy tính đã được bật."
+        },
+        {
+          "zh": "开心",
+          "vi": "Vui vẻ, hạnh phúc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我今天很开心。",
+          "exVi": "Hôm nay tôi rất vui."
+        },
+        {
+          "zh": "开学",
+          "vi": "Khai giảng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "学生们开学了。",
+          "exVi": "Học sinh đã khai giảng rồi."
+        },
+        {
+          "zh": "看法",
+          "vi": "Quan điểm, cách nhìn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这是我的个人看法。",
+          "exVi": "Đây là ý kiến cá nhân của tôi."
+        },
+        {
+          "zh": "考生",
+          "vi": "Thí sinh",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "考生们很紧张。",
+          "exVi": "Các thí sinh rất căng thẳng."
+        },
+        {
+          "zh": "靠",
+          "vi": "Tựa, kê",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢靠窗的位置。",
+          "exVi": "Tôi thích chỗ ngồi cạnh cửa sổ."
+        },
+        {
+          "zh": "科",
+          "vi": "Ngành học, khoa (trong bệnh viện)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你学哪一科？",
+          "exVi": "Bạn học chuyên ngành gì?"
+        },
+        {
+          "zh": "科学",
+          "vi": "Khoa học",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她是一个了不起的科学家。",
+          "exVi": "Cô ấy là một nhà khoa học tài ba."
+        },
+        {
+          "zh": "可爱",
+          "vi": "Đáng yêu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这只猫很可爱。",
+          "exVi": "Con mèo này rất đáng yêu."
+        },
+        {
+          "zh": "可能",
+          "vi": "Có thể, khả năng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "明天可能下雨。",
+          "exVi": "Ngày mai có thể sẽ mưa."
+        },
+        {
+          "zh": "可怕",
+          "vi": "Đáng sợ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这部电影太可怕了！",
+          "exVi": "Bộ phim này thật đáng sợ!"
+        }
+      ]
+    },
+    {
+      "title": "Unit 3: 🗣️ Phần 3",
+      "words": [
+        {
+          "zh": "可是",
+          "vi": "Nhưng, thế nhưng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我很想去，可是没时间。",
+          "exVi": "Tôi muốn đi nhưng không có thời gian."
+        },
+        {
+          "zh": "可以",
+          "vi": "Có thể, được phép",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们可以在这里休息一下。",
+          "exVi": "Chúng ta có thể nghỉ ngơi ở đây."
+        },
+        {
+          "zh": "克",
+          "vi": "Gram (đơn vị đo lường)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这块巧克力有 100 克。",
+          "exVi": "Miếng sô-cô-la này nặng 100 gram."
+        },
+        {
+          "zh": "刻",
+          "vi": "Khắc, 15 phút",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "现在是三点一刻。",
+          "exVi": "Bây giờ là ba giờ mười lăm phút."
+        },
+        {
+          "zh": "客人",
+          "vi": "Khách",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "客人已经到了。",
+          "exVi": "Khách đã đến rồi."
+        },
+        {
+          "zh": "课堂",
+          "vi": "Lớp học, giảng đường",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "老师正在课堂上讲课。",
+          "exVi": "Giáo viên đang giảng bài trên lớp."
+        },
+        {
+          "zh": "空气",
+          "vi": "Không khí",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这里的空气很好。",
+          "exVi": "Không khí ở đây rất tốt."
+        },
+        {
+          "zh": "哭",
+          "vi": "Khóc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你别哭了！",
+          "exVi": "Bạn đừng khóc nữa!"
+        },
+        {
+          "zh": "快餐",
+          "vi": "Thức ăn nhanh",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们去吃快餐吧！",
+          "exVi": "Chúng ta đi ăn đồ ăn nhanh nhé!"
+        },
+        {
+          "zh": "快乐",
+          "vi": "Vui vẻ, hạnh phúc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "祝你生日快乐！",
+          "exVi": "Chúc bạn sinh nhật vui vẻ!"
+        },
+        {
+          "zh": "快点儿",
+          "vi": "Nhanh lên",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "快点儿，我们要迟到了！",
+          "exVi": "Nhanh lên, chúng ta sắp trễ rồi!"
+        },
+        {
+          "zh": "快要",
+          "vi": "Sắp, sắp sửa",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "咖啡店快要关门了！",
+          "exVi": "Quán cà phê sắp đóng cửa rồi!"
+        },
+        {
+          "zh": "筷子",
+          "vi": "Đũa",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我不会用筷子。",
+          "exVi": "Tôi không biết dùng đũa."
+        },
+        {
+          "zh": "拉",
+          "vi": "Kéo, lôi, lôi kéo, dắt",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他拉着小狗散步。",
+          "exVi": "Anh ấy dắt chó đi dạo."
+        },
+        {
+          "zh": "来自",
+          "vi": "Đến từ, xuất phát từ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他来自中国。",
+          "exVi": "Anh ấy đến từ Trung Quốc."
+        },
+        {
+          "zh": "蓝",
+          "vi": "Xanh",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今天的天空很蓝。",
+          "exVi": "Bầu trời hôm nay rất xanh."
+        },
+        {
+          "zh": "蓝色",
+          "vi": "Màu xanh lam",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢蓝色的衣服。",
+          "exVi": "Tôi thích quần áo màu xanh."
+        },
+        {
+          "zh": "篮球",
+          "vi": "Bóng rổ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他的篮球打得很好。",
+          "exVi": "Anh ấy chơi bóng rổ rất giỏi."
+        },
+        {
+          "zh": "老",
+          "vi": "Cũ, già",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我奶奶老了。",
+          "exVi": "Bà tôi già rồi."
+        },
+        {
+          "zh": "老 ( 老王 )",
+          "vi": "Ông (dùng trước họ người để gọi người lớn tuổi)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "老王是我的大学同学。",
+          "exVi": "Lão Vương là bạn cùng lớp đại học của tôi."
+        },
+        {
+          "zh": "老年",
+          "vi": "Tuổi già, người già",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "老年人喜欢喝茶。",
+          "exVi": "Người già thích uống trà."
+        },
+        {
+          "zh": "老朋友",
+          "vi": "Bạn cũ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他是我的老朋友。",
+          "exVi": "Anh ấy là bạn cũ của tôi."
+        },
+        {
+          "zh": "老是",
+          "vi": "Luôn luôn, lúc nào cũng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他老是迟到。",
+          "exVi": "Anh ấy lúc nào cũng đến muộn."
+        },
+        {
+          "zh": "离",
+          "vi": "Cách",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我家离学校很近。",
+          "exVi": "Nhà tôi cách trường rất gần."
+        },
+        {
+          "zh": "离开",
+          "vi": "Rời khỏi, rời xa",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我明天要离开北京了。",
+          "exVi": "Ngày mai tôi sẽ phải rời khỏi Bắc Kinh rồi."
+        },
+        {
+          "zh": "礼物",
+          "vi": "Quà, quà tặng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这是送给你的礼物。",
+          "exVi": "Đây là món quà dành tặng bạn."
+        },
+        {
+          "zh": "里头",
+          "vi": "Bên trong",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "书在书柜里头。",
+          "exVi": "Quyển sách ở bên trong tủ sách."
+        },
+        {
+          "zh": "理想",
+          "vi": "Lý tưởng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他是我的理想型。",
+          "exVi": "Anh ấy là mẫu người lý tưởng của tôi."
+        },
+        {
+          "zh": "例如",
+          "vi": "Ví dụ như",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢很多花,例如荷花、菊花、和玫瑰花。",
+          "exVi": "Tôi thích nhiều loại hoa như hoa sen, hoa cúc và hoa hồng."
+        },
+        {
+          "zh": "例子",
+          "vi": "Ví dụ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个例子很容易。",
+          "exVi": "Ví dụ này rất dễ hiểu."
+        },
+        {
+          "zh": "脸",
+          "vi": "Mặt",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她的脸红了起来。",
+          "exVi": "Mặt cô đỏ bừng."
+        },
+        {
+          "zh": "练",
+          "vi": "Luyện tập",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他每天都练习写汉字。",
+          "exVi": "Anh ấy luyện viết chữ Hán mỗi ngày."
+        },
+        {
+          "zh": "练习",
+          "vi": "Luyện tập, rèn luyện",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "",
+          "exVi": ""
+        },
+        {
+          "zh": "凉",
+          "vi": "Mát mẻ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "夏天晚上很凉快。",
+          "exVi": "Mùa hè buổi tối rất mát mẻ."
+        },
+        {
+          "zh": "凉快",
+          "vi": "Mát mẻ, dễ chịu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "",
+          "exVi": ""
+        },
+        {
+          "zh": "两",
+          "vi": "Lạng (đơn vị đo trọng lượng)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他买了五两花生米。",
+          "exVi": "Anh ấy mua năm lạng đậu phộng."
+        },
+        {
+          "zh": "亮",
+          "vi": "Sáng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个房间很亮。",
+          "exVi": "Căn phòng này rất sáng."
+        },
+        {
+          "zh": "辆",
+          "vi": "Chiếc (dùng cho xe cộ)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他买了一辆新车。",
+          "exVi": "Anh ấy đã mua một chiếc xe mới."
+        },
+        {
+          "zh": "零下",
+          "vi": "Dưới không độ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今天的气温降到了零下十度。",
+          "exVi": "Nhiệt độ hôm nay giảm xuống còn âm 10 độ C."
+        },
+        {
+          "zh": "留",
+          "vi": "Lưu lại, ở lại",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他留在农村工作了。",
+          "exVi": "Anh ấy ở lại nông thôn làm việc."
+        },
+        {
+          "zh": "留下",
+          "vi": "Để lại, lưu lại",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她留下了一封信。",
+          "exVi": "Cô ấy đã để lại một bức thư."
+        },
+        {
+          "zh": "留学生",
+          "vi": "Du học sinh",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我是留学生。",
+          "exVi": "Tôi là du học sinh."
+        },
+        {
+          "zh": "流",
+          "vi": "Chảy, đổ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他的手指流血了。",
+          "exVi": "Ngón tay của anh ấy bị chảy máu."
+        },
+        {
+          "zh": "流利",
+          "vi": "Lưu loát, trôi chảy",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他中文说得很流利。",
+          "exVi": "Anh ấy nói tiếng Trung rất lưu loát."
+        },
+        {
+          "zh": "流行",
+          "vi": "Thịnh hành, phổ biến",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这部电影在流行全球。",
+          "exVi": "Bộ phim này đang phổ biến trên toàn cầu."
+        },
+        {
+          "zh": "路边",
+          "vi": "Ven đường",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "路边有很多商店。",
+          "exVi": "Ven đường có rất nhiều cửa hàng."
+        },
+        {
+          "zh": "旅客",
+          "vi": "Khách du lịch",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "旅客们正在上车。",
+          "exVi": "Các hành khách đang lên xe."
+        },
+        {
+          "zh": "旅行",
+          "vi": "Du lịch",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们一起去旅行吧！",
+          "exVi": "Chúng ta cùng đi du lịch nhé!"
+        },
+        {
+          "zh": "旅游",
+          "vi": "Du lịch, du ngoạn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他很喜欢去旅游。",
+          "exVi": "Anh ấy rất thích đi du lịch."
+        },
+        {
+          "zh": "绿",
+          "vi": "Màu xanh lá cây",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "草地上长满了绿草。",
+          "exVi": "Cỏ xanh mọc đầy trên cánh đồng."
+        },
+        {
+          "zh": "绿色",
+          "vi": "Màu xanh lá cây",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢绿色。",
+          "exVi": "Tôi thích màu xanh lá cây."
+        },
+        {
+          "zh": "卖",
+          "vi": "Bán",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他在市场卖水果。",
+          "exVi": "Anh ấy bán trái cây ở chợ."
+        },
+        {
+          "zh": "满",
+          "vi": "Đầy, tràn đầy",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我的房间里满都是书。",
+          "exVi": "Trong phòng tôi đều là sách."
+        },
+        {
+          "zh": "满意",
+          "vi": "Hài lòng, thỏa mãn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你对我们的服务满意吗？",
+          "exVi": "Bạn có hài lòng với dịch vụ của chúng tôi không?"
+        },
+        {
+          "zh": "猫",
+          "vi": "Mèo",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我家有一只猫。",
+          "exVi": "Nhà tôi có một con mèo."
+        },
+        {
+          "zh": "米",
+          "vi": "Gạo\n\nmét",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我想买一公斤米。\n\n我哥哥一米八。",
+          "exVi": "Tôi muốn mua một ký gạo.\n\nAnh trai tôi cao 1,8 mét."
+        },
+        {
+          "zh": "面",
+          "vi": "Chiếc, tấm, bức",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她有一面镜子。",
+          "exVi": "Anh ấy có một cái gương."
+        },
+        {
+          "zh": "面",
+          "vi": "mặt",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "桌面(tô đỏ)很干净。",
+          "exVi": "Mặt bàn rất sạch sẽ."
+        },
+        {
+          "zh": "面前",
+          "vi": "Trước mặt",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他站在我面前。",
+          "exVi": "Anh ấy đứng trước tôi."
+        },
+        {
+          "zh": "名",
+          "vi": "Tên, danh tiếng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你的名字是什么？",
+          "exVi": "Tên của bạn là gì?"
+        },
+        {
+          "zh": "名称",
+          "vi": "Danh xưng, tên gọi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个学校的名称很长。",
+          "exVi": "Tên của ngôi trường này rất dài."
+        },
+        {
+          "zh": "名单",
+          "vi": "Danh sách",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们需要一个新的名单。",
+          "exVi": "Chúng tôi cần một danh sách mới."
+        },
+        {
+          "zh": "明星",
+          "vi": "Ngôi sao, người nổi tiếng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她是电影明星。",
+          "exVi": "Cô ấy là ngôi sao điện ảnh."
+        },
+        {
+          "zh": "目的",
+          "vi": "Mục đích",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你的目的是什么？",
+          "exVi": "Mục đích của bạn là gì?"
+        },
+        {
+          "zh": "拿出",
+          "vi": "Lấy ra",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他拿出(tô đỏ)一个苹果。",
+          "exVi": "Anh ấy lấy ra một quả táo."
+        },
+        {
+          "zh": "拿到",
+          "vi": "Lấy được",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我拿到了考试成绩。",
+          "exVi": "Tôi đã nhận được kết quả thi."
+        },
+        {
+          "zh": "那",
+          "vi": "Kia, đó",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "那是我的手机。",
+          "exVi": "Đó là điện thoại của tôi."
+        },
+        {
+          "zh": "那会儿",
+          "vi": "Khi đó, lúc đó",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "那会儿(tô đỏ)我在学校。",
+          "exVi": "Khi đó tôi đang ở trường."
+        },
+        {
+          "zh": "那么",
+          "vi": "Như vậy, thế thì",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他那么高啊。",
+          "exVi": "Anh ấy cao thế!"
+        },
+        {
+          "zh": "那时候 | 那时",
+          "vi": "Khi đó, lúc đó",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "那时候我们很快乐。",
+          "exVi": "Khi đó chúng tôi rất vui."
+        },
+        {
+          "zh": "那样",
+          "vi": "Như vậy",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "不要那样做。",
+          "exVi": "Đừng làm như vậy."
+        },
+        {
+          "zh": "南方",
+          "vi": "Miền nam",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "南方的天气很热。",
+          "exVi": "Thời tiết miền Nam rất nóng."
+        },
+        {
+          "zh": "难过",
+          "vi": "Buồn, khó chịu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她听到坏消息就很难过。",
+          "exVi": "Cô ấy rất buồn khi nghe tin xấu."
+        },
+        {
+          "zh": "难看",
+          "vi": "Xấu, khó coi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这件衣服太难看了。",
+          "exVi": "Bộ quần áo này quá xấu."
+        },
+        {
+          "zh": "难受",
+          "vi": "Khó chịu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "天气太热，我很难受。",
+          "exVi": "Trời quá nóng, tôi rất khó chịu."
+        },
+        {
+          "zh": "难题",
+          "vi": "Câu hỏi khó, vấn đề khó",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这道数学题是个难题。",
+          "exVi": "Câu toán này là một bài toán khó."
+        },
+        {
+          "zh": "难听",
+          "vi": "Khó nghe",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这首歌太难听了。",
+          "exVi": "Bài hát này quá khó nghe."
+        },
+        {
+          "zh": "能够",
+          "vi": "Có thể",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我能够(tô đỏ)完成这项工作。",
+          "exVi": "Tôi có thể hoàn thành công việc này."
+        },
+        {
+          "zh": "年级",
+          "vi": "Khối lớp",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我今年读三年级。",
+          "exVi": "Năm nay tôi học lớp ba."
+        },
+        {
+          "zh": "年轻",
+          "vi": "Trẻ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她看起来很年轻。",
+          "exVi": "Cô ấy trông rất trẻ."
+        },
+        {
+          "zh": "鸟",
+          "vi": "Con chim",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "树上有一只小鸟。",
+          "exVi": "Trên cây có một con chim nhỏ."
+        },
+        {
+          "zh": "弄",
+          "vi": "Làm, gây ra",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你把衣服弄脏了。",
+          "exVi": "Bạn làm bẩn quần áo rồi."
+        },
+        {
+          "zh": "努力",
+          "vi": "Nỗ lực, cố gắng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他努力学习汉语。",
+          "exVi": "Anh ấy nỗ lực học tiếng Trung."
+        },
+        {
+          "zh": "爬",
+          "vi": "Leo, bò",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "孩子会爬了。",
+          "exVi": "Đứa bé đã biết bò."
+        },
+        {
+          "zh": "爬山",
+          "vi": "Leo núi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "周末我们去爬山。",
+          "exVi": "Cuối tuần chúng tôi đi leo núi."
+        },
+        {
+          "zh": "怕",
+          "vi": "Sợ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我怕黑，不敢出门。",
+          "exVi": "Tôi sợ bóng tối, không dám ra ngoài."
+        },
+        {
+          "zh": "排",
+          "vi": "Xếp hàng, sắp xếp",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请大家排好队。",
+          "exVi": "Mọi người vui lòng xếp hàng ngay ngắn."
+        },
+        {
+          "zh": "排队",
+          "vi": "Xếp hàng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们要排队买票。",
+          "exVi": "Chúng tôi phải xếp hàng mua vé."
+        },
+        {
+          "zh": "排球",
+          "vi": "Bóng chuyền",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他喜欢打排球。",
+          "exVi": "Anh ấy thích chơi bóng chuyền."
+        },
+        {
+          "zh": "碰",
+          "vi": "Va chạm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他不小心碰到了桌子。",
+          "exVi": "Anh ấy vô tình đụng vào bàn."
+        },
+        {
+          "zh": "碰到",
+          "vi": "Gặp phải",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我在路上碰到朋友。",
+          "exVi": "Tôi gặp bạn trên đường."
+        },
+        {
+          "zh": "碰见",
+          "vi": "Gặp gỡ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我昨天碰见了老师。",
+          "exVi": "Hôm qua tôi gặp giáo viên."
+        },
+        {
+          "zh": "篇",
+          "vi": "Bài (dùng cho bài viết, bài văn)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他写了一篇文章。",
+          "exVi": "Anh ấy đã viết một bài văn."
+        },
+        {
+          "zh": "便宜",
+          "vi": "Rẻ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这件衣服很便宜。",
+          "exVi": "Bộ quần áo này rất rẻ."
+        },
+        {
+          "zh": "片",
+          "vi": "Tấm, lát",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我吃了一片面包。",
+          "exVi": "Tôi đã ăn một lát bánh mì."
+        },
+        {
+          "zh": "漂亮",
+          "vi": "Đẹp",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她的衣服很漂亮。",
+          "exVi": "Quần áo của cô ấy rất đẹp."
+        },
+        {
+          "zh": "平",
+          "vi": "Bằng phẳng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这条路很平。",
+          "exVi": "Con đường này rất bằng phẳng."
+        },
+        {
+          "zh": "平安",
+          "vi": "Bình an",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "祝你一路平安。",
+          "exVi": "Chúc bạn lên đường bình an."
+        },
+        {
+          "zh": "平常",
+          "vi": "Bình thường",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他平常很早起床。",
+          "exVi": "Bình thường anh ấy dậy rất sớm."
+        },
+        {
+          "zh": "平等",
+          "vi": "Bình đẳng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们都是平等的。",
+          "exVi": "Chúng ta đều bình đẳng."
+        },
+        {
+          "zh": "平时",
+          "vi": "Thường ngày",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我平时不喝咖啡。",
+          "exVi": "Tôi thường ngày không uống cà phê."
+        },
+        {
+          "zh": "瓶",
+          "vi": "Chai, lọ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我买了一瓶水。",
+          "exVi": "Tôi đã mua một chai nước."
+        },
+        {
+          "zh": "瓶子",
+          "vi": "Chai, lọ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个瓶子很大。",
+          "exVi": "Cái chai này rất to."
+        },
+        {
+          "zh": "普通",
+          "vi": "Bình thường",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他是一个普通(tô đỏ)人。",
+          "exVi": "Anh ấy là một người bình thường."
+        },
+        {
+          "zh": "普通话",
+          "vi": "Tiếng phổ thông",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我会说普通话。",
+          "exVi": "Tôi biết nói tiếng phổ thông."
+        },
+        {
+          "zh": "其他",
+          "vi": "Khác, những cái khác",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你还有其他问题吗？",
+          "exVi": "Bạn còn câu hỏi nào khác không?"
+        },
+        {
+          "zh": "其中",
+          "vi": "Trong đó",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "其中一个是我的朋友。",
+          "exVi": "Trong đó có một người là bạn tôi."
+        },
+        {
+          "zh": "骑",
+          "vi": "Cưỡi (xe, ngựa)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我会骑自行车。",
+          "exVi": "Tôi biết đi xe đạp."
+        },
+        {
+          "zh": "骑车",
+          "vi": "Đi xe (đạp, máy)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我每天骑车上班。",
+          "exVi": "Tôi đi xe đi làm mỗi ngày."
+        },
+        {
+          "zh": "起飞",
+          "vi": "Cất cánh",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "飞机马上起飞了。",
+          "exVi": "Máy bay sắp cất cánh rồi."
+        },
+        {
+          "zh": "气",
+          "vi": "Thời tiết, khí hậu\n\nkhí thế, trạng thái tinh thần",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今天的天气非常热。\n\n你今天气色不错。",
+          "exVi": "Thời tiết hôm nay rất nóng.\n\nTinh thần của bạn hôm nay không tệ."
+        },
+        {
+          "zh": "气温",
+          "vi": "Nhiệt độ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今天的气温非常高。",
+          "exVi": "Nhiệt độ hôm nay rất cao."
+        },
+        {
+          "zh": "千",
+          "vi": "Một nghìn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个手机两千块。",
+          "exVi": "Chiếc điện thoại này hai nghìn tệ."
+        },
+        {
+          "zh": "千克",
+          "vi": "Kilogram (kg)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个箱子十千克。",
+          "exVi": "Chiếc vali này nặng 10 kg."
+        },
+        {
+          "zh": "前年",
+          "vi": "Năm kia",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我前年去了北京。",
+          "exVi": "Năm kia tôi đã đi Bắc Kinh."
+        },
+        {
+          "zh": "墙",
+          "vi": "Bức tường",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "墙上有一幅画。",
+          "exVi": "Trên tường có một bức tranh."
+        },
+        {
+          "zh": "青年",
+          "vi": "Thanh niên",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他是一位有为青年(tô đỏ)。",
+          "exVi": "Anh ấy là một thanh niên ưu tú."
+        },
+        {
+          "zh": "青少年",
+          "vi": "Thanh thiếu niên",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他们是青少年。",
+          "exVi": "Họ là thanh thiếu niên."
+        },
+        {
+          "zh": "轻",
+          "vi": "Nhẹ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个箱子很轻。",
+          "exVi": "Cái vali này rất nhẹ."
+        },
+        {
+          "zh": "清楚",
+          "vi": "Rõ ràng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我看不清楚(tô đỏ)。",
+          "exVi": "Tôi nhìn không rõ."
+        },
+        {
+          "zh": "晴",
+          "vi": "Trời trong, trời quang",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "雨后总会有晴天。",
+          "exVi": "Sau cơn mưa trời lại sáng."
+        },
+        {
+          "zh": "晴天",
+          "vi": "Ngày nắng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "明天是晴天。",
+          "exVi": "Ngày mai trời nắng."
+        },
+        {
+          "zh": "请客",
+          "vi": "Mời khách",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今天我请客。",
+          "exVi": "Hôm nay tôi mời khách."
+        },
+        {
+          "zh": "请求",
+          "vi": "Yêu cầu, xin ý kiến, đề nghị",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他请求大家努力工作。",
+          "exVi": "Anh ấy đề nghị mọi người cố gắng làm việc."
+        },
+        {
+          "zh": "秋天",
+          "vi": "Mùa thu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢秋天。",
+          "exVi": "Tôi thích mùa thu."
+        },
+        {
+          "zh": "球",
+          "vi": "Quả bóng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢踢球。",
+          "exVi": "Tôi thích đá bóng."
+        },
+        {
+          "zh": "球场",
+          "vi": "Sân bóng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们去球场玩吧。",
+          "exVi": "Chúng ta đi sân bóng chơi nhé."
+        },
+        {
+          "zh": "球队",
+          "vi": "Đội bóng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个球队很有名。",
+          "exVi": "Đội bóng này rất nổi tiếng."
+        },
+        {
+          "zh": "球鞋",
+          "vi": "Giày thể thao",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我买了新球鞋。",
+          "exVi": "Tôi đã mua đôi giày thể thao mới."
+        },
+        {
+          "zh": "取",
+          "vi": "Lấy, rút",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我去银行取钱。",
+          "exVi": "Tôi đi ngân hàng rút tiền."
+        },
+        {
+          "zh": "取得",
+          "vi": "Đạt được",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他取得了好成绩。",
+          "exVi": "Anh ấy đạt được thành tích tốt."
+        },
+        {
+          "zh": "全",
+          "vi": "Toàn bộ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "全(tô đỏ)世界都在关注这件事。",
+          "exVi": "Cả thế giới đều đang chú ý đến việc này."
+        },
+        {
+          "zh": "全部",
+          "vi": "Toàn bộ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "全部学生都参加了。",
+          "exVi": "Toàn bộ học sinh đều tham gia."
+        },
+        {
+          "zh": "全国",
+          "vi": "Toàn quốc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "全国(tô đỏ)都在庆祝春节。",
+          "exVi": "Cả nước đều đang ăn mừng Tết Nguyên Đán."
+        },
+        {
+          "zh": "全家",
+          "vi": "Cả nhà, cả gia đình",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们全家去公园散步了。",
+          "exVi": "Cả nhà chúng tôi đã đi dạo công viên."
+        },
+        {
+          "zh": "全年",
+          "vi": "Cả năm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这里的天气全年都很好。",
+          "exVi": "Thời tiết ở đây rất tốt cả năm."
+        },
+        {
+          "zh": "全身",
+          "vi": "Toàn thân, cả người",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他全身都湿了。",
+          "exVi": "Cả người anh ấy đều ướt."
+        },
+        {
+          "zh": "全体",
+          "vi": "Toàn thể",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "全体学生都参加了活动。",
+          "exVi": "Toàn thể học sinh đều tham gia hoạt động."
+        },
+        {
+          "zh": "让",
+          "vi": "Làm cho, khiến cho",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这件事让我很高兴。",
+          "exVi": "Chuyện này khiến tôi rất vui."
+        },
+        {
+          "zh": "然后",
+          "vi": "Sau đó",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我先吃饭，然后去学校学习。",
+          "exVi": "Tôi ăn cơm, sau đó đến trường học."
+        },
+        {
+          "zh": "热情",
+          "vi": "Nhiệt tình",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她对客人非常热情。",
+          "exVi": "Cô ấy rất nhiệt tình với khách."
+        },
+        {
+          "zh": "人口",
+          "vi": "Dân số",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个城市的人口很多。",
+          "exVi": "Thành phố này có dân số rất đông."
+        },
+        {
+          "zh": "人们",
+          "vi": "Mọi người",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "人们喜欢去公园散步。",
+          "exVi": "Mọi người thích đi dạo trong công viên."
+        },
+        {
+          "zh": "人数",
+          "vi": "Số người, sĩ số, số lượng người",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个班的人数很多。",
+          "exVi": "Sĩ số của lớp này rất đông."
+        },
+        {
+          "zh": "认为",
+          "vi": "Cho rằng, nghĩ rằng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我认为这个办法很好。",
+          "exVi": "Tôi cho rằng cách này rất tốt."
+        },
+        {
+          "zh": "日报",
+          "vi": "Nhật báo, báo hằng ngày",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我每天看日报。",
+          "exVi": "Tôi đọc báo hằng ngày."
+        },
+        {
+          "zh": "日子",
+          "vi": "Ngày, cuộc sống",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这些日子很开心。",
+          "exVi": "Những ngày này rất vui."
+        },
+        {
+          "zh": "如果",
+          "vi": "Nếu như",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "如果下雨，我不去公园。",
+          "exVi": "Nếu trời mưa, tôi không đi công viên."
+        },
+        {
+          "zh": "人口",
+          "vi": "Dân số",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个城市的人口很多。",
+          "exVi": "Thành phố này có dân số rất đông."
+        },
+        {
+          "zh": "商量",
+          "vi": "Thương lượng, bàn bạc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他们在商量这件事。",
+          "exVi": "Họ đang bàn bạc về việc này."
+        },
+        {
+          "zh": "商人",
+          "vi": "Thương nhân, doanh nhân",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他是一个成功的商人。",
+          "exVi": "Anh ấy là một doanh nhân thành công."
+        },
+        {
+          "zh": "上周",
+          "vi": "Tuần trước",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "上周我们去了北京。",
+          "exVi": "Tuần trước chúng tôi đã đi Bắc Kinh."
+        },
+        {
+          "zh": "少数",
+          "vi": "Số ít, thiểu số",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "只有少数人知道这件事。",
+          "exVi": "Chỉ có số ít người biết chuyện này."
+        },
+        {
+          "zh": "少年",
+          "vi": "Thiếu niên, thanh thiếu niên",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这些少年很有活力。",
+          "exVi": "Những thiếu niên này rất năng động."
+        },
+        {
+          "zh": "身边",
+          "vi": "Bên cạnh, bên người",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我身边有很多朋友。",
+          "exVi": "Bên cạnh tôi có rất nhiều bạn bè."
+        },
+        {
+          "zh": "什么样",
+          "vi": "Như thế nào, loại nào",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你喜欢什么样的电影？",
+          "exVi": "Bạn thích loại phim nào?"
+        },
+        {
+          "zh": "生（动）",
+          "vi": "Sinh, sinh ra",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她去年生了一个女儿。",
+          "exVi": "Cô ấy sinh một bé gái vào năm ngoái."
+        },
+        {
+          "zh": "生词",
+          "vi": "Từ mới",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我今天学了十个生词。",
+          "exVi": "Hôm nay tôi đã học mười từ mới."
+        },
+        {
+          "zh": "生活",
+          "vi": "Cuộc sống, sinh hoạt",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他的生活很简单。",
+          "exVi": "Cuộc sống của anh ấy rất đơn giản."
+        },
+        {
+          "zh": "声音",
+          "vi": "Âm thanh, giọng nói",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你的声音很好听。",
+          "exVi": "Giọng nói của bạn rất hay."
+        }
+      ]
+    },
+    {
+      "title": "Unit 4: 📝 Phần 4",
+      "words": [
+        {
+          "zh": "省（名）",
+          "vi": "Tỉnh (đơn vị hành chính)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他住在广东省。",
+          "exVi": "Anh ấy sống ở tỉnh Quảng Đông."
+        },
+        {
+          "zh": "省（动）",
+          "vi": "Tiết kiệm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "关灯可以省电。",
+          "exVi": "Tắt đèn có thể tiết kiệm điện."
+        },
+        {
+          "zh": "十分",
+          "vi": "Rất, vô cùng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我十分喜欢这本书。",
+          "exVi": "Tôi rất thích quyển sách này."
+        },
+        {
+          "zh": "实际",
+          "vi": "Thực tế",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个计划很实际。",
+          "exVi": "Kế hoạch này rất thực tế."
+        },
+        {
+          "zh": "实习",
+          "vi": "Thực tập",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她在国际公司实习。",
+          "exVi": "Cô ấy đang thực tập tại công ty quốc tế."
+        },
+        {
+          "zh": "实现",
+          "vi": "Thực hiện",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他实现了自己的梦想。",
+          "exVi": "Anh ấy đã thực hiện ước mơ của mình."
+        },
+        {
+          "zh": "实在",
+          "vi": "Quả thực, thực sự",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个问题实在太难了。",
+          "exVi": "Vấn đề này thực sự quá khó."
+        },
+        {
+          "zh": "实在",
+          "vi": "Chắc chắn; cẩn thận; kỹ; khéo; tốt (công tác, công việc)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他工作做得很实在，你放心吧！",
+          "exVi": "Anh ấy làm việc rất tốt, bạn yên tâm nhé!"
+        },
+        {
+          "zh": "食物",
+          "vi": "Thức ăn, thực phẩm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这些食物很健康。",
+          "exVi": "Những thực phẩm này rất tốt cho sức khỏe."
+        },
+        {
+          "zh": "使用",
+          "vi": "Sử dụng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请正确使用电脑。",
+          "exVi": "Vui lòng sử dụng máy tính đúng cách."
+        },
+        {
+          "zh": "市",
+          "vi": "Thành phố, thị trấn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个市很大。",
+          "exVi": "Thành phố này rất lớn."
+        },
+        {
+          "zh": "市长",
+          "vi": "Thị trưởng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他是这个市的市长。",
+          "exVi": "Ông ấy là thị trưởng của thành phố này."
+        },
+        {
+          "zh": "事情",
+          "vi": "Sự việc, chuyện",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这是一件重要的事情。",
+          "exVi": "Đây là một việc quan trọng."
+        },
+        {
+          "zh": "收",
+          "vi": "Nhận, thu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他们还没收房租。",
+          "exVi": "Họ vẫn chưa thu tiền thuê nhà."
+        },
+        {
+          "zh": "收到",
+          "vi": "Nhận được",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我收到了一份礼物。",
+          "exVi": "Tôi đã nhận được một món quà."
+        },
+        {
+          "zh": "收入",
+          "vi": "Thu nhập",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他的收入很高。",
+          "exVi": "Thu nhập của anh ấy rất cao."
+        },
+        {
+          "zh": "手表",
+          "vi": "Đồng hồ đeo tay",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你的手表很好看。",
+          "exVi": "Đồng hồ của bạn rất đẹp."
+        },
+        {
+          "zh": "受到",
+          "vi": "Nhận được",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他受到(tô đỏ)了老师的表扬。",
+          "exVi": "Anh ấy được cô giáo khen ngợi."
+        },
+        {
+          "zh": "舒服",
+          "vi": "Thoải mái",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个椅子很舒服。",
+          "exVi": "Chiếc ghế này rất thoải mái."
+        },
+        {
+          "zh": "熟",
+          "vi": "Quen thuộc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他对这里很熟。",
+          "exVi": "Anh ấy rất quen thuộc với nơi này."
+        },
+        {
+          "zh": "数",
+          "vi": "Đếm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我来数一数有多少人。",
+          "exVi": "Để tôi đếm có bao nhiêu người."
+        },
+        {
+          "zh": "数字",
+          "vi": "Chữ số",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请写下这个数字。",
+          "exVi": "Hãy viết số này xuống."
+        },
+        {
+          "zh": "水平",
+          "vi": "Trình độ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他的水平很高。",
+          "exVi": "Trình độ của anh ấy rất cao."
+        },
+        {
+          "zh": "顺利",
+          "vi": "Thuận lợi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "祝你考试顺利！",
+          "exVi": "Chúc bạn thi cử thuận lợi!"
+        },
+        {
+          "zh": "说明",
+          "vi": "Giải thích",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请说明一下吧。",
+          "exVi": "Hãy giải thích một chút."
+        },
+        {
+          "zh": "司机",
+          "vi": "Tài xế",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他是出租车司机。",
+          "exVi": "Anh ấy là tài xế taxi."
+        },
+        {
+          "zh": "送到",
+          "vi": "Gửi đến, đưa đến",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你的快递送到了。",
+          "exVi": "Bưu kiện của bạn đã được giao đến."
+        },
+        {
+          "zh": "送给",
+          "vi": "Tặng cho",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他送给我一本书。",
+          "exVi": "Anh ấy tặng tôi một quyển sách."
+        },
+        {
+          "zh": "算",
+          "vi": "Đếm, tính toán\n\nxem như, coi là\n\nthôi, bỏ đi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们来算一算有多少人。\n\n这个问题算小的。\n\n算了，我们不说了。",
+          "exVi": "Chúng ta cùng đếm xem có bao nhiêu người.\n\nVấn đề này được xem như là nhỏ.\n\nThôi, chúng ta không nói nữa."
+        },
+        {
+          "zh": "虽然",
+          "vi": "Mặc dù",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "虽然下雨，我还是去。",
+          "exVi": "Mặc dù trời mưa, tôi vẫn đi."
+        },
+        {
+          "zh": "随便",
+          "vi": "Tùy tiện, tùy ý",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你可以随便坐。",
+          "exVi": "Bạn có thể ngồi tùy ý."
+        },
+        {
+          "zh": "随时",
+          "vi": "Bất cứ lúc nào",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你可以随时打给我。",
+          "exVi": "Bạn có thể gọi cho tôi bất cứ lúc nào."
+        },
+        {
+          "zh": "所以",
+          "vi": "Cho nên, vậy nên, vì vậy",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢看书，所以每天都去图书馆。",
+          "exVi": "Tôi thích đọc sách nên tôi đến thư viện mỗi ngày."
+        },
+        {
+          "zh": "所有",
+          "vi": "Tất cả",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "所有人都来了。",
+          "exVi": "Tất cả mọi người đều đến rồi."
+        },
+        {
+          "zh": "它",
+          "vi": "Nó (chỉ đồ vật, động vật)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这是我的猫，它很可爱。",
+          "exVi": "Đây là con mèo của tôi, nó rất đáng yêu."
+        },
+        {
+          "zh": "它们",
+          "vi": "Chúng, bọn chúng (chỉ đồ vật, động vật số nhiều)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "它们(tô đỏ)正在吃东西。",
+          "exVi": "Họ đang ăn."
+        },
+        {
+          "zh": "太太",
+          "vi": "Bà, vợ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "王太太很友好。",
+          "exVi": "Bà Vương rất thân thiện."
+        },
+        {
+          "zh": "太阳",
+          "vi": "Mặt trời",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今天太阳很大。",
+          "exVi": "Hôm nay trời rất nắng."
+        },
+        {
+          "zh": "态度",
+          "vi": "Thái độ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他的态度很好。",
+          "exVi": "Thái độ của anh ấy rất tốt."
+        },
+        {
+          "zh": "讨论",
+          "vi": "Thảo luận",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他们在讨论问题。",
+          "exVi": "Họ đang thảo luận vấn đề."
+        },
+        {
+          "zh": "套",
+          "vi": "Bộ (quần áo, sách, đồ vật)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我买了一套衣服。",
+          "exVi": "Tôi đã mua một bộ quần áo."
+        },
+        {
+          "zh": "特别",
+          "vi": "Đặc biệt, vô cùng, rất",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这本书特别有意思。",
+          "exVi": "Cuốn sách này đặc biệt thú vị."
+        },
+        {
+          "zh": "特点",
+          "vi": "Đặc điểm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个地方有什么特点？",
+          "exVi": "Nơi này có đặc điểm gì?"
+        },
+        {
+          "zh": "疼",
+          "vi": "Đau",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我的头很疼。",
+          "exVi": "Đầu của tôi rất đau."
+        },
+        {
+          "zh": "提",
+          "vi": "Nêu ra, đề xuất",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他提了一个问题。",
+          "exVi": "Anh ấy đã nêu ra một câu hỏi."
+        },
+        {
+          "zh": "提出",
+          "vi": "Đề xuất, đưa ra",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "老师提出了新问题。",
+          "exVi": "Giáo viên đã đưa ra một câu hỏi mới."
+        },
+        {
+          "zh": "提到",
+          "vi": "Nhắc đến, đề cập đến",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他提到了我的名字。",
+          "exVi": "Anh ấy đã nhắc đến tên tôi."
+        },
+        {
+          "zh": "提高",
+          "vi": "Nâng cao, cải thiện",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我要提高汉语水平。",
+          "exVi": "Tôi muốn nâng cao trình độ tiếng Trung."
+        },
+        {
+          "zh": "题",
+          "vi": "Câu hỏi, đề bài",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个题很简单。",
+          "exVi": "Câu hỏi này rất đơn giản."
+        },
+        {
+          "zh": "体育",
+          "vi": "Thể thao",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢体育运动。",
+          "exVi": "Tôi thích các hoạt động thể thao."
+        },
+        {
+          "zh": "体育场",
+          "vi": "Sân vận động",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们去体育场吧。",
+          "exVi": "Chúng ta đi sân vận động nhé."
+        },
+        {
+          "zh": "体育馆",
+          "vi": "Nhà thi đấu thể thao",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "体育馆很大。",
+          "exVi": "Nhà thi đấu thể thao rất lớn."
+        },
+        {
+          "zh": "天上",
+          "vi": "Trên trời",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "天上有很多云。",
+          "exVi": "Trên trời có nhiều mây."
+        },
+        {
+          "zh": "条",
+          "vi": "Cái, chiếc (dùng cho vật dài)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这条裤子很好看。",
+          "exVi": "Chiếc quần này rất đẹp."
+        },
+        {
+          "zh": "条件",
+          "vi": "Điều kiện",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他有很好的学习条件(tô đỏ)。",
+          "exVi": "Anh ấy có điều kiện học tập rất tốt."
+        },
+        {
+          "zh": "听讲",
+          "vi": "Nghe giảng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "学生认真听讲。",
+          "exVi": "Học sinh nghe giảng chăm chú."
+        },
+        {
+          "zh": "听说",
+          "vi": "Nghe nói",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我听说他很忙。",
+          "exVi": "Tôi nghe nói anh ấy rất bận."
+        },
+        {
+          "zh": "停",
+          "vi": "Dừng lại",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "车停在门口了。",
+          "exVi": "Xe dừng trước cửa rồi."
+        },
+        {
+          "zh": "停车",
+          "vi": "Đỗ xe",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请在这里停车。",
+          "exVi": "Vui lòng đỗ xe ở đây."
+        },
+        {
+          "zh": "停车场",
+          "vi": "Bãi đỗ xe",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "停车场很大。",
+          "exVi": "Bãi đỗ xe rất lớn."
+        },
+        {
+          "zh": "挺 （副）",
+          "vi": "Rất, khá",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这部电影挺好看的。",
+          "exVi": "Bộ phim này rất hay."
+        },
+        {
+          "zh": "挺好",
+          "vi": "Khá tốt",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个饭馆挺好。",
+          "exVi": "Nhà hàng này khá tốt."
+        },
+        {
+          "zh": "通",
+          "vi": "Thông, thông suốt",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "电话已经打通了。",
+          "exVi": "Điện thoại đã kết nối được rồi."
+        },
+        {
+          "zh": "通过",
+          "vi": "Thông qua",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他通过了考试。",
+          "exVi": "Anh ấy đã vượt qua kỳ thi."
+        },
+        {
+          "zh": "通知",
+          "vi": "Thông báo",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我收到一个通知。",
+          "exVi": "Tôi nhận được một thông báo."
+        },
+        {
+          "zh": "同时",
+          "vi": "Đồng thời",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我同时做两件事。",
+          "exVi": "Tôi làm hai việc cùng một lúc."
+        },
+        {
+          "zh": "同事",
+          "vi": "Đồng nghiệp",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他是我的同事。",
+          "exVi": "Anh ấy là đồng nghiệp của tôi."
+        },
+        {
+          "zh": "同样",
+          "vi": "Giống nhau",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们的想法同样。",
+          "exVi": "Suy nghĩ của chúng tôi giống nhau."
+        },
+        {
+          "zh": "头 (名，量）",
+          "vi": "Con (lượng từ cho gia súc)\n\ncủ (lượng từ cho củ quả)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我家有一头牛。\n\n我买了两头蒜。",
+          "exVi": "Nhà tôi có một con bò.\n\nTôi đã mua hai củ tỏi."
+        },
+        {
+          "zh": "头发",
+          "vi": "Tóc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她的头发很长。",
+          "exVi": "Tóc của cô ấy rất dài."
+        },
+        {
+          "zh": "图片",
+          "vi": "Hình ảnh",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这张图片很好看。",
+          "exVi": "Bức ảnh này rất đẹp."
+        },
+        {
+          "zh": "推",
+          "vi": "Đẩy",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他推(tô đỏ)开了门。",
+          "exVi": "Anh ấy đẩy cửa ra."
+        },
+        {
+          "zh": "腿",
+          "vi": "Chân",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我的腿有点疼。",
+          "exVi": "Chân tôi hơi đau."
+        },
+        {
+          "zh": "外地",
+          "vi": "Ngoại tỉnh, nơi khác",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他从外地回来。",
+          "exVi": "Anh ấy từ nơi khác trở về."
+        },
+        {
+          "zh": "外卖",
+          "vi": "Đồ ăn mang đi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我点了外卖。",
+          "exVi": "Tôi đã đặt đồ ăn mang đi."
+        },
+        {
+          "zh": "完",
+          "vi": "Xong, hoàn thành",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我吃完饭了。",
+          "exVi": "Tôi đã ăn xong cơm."
+        },
+        {
+          "zh": "完成",
+          "vi": "Hoàn thành",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我完成了作业。",
+          "exVi": "Tôi đã hoàn thành bài tập."
+        },
+        {
+          "zh": "完全",
+          "vi": "Hoàn toàn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我完全同意。",
+          "exVi": "Tôi hoàn toàn đồng ý."
+        },
+        {
+          "zh": "晚安",
+          "vi": "Chúc ngủ ngon",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "妈妈，晚安。",
+          "exVi": "Mẹ ngủ ngon nhé."
+        },
+        {
+          "zh": "晚报",
+          "vi": "Báo buổi tối",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我买了一份晚报。",
+          "exVi": "Tôi đã mua một tờ báo buổi tối."
+        },
+        {
+          "zh": "晚餐",
+          "vi": "Bữa tối",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们一起吃晚餐。",
+          "exVi": "Chúng tôi ăn tối cùng nhau."
+        },
+        {
+          "zh": "晚会",
+          "vi": "Tiệc tối",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他们去参加晚会。",
+          "exVi": "Họ đi tham gia tiệc tối."
+        },
+        {
+          "zh": "碗",
+          "vi": "Cái bát",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我买了一个碗。",
+          "exVi": "Tôi đã mua một cái bát."
+        },
+        {
+          "zh": "万",
+          "vi": "Mười nghìn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个手机两万元。",
+          "exVi": "Chiếc điện thoại này giá 20 nghìn nhân dân tệ."
+        },
+        {
+          "zh": "网",
+          "vi": "Lưới (đánh bắt cá, chim)\n\nmạng, mạng lưới, hệ thống",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他用网捉鱼。\n\n这里的网(tô đỏ)络很快。",
+          "exVi": "Anh ấy dùng lưới để bắt cá.\n\nMạng ở đây rất nhanh."
+        },
+        {
+          "zh": "网球",
+          "vi": "Quần vợt",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢打网球。",
+          "exVi": "Tôi thích chơi quần vợt."
+        },
+        {
+          "zh": "网站",
+          "vi": "Trang web",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个网站很有用。",
+          "exVi": "Trang web này rất hữu ích."
+        },
+        {
+          "zh": "往",
+          "vi": "Hướng về",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他往学校走去了。",
+          "exVi": "Anh ấy đi về hướng trường học."
+        },
+        {
+          "zh": "为",
+          "vi": "Vì, để",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我为你准备了礼物。",
+          "exVi": "Tôi đã chuẩn bị quà cho bạn."
+        },
+        {
+          "zh": "为什么",
+          "vi": "Tại sao",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你为什么不去？",
+          "exVi": "Tại sao bạn không đi?"
+        },
+        {
+          "zh": "位",
+          "vi": "Vị, ngài",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这位老师很有名。",
+          "exVi": "Vị giáo viên này rất nổi tiếng."
+        },
+        {
+          "zh": "味道",
+          "vi": "Hương vị",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个菜味道很好。",
+          "exVi": "Món ăn này có hương vị rất ngon."
+        },
+        {
+          "zh": "喂",
+          "vi": "A lô",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "喂，你在家吗？",
+          "exVi": "A lô, bạn có ở nhà không?"
+        },
+        {
+          "zh": "温度",
+          "vi": "Nhiệt độ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今天的温度很高。",
+          "exVi": "Hôm nay nhiệt độ rất cao."
+        },
+        {
+          "zh": "问",
+          "vi": "Hỏi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请问，这里怎么走？",
+          "exVi": "Xin hỏi, đi đến đây như thế nào?"
+        },
+        {
+          "zh": "问路",
+          "vi": "Hỏi đường",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他向我问路。",
+          "exVi": "Anh ấy hỏi đường tôi."
+        },
+        {
+          "zh": "问题",
+          "vi": "Câu hỏi, vấn đề",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个问题很容易。",
+          "exVi": "Câu hỏi này rất dễ."
+        },
+        {
+          "zh": "午餐",
+          "vi": "Bữa trưa",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们一起吃午餐吧！",
+          "exVi": "Chúng ta cùng ăn trưa nhé!"
+        },
+        {
+          "zh": "午睡",
+          "vi": "Ngủ trưa",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "午睡对身体很好。",
+          "exVi": "Ngủ trưa tốt cho sức khỏe."
+        },
+        {
+          "zh": "西北",
+          "vi": "Tây bắc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他住在中国西北。",
+          "exVi": "Anh ấy sống ở Tây Bắc Trung Quốc."
+        },
+        {
+          "zh": "西餐",
+          "vi": "Món ăn phương tây",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢吃西餐。",
+          "exVi": "Tôi thích ăn món Tây."
+        },
+        {
+          "zh": "西方",
+          "vi": "Phương tây",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "西方国家很多。",
+          "exVi": "Có nhiều quốc gia phương Tây."
+        },
+        {
+          "zh": "西南",
+          "vi": "Tây nam",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我家在西南方向。",
+          "exVi": "Nhà tôi ở hướng Tây Nam."
+        },
+        {
+          "zh": "西医",
+          "vi": "Tây y",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他是西医。",
+          "exVi": "Anh ấy là bác sĩ."
+        },
+        {
+          "zh": "习惯",
+          "vi": "Thói quen",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我习惯早上喝茶。",
+          "exVi": "Tôi có thói quen uống trà buổi sáng."
+        },
+        {
+          "zh": "洗衣机",
+          "vi": "Máy giặt",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我家有一台洗衣机。",
+          "exVi": "Nhà tôi có một cái máy giặt."
+        },
+        {
+          "zh": "洗澡",
+          "vi": "Tắm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我每天洗澡。",
+          "exVi": "Tôi tắm mỗi ngày."
+        },
+        {
+          "zh": "下",
+          "vi": "Tiếng, cái, lần (chỉ số lần của động tác)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "钟打了三下。",
+          "exVi": "Chuông đổ ba tiếng."
+        },
+        {
+          "zh": "下雪",
+          "vi": "Tuyết rơi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今天晚上会下雪。",
+          "exVi": "Tối nay sẽ có tuyết rơi."
+        },
+        {
+          "zh": "下周",
+          "vi": "Tuần sau",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "下周我们去旅游。",
+          "exVi": "Tuần sau chúng ta đi du lịch."
+        },
+        {
+          "zh": "夏天",
+          "vi": "Mùa hè",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "夏天很热，我们去游泳吧。",
+          "exVi": "Mùa hè rất nóng, chúng ta đi bơi đi."
+        },
+        {
+          "zh": "相同",
+          "vi": "Giống nhau",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他们的衣服相同。",
+          "exVi": "Quần áo của họ giống nhau."
+        },
+        {
+          "zh": "相信",
+          "vi": "Tin tưởng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我相信你能做到。",
+          "exVi": "Tôi tin bạn có thể làm được."
+        },
+        {
+          "zh": "响",
+          "vi": "Tiếng, âm thanh",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "外面有很大的响声。",
+          "exVi": "Bên ngoài có âm thanh rất lớn."
+        },
+        {
+          "zh": "想到",
+          "vi": "Nghĩ đến, nhớ đến",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我想到一个好办法。",
+          "exVi": "Tôi nghĩ ra một cách hay."
+        },
+        {
+          "zh": "想法",
+          "vi": "Ý tưởng, suy nghĩ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你的想法很好！",
+          "exVi": "Ý tưởng của bạn rất hay!"
+        },
+        {
+          "zh": "想起",
+          "vi": "Nhớ lại, nghĩ ra",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我想起了小时候的事。",
+          "exVi": "Tôi nhớ lại chuyện hồi nhỏ."
+        },
+        {
+          "zh": "向",
+          "vi": "Hướng về, về phía",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他向老师问好。",
+          "exVi": "Anh ấy chào hỏi thầy giáo."
+        },
+        {
+          "zh": "相机",
+          "vi": "Máy ảnh",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你的相机很好看。",
+          "exVi": "Máy ảnh của bạn trông rất đẹp."
+        },
+        {
+          "zh": "像",
+          "vi": "Giống như",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你像你的哥哥。",
+          "exVi": "Bạn giống anh trai của bạn."
+        },
+        {
+          "zh": "小 （小王）",
+          "vi": "Tiểu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "小王是我的同事。",
+          "exVi": "Tiểu Vương là đồng nghiệp của tôi."
+        },
+        {
+          "zh": "小声",
+          "vi": "Giọng nhỏ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请小声说话。",
+          "exVi": "Làm ơn nói nhỏ lại."
+        },
+        {
+          "zh": "小时候",
+          "vi": "Thời thơ ấu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "小时候，我喜欢画画。",
+          "exVi": "Khi còn nhỏ, tôi thích vẽ tranh."
+        },
+        {
+          "zh": "小说",
+          "vi": "Tiểu thuyết",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她在看一本小说。",
+          "exVi": "Cô ấy đang đọc một cuốn tiểu thuyết."
+        },
+        {
+          "zh": "小心",
+          "vi": "Cẩn thận",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "过马路要小心。",
+          "exVi": "Qua đường phải cẩn thận."
+        },
+        {
+          "zh": "小组",
+          "vi": "Nhóm nhỏ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们是一个小组。",
+          "exVi": "Chúng tôi là một nhóm nhỏ."
+        },
+        {
+          "zh": "校园",
+          "vi": "Khuôn viên trường",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们的校园很大。",
+          "exVi": "Khuôn viên trường chúng tôi rất lớn."
+        },
+        {
+          "zh": "校长",
+          "vi": "Hiệu trưởng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "校长在开会。",
+          "exVi": "Hiệu trưởng đang họp."
+        },
+        {
+          "zh": "笑话",
+          "vi": "Cười, trêu đùa\n\nchế nhạo, cười nhạo",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "不要笑话(tô đỏ)别人。\n\n别笑话他，要互相尊重。",
+          "exVi": "Đừng chê cười người khác.\n\nĐừng cười nhạo anh ấy, phải tôn trọng lẫn nhau."
+        },
+        {
+          "zh": "鞋",
+          "vi": "Giày",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你的鞋很好看。",
+          "exVi": "Đôi giày của bạn rất đẹp."
+        },
+        {
+          "zh": "心里",
+          "vi": "Trong lòng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我心里很高兴。",
+          "exVi": "Trong lòng tôi rất vui."
+        },
+        {
+          "zh": "心情",
+          "vi": "Tâm trạng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今天我的心情很好。",
+          "exVi": "Hôm nay tâm trạng tôi rất tốt."
+        },
+        {
+          "zh": "心中",
+          "vi": "Trong lòng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他心中有很多想法。",
+          "exVi": "Trong lòng anh ấy có rất nhiều suy nghĩ."
+        },
+        {
+          "zh": "新闻",
+          "vi": "Tin tức",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我每天看新闻。",
+          "exVi": "Tôi xem tin tức mỗi ngày."
+        },
+        {
+          "zh": "信",
+          "vi": "Thư, niềm tin",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我给你写了一封信。",
+          "exVi": "Tôi đã viết cho bạn một bức thư."
+        },
+        {
+          "zh": "信号",
+          "vi": "Tín hiệu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这里的信号不好。",
+          "exVi": "Tín hiệu ở đây không tốt."
+        },
+        {
+          "zh": "信息",
+          "vi": "Thông tin",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我想告诉你一个信息。",
+          "exVi": "Tôi muốn nói với bạn một thông tin."
+        },
+        {
+          "zh": "信心",
+          "vi": "Lòng tin",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你要对自己有信心。",
+          "exVi": "Bạn phải có lòng tin vào bản thân."
+        },
+        {
+          "zh": "信用卡",
+          "vi": "Thẻ tín dụng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我用信用卡买东西。",
+          "exVi": "Tôi dùng thẻ tín dụng để mua đồ."
+        },
+        {
+          "zh": "星星",
+          "vi": "Ngôi sao",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "夜晚的星星很美丽。",
+          "exVi": "Những ngôi sao về đêm thật đẹp."
+        },
+        {
+          "zh": "行动",
+          "vi": "Hành động",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他说到就要行动。",
+          "exVi": "Anh ấy nói là làm ngay."
+        },
+        {
+          "zh": "行人",
+          "vi": "Người đi bộ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这里有很多行人。",
+          "exVi": "Ở đây có rất nhiều người đi bộ."
+        },
+        {
+          "zh": "行为",
+          "vi": "Hành vi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他的行为很奇怪。",
+          "exVi": "Hành vi của anh ấy rất kỳ lạ."
+        },
+        {
+          "zh": "姓",
+          "vi": "Họ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我姓王，你呢？",
+          "exVi": "Tôi họ Vương, còn bạn?"
+        },
+        {
+          "zh": "姓名",
+          "vi": "Họ và tên",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请写下你的姓名。",
+          "exVi": "Vui lòng ghi họ và tên của bạn."
+        },
+        {
+          "zh": "休假",
+          "vi": "Nghỉ phép",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我下周要休假。",
+          "exVi": "Tuần sau tôi sẽ nghỉ phép."
+        },
+        {
+          "zh": "许多",
+          "vi": "Nhiều",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这里有许多书。",
+          "exVi": "Ở đây có rất nhiều sách."
+        },
+        {
+          "zh": "选",
+          "vi": "Chọn lựa",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你可以选这个。",
+          "exVi": "Bạn có thể chọn cái này."
+        },
+        {
+          "zh": "学期",
+          "vi": "Học kỳ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个学期很忙。",
+          "exVi": "Học kỳ này rất bận."
+        },
+        {
+          "zh": "雪",
+          "vi": "Tuyết",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "下雪了，好美啊！",
+          "exVi": "Tuyết rơi rồi, đẹp quá!"
+        },
+        {
+          "zh": "颜色",
+          "vi": "Màu sắc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你喜欢什么颜色？",
+          "exVi": "Bạn thích màu gì?"
+        },
+        {
+          "zh": "眼",
+          "vi": "Mắt",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我的眼有点疼。",
+          "exVi": "Mắt của tôi hơi đau."
+        },
+        {
+          "zh": "眼睛",
+          "vi": "Đôi mắt",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她的眼睛很大。",
+          "exVi": "Đôi mắt của cô ấy rất to."
+        },
+        {
+          "zh": "养",
+          "vi": "Nuôi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她家养了一只狗。",
+          "exVi": "Nhà cô ấy nuôi một con chó."
+        },
+        {
+          "zh": "样子",
+          "vi": "Dáng vẻ, kiểu dáng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个样子很好看。",
+          "exVi": "Kiểu dáng này rất đẹp."
+        },
+        {
+          "zh": "要求",
+          "vi": "Yêu cầu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "老师的要求很高。",
+          "exVi": "Yêu cầu của giáo viên rất cao."
+        },
+        {
+          "zh": "药",
+          "vi": "Thuốc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你要吃药吗？",
+          "exVi": "Bạn có cần uống thuốc không?"
+        },
+        {
+          "zh": "药店",
+          "vi": "Hiệu thuốc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "药店在哪里？",
+          "exVi": "Hiệu thuốc ở đâu?"
+        }
+      ]
+    },
+    {
+      "title": "Unit 5: 🌟 Phần 5",
+      "words": [
+        {
+          "zh": "药片",
+          "vi": "Viên thuốc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我每天吃两片药片。",
+          "exVi": "Tôi uống hai viên thuốc mỗi ngày."
+        },
+        {
+          "zh": "药水",
+          "vi": "Thuốc nước",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个药水很苦。",
+          "exVi": "Thuốc nước này rất đắng."
+        },
+        {
+          "zh": "也许",
+          "vi": "Có lẽ, có thể",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他也许不会来。",
+          "exVi": "Anh ấy có lẽ sẽ không đến."
+        },
+        {
+          "zh": "夜",
+          "vi": "Đêm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今天夜里很冷。",
+          "exVi": "Đêm nay rất lạnh."
+        },
+        {
+          "zh": "夜里",
+          "vi": "Trong đêm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我夜里睡得很好。",
+          "exVi": "Tôi ngủ rất ngon vào ban đêm."
+        },
+        {
+          "zh": "一部分",
+          "vi": "Một phần",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这是一部分工作。",
+          "exVi": "Đây là một phần công việc."
+        },
+        {
+          "zh": "一定",
+          "vi": "Nhất định",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你一定要小心。",
+          "exVi": "Bạn nhất định phải cẩn thận."
+        },
+        {
+          "zh": "一共",
+          "vi": "Tổng cộng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这些书一共多少钱？",
+          "exVi": "Những quyển sách này tổng cộng bao nhiêu tiền?"
+        },
+        {
+          "zh": "一会儿",
+          "vi": "Một lát",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请等我一会儿。",
+          "exVi": "Vui lòng đợi tôi một lát."
+        },
+        {
+          "zh": "一路平安",
+          "vi": "Thượng lộ bình an",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "祝你一路平安！",
+          "exVi": "Chúc bạn thượng lộ bình an!"
+        },
+        {
+          "zh": "一路顺风",
+          "vi": "Thuận buồm xuôi gió",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "祝你一路顺风！",
+          "exVi": "Chúc bạn lên đường thuận lợi!"
+        },
+        {
+          "zh": "已经",
+          "vi": "Đã",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我已经吃饭了。",
+          "exVi": "Tôi đã ăn cơm rồi."
+        },
+        {
+          "zh": "以后",
+          "vi": "Sau này, về sau",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "以后我要学中文。",
+          "exVi": "Sau này tôi muốn học tiếng Trung."
+        },
+        {
+          "zh": "以前",
+          "vi": "Trước đây, trước kia",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "以前我住在北京。",
+          "exVi": "Trước đây tôi sống ở Bắc Kinh."
+        },
+        {
+          "zh": "以上",
+          "vi": "Trở lên",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们需要十人以上。",
+          "exVi": "Chúng tôi cần từ 10 người trở lên."
+        },
+        {
+          "zh": "以下",
+          "vi": "Trở xuống",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这本书适合十岁以下。",
+          "exVi": "Cuốn sách này phù hợp với trẻ dưới 10 tuổi."
+        },
+        {
+          "zh": "以外",
+          "vi": "Ngoài ra",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "除了工作以外，我还学习。",
+          "exVi": "Ngoài công việc, tôi còn học tập."
+        },
+        {
+          "zh": "以为",
+          "vi": "Cho rằng, tưởng rằng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我以为你在家。",
+          "exVi": "Tôi tưởng bạn ở nhà."
+        },
+        {
+          "zh": "椅子",
+          "vi": "Cái ghế",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这把椅子很舒服。",
+          "exVi": "Cái ghế này rất thoải mái."
+        },
+        {
+          "zh": "一般",
+          "vi": "Thông thường",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这家店的衣服一般。",
+          "exVi": "Quần áo ở cửa hàng này bình thường."
+        },
+        {
+          "zh": "一点点",
+          "vi": "Một chút",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请给我一点点水。",
+          "exVi": "Làm ơn cho tôi một chút nước."
+        },
+        {
+          "zh": "一生",
+          "vi": "Cả đời",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他一生都很努力。",
+          "exVi": "Anh ấy làm việc chăm chỉ cả đời."
+        },
+        {
+          "zh": "一直",
+          "vi": "Luôn luôn, suốt",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我一直在学习汉语。",
+          "exVi": "Tôi luôn học tiếng Trung."
+        },
+        {
+          "zh": "亿",
+          "vi": "100 triệu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "中国有十多亿人口。",
+          "exVi": "Trung Quốc có hơn một tỷ dân."
+        },
+        {
+          "zh": "意见",
+          "vi": "Ý kiến",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你有什么意见吗？",
+          "exVi": "Bạn có ý kiến gì không?"
+        },
+        {
+          "zh": "意思",
+          "vi": "Ý nghĩa, ý tứ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个词的意思是什么？",
+          "exVi": "Từ này có nghĩa là gì?"
+        },
+        {
+          "zh": "因为",
+          "vi": "Bởi vì",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "因为下雨，我没去公园。",
+          "exVi": "Vì trời mưa, nên tôi không đi công viên."
+        },
+        {
+          "zh": "阳",
+          "vi": "Mặt trời, dương",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "太阳在天上很亮。",
+          "exVi": "Mặt trời trên trời rất sáng."
+        },
+        {
+          "zh": "明天",
+          "vi": "Ngày mai",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "明天我们去学校。",
+          "exVi": "Ngày mai chúng tôi đi học."
+        },
+        {
+          "zh": "音节",
+          "vi": "Âm tiết",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个词有两个音节。",
+          "exVi": "Từ này có hai âm tiết."
+        },
+        {
+          "zh": "音乐",
+          "vi": "Âm nhạc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢听音乐。",
+          "exVi": "Tôi thích nghe nhạc."
+        },
+        {
+          "zh": "音乐会",
+          "vi": "Buổi hòa nhạc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们去听音乐会吧！",
+          "exVi": "Chúng ta đi nghe hòa nhạc đi!"
+        },
+        {
+          "zh": "银行",
+          "vi": "Ngân hàng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他去银行取钱。",
+          "exVi": "Anh ấy đi ngân hàng rút tiền."
+        },
+        {
+          "zh": "银行卡",
+          "vi": "Thẻ ngân hàng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你有银行卡吗？",
+          "exVi": "Bạn có thẻ ngân hàng không?"
+        },
+        {
+          "zh": "应该",
+          "vi": "Nên, phải",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你应该多喝水。",
+          "exVi": "Bạn nên uống nhiều nước."
+        },
+        {
+          "zh": "英文",
+          "vi": "Tiếng anh",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他的英文很好。",
+          "exVi": "Tiếng Anh của anh ấy rất tốt."
+        },
+        {
+          "zh": "英语",
+          "vi": "Tiếng anh",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你会说英语吗？",
+          "exVi": "Bạn biết nói tiếng Anh không?"
+        },
+        {
+          "zh": "影片",
+          "vi": "Bộ phim",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这部影片很好看。",
+          "exVi": "Bộ phim này rất hay."
+        },
+        {
+          "zh": "影响",
+          "vi": "Ảnh hưởng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "太吵会影响学习。",
+          "exVi": "Quá ồn sẽ ảnh hưởng đến việc học."
+        },
+        {
+          "zh": "永远",
+          "vi": "Mãi mãi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们是永远的朋友。",
+          "exVi": "Chúng ta là bạn mãi mãi."
+        },
+        {
+          "zh": "油",
+          "vi": "Dầu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "炒菜需要用油。",
+          "exVi": "Xào rau cần dùng dầu."
+        },
+        {
+          "zh": "游客",
+          "vi": "Du khách",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这里有很多游客。",
+          "exVi": "Ở đây có rất nhiều du khách."
+        },
+        {
+          "zh": "友好",
+          "vi": "Thân thiện",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她很友好。",
+          "exVi": "Cô ấy rất thân thiện."
+        },
+        {
+          "zh": "有空儿",
+          "vi": "Rảnh rỗi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你明天有空儿吗？",
+          "exVi": "Ngày mai bạn có rảnh không?"
+        },
+        {
+          "zh": "有人",
+          "vi": "Có người",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "门外有人。",
+          "exVi": "Ngoài cửa có người."
+        },
+        {
+          "zh": "有（一）点儿",
+          "vi": "Hơi, một chút",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今天有点儿冷。",
+          "exVi": "Hôm nay hơi lạnh."
+        },
+        {
+          "zh": "有意思",
+          "vi": "Thú vị, có ý nghĩa",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这本书很有意思。",
+          "exVi": "Cuốn sách này rất thú vị."
+        },
+        {
+          "zh": "又",
+          "vi": "Lại, vừa... vừa...",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "她又高又漂亮。",
+          "exVi": "Cô ấy vừa cao vừa xinh đẹp."
+        },
+        {
+          "zh": "鱼",
+          "vi": "Cá",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个鱼很好吃。",
+          "exVi": "Con cá này rất ngon."
+        },
+        {
+          "zh": "语言",
+          "vi": "Ngôn ngữ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你会几种语言？",
+          "exVi": "Bạn biết bao nhiêu ngôn ngữ?"
+        },
+        {
+          "zh": "原来",
+          "vi": "Hóa ra, vốn dĩ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "原来是你！",
+          "exVi": "Hóa ra là bạn!"
+        },
+        {
+          "zh": "原因",
+          "vi": "Nguyên nhân",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你知道原因吗？",
+          "exVi": "Bạn biết nguyên nhân không?"
+        },
+        {
+          "zh": "院",
+          "vi": "Viện, sân",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "医院很大。",
+          "exVi": "Bệnh viện rất lớn."
+        },
+        {
+          "zh": "院长",
+          "vi": "Viện trưởng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他是医院院长。",
+          "exVi": "Ông ấy là viện trưởng bệnh viện."
+        },
+        {
+          "zh": "院子",
+          "vi": "Sân, sân vườn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我家有个院子。",
+          "exVi": "Nhà tôi có một cái sân."
+        },
+        {
+          "zh": "月",
+          "vi": "Tháng, mặt trăng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "天上的月亮很美。",
+          "exVi": "Mặt trăng trên trời rất đẹp."
+        },
+        {
+          "zh": "月份",
+          "vi": "Tháng trong năm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个月份很热。",
+          "exVi": "Tháng này rất nóng."
+        },
+        {
+          "zh": "月亮",
+          "vi": "Mặt trăng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今晚的月亮很圆。",
+          "exVi": "Mặt trăng tối nay rất tròn."
+        },
+        {
+          "zh": "越",
+          "vi": "Càng… càng…",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你越努力越成功。",
+          "exVi": "Bạn càng nỗ lực càng thành công."
+        },
+        {
+          "zh": "越来越",
+          "vi": "Ngày càng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "天气越来越冷。",
+          "exVi": "Thời tiết ngày càng lạnh."
+        },
+        {
+          "zh": "云",
+          "vi": "Mây",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "天上的云很漂亮。",
+          "exVi": "Mây trên trời rất đẹp."
+        },
+        {
+          "zh": "运动",
+          "vi": "Vận động, thể thao",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他每天都运动。",
+          "exVi": "Anh ấy tập thể dục mỗi ngày."
+        },
+        {
+          "zh": "咱",
+          "vi": "Tôi, ta, mình",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "咱不会说英语。",
+          "exVi": "Tôi không biết nói tiếng Anh."
+        },
+        {
+          "zh": "咱们",
+          "vi": "Chúng ta",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "咱们吃饭吧。",
+          "exVi": "Chúng ta ăn cơm đi."
+        },
+        {
+          "zh": "脏",
+          "vi": "Bẩn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你的衣服很脏。",
+          "exVi": "Quần áo của bạn rất bẩn."
+        },
+        {
+          "zh": "早餐",
+          "vi": "Bữa sáng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我每天都吃早餐。",
+          "exVi": "Tôi ăn sáng mỗi ngày."
+        },
+        {
+          "zh": "早晨",
+          "vi": "Buổi sáng sớm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "早晨的空气很好。",
+          "exVi": "Không khí buổi sáng rất tốt."
+        },
+        {
+          "zh": "早就",
+          "vi": "Đã sớm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他早就回家了。",
+          "exVi": "Anh ấy đã về nhà từ sớm."
+        },
+        {
+          "zh": "怎么办",
+          "vi": "Làm sao bây giờ?",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我不知道怎么办。",
+          "exVi": "Tôi không biết phải làm sao."
+        },
+        {
+          "zh": "怎么样",
+          "vi": "Như thế nào",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你今天怎么样？",
+          "exVi": "Hôm nay bạn thế nào?"
+        },
+        {
+          "zh": "怎样",
+          "vi": "Như thế nào",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今天的天气怎样？",
+          "exVi": "Thời tiết hôm nay thế nào?"
+        },
+        {
+          "zh": "占",
+          "vi": "Chiếm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这张桌子占地方。",
+          "exVi": "Cái bàn này chiếm chỗ."
+        },
+        {
+          "zh": "站",
+          "vi": "Đứng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你站在这里吧。",
+          "exVi": "Bạn đứng ở đây đi."
+        },
+        {
+          "zh": "站住",
+          "vi": "Đứng lại",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请你站住一下。",
+          "exVi": "Mời bạn đứng lại một chút."
+        },
+        {
+          "zh": "长",
+          "vi": "Lớn lên",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "孩子长得很快。",
+          "exVi": "Đứa trẻ lớn rất nhanh."
+        },
+        {
+          "zh": "长大",
+          "vi": "Trưởng thành",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他长大了。",
+          "exVi": "Anh ấy đã trưởng thành."
+        },
+        {
+          "zh": "找出",
+          "vi": "Tìm ra",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你找出答案了吗？",
+          "exVi": "Bạn đã tìm ra đáp án chưa?"
+        },
+        {
+          "zh": "照顾",
+          "vi": "Chăm sóc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "妈妈照顾我。",
+          "exVi": "Mẹ chăm sóc tôi."
+        },
+        {
+          "zh": "照片",
+          "vi": "Ảnh",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这是我的照片。",
+          "exVi": "Đây là ảnh của tôi."
+        },
+        {
+          "zh": "照相",
+          "vi": "Chụp ảnh",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢照相。",
+          "exVi": "Tôi thích chụp ảnh."
+        },
+        {
+          "zh": "这么",
+          "vi": "Như vậy",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你为什么这么说？",
+          "exVi": "Tại sao bạn nói như vậy?"
+        },
+        {
+          "zh": "这时候 | 这时",
+          "vi": "Lúc này; thời gian này",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这时，他刚到家。",
+          "exVi": "Lúc này, anh ấy vừa về đến nhà."
+        },
+        {
+          "zh": "这样",
+          "vi": "Như thế này",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这样做更好。",
+          "exVi": "Làm thế này tốt hơn."
+        },
+        {
+          "zh": "真正",
+          "vi": "Thật sự",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这是真正的爱。",
+          "exVi": "Đây là tình yêu thật sự."
+        },
+        {
+          "zh": "正常",
+          "vi": "Bình thường",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "一切都很正常。",
+          "exVi": "Mọi thứ đều rất bình thường."
+        },
+        {
+          "zh": "正好",
+          "vi": "Vừa hay, đúng lúc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我来得正好。",
+          "exVi": "Tôi đến vừa đúng lúc."
+        },
+        {
+          "zh": "正确",
+          "vi": "Chính xác, đúng đắn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你的答案是正确的。",
+          "exVi": "Câu trả lời của bạn là chính xác."
+        },
+        {
+          "zh": "正是",
+          "vi": "Chính là",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他正是我要找的人。",
+          "exVi": "Anh ấy chính là người tôi đang tìm."
+        },
+        {
+          "zh": "直接",
+          "vi": "Trực tiếp",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你可以直接告诉我。",
+          "exVi": "Bạn có thể nói thẳng với tôi."
+        },
+        {
+          "zh": "只",
+          "vi": "Chỉ (trong phạm vi)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他只喝咖啡，不喝茶。",
+          "exVi": "Anh ấy chỉ uống cà phê, không uống trà."
+        },
+        {
+          "zh": "只要",
+          "vi": "Chỉ cần",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "只要努力，就会成功。",
+          "exVi": "Chỉ cần cố gắng, bạn sẽ thành công."
+        },
+        {
+          "zh": "只能",
+          "vi": "Chỉ có thể",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们只能等他回来。",
+          "exVi": "Chúng ta chỉ có thể đợi anh ấy quay về."
+        },
+        {
+          "zh": "纸",
+          "vi": "Giấy",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这张纸很白。",
+          "exVi": "Tờ giấy này rất trắng."
+        },
+        {
+          "zh": "中餐",
+          "vi": "Món ăn trung quốc",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我喜欢吃中餐。",
+          "exVi": "Tôi thích ăn món Trung."
+        },
+        {
+          "zh": "中级",
+          "vi": "Trung cấp",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我学中级汉语。",
+          "exVi": "Tôi học tiếng Trung trung cấp."
+        },
+        {
+          "zh": "中年",
+          "vi": "Trung niên",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他是中年人。",
+          "exVi": "Anh ấy là người trung niên."
+        },
+        {
+          "zh": "中小学",
+          "vi": "Trường tiểu học và trung học",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我的弟弟在中小学读书。",
+          "exVi": "Em trai tôi học ở trường tiểu học và trung học."
+        },
+        {
+          "zh": "中心",
+          "vi": "Trung tâm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个城市的中心很热闹。",
+          "exVi": "Trung tâm thành phố này rất nhộn nhịp."
+        },
+        {
+          "zh": "中医",
+          "vi": "Đông y",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他喜欢学习中医知识。",
+          "exVi": "Anh ấy thích học kiến thức về Đông y."
+        },
+        {
+          "zh": "重点",
+          "vi": "Trọng điểm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请注意这个问题的重点。",
+          "exVi": "Hãy chú ý đến trọng điểm của vấn đề này."
+        },
+        {
+          "zh": "重视",
+          "vi": "Coi trọng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "老师很重视学生的努力。",
+          "exVi": "Giáo viên rất coi trọng sự nỗ lực của học sinh."
+        },
+        {
+          "zh": "周",
+          "vi": "Tuần",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这周我们有考试。",
+          "exVi": "Tuần này chúng tôi có kỳ thi."
+        },
+        {
+          "zh": "周末",
+          "vi": "Cuối tuần",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "周末我们一起去公园吧。",
+          "exVi": "Cuối tuần chúng ta cùng đi công viên nhé."
+        },
+        {
+          "zh": "周年",
+          "vi": "Kỷ niệm năm",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他们庆祝结婚十周年。",
+          "exVi": "Họ kỷ niệm 10 năm ngày cưới."
+        },
+        {
+          "zh": "主人",
+          "vi": "Chủ nhân",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "狗跟着它的主人走。",
+          "exVi": "Con chó đi theo chủ nhân của nó."
+        },
+        {
+          "zh": "主要",
+          "vi": "Chủ yếu",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这本书的内容很主要。",
+          "exVi": "Nội dung của cuốn sách này rất quan trọng."
+        },
+        {
+          "zh": "住房",
+          "vi": "Nhà ở",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这里的住房很贵。",
+          "exVi": "Nhà ở đây rất đắt."
+        },
+        {
+          "zh": "住院",
+          "vi": "Nhập viện",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他生病了需要住院。",
+          "exVi": "Anh ấy bị bệnh nên cần nhập viện."
+        },
+        {
+          "zh": "装",
+          "vi": "Lắp đặt, giả vờ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他在装电脑软件。",
+          "exVi": "Anh ấy đang cài đặt phần mềm máy tính."
+        },
+        {
+          "zh": "准确",
+          "vi": "Chính xác",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "你的答案很准确。",
+          "exVi": "Câu trả lời của bạn rất chính xác."
+        },
+        {
+          "zh": "自己",
+          "vi": "Bản thân",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我可以自己完成作业。",
+          "exVi": "Tôi có thể tự mình hoàn thành bài tập."
+        },
+        {
+          "zh": "自行车",
+          "vi": "Xe đạp",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我每天骑自行车上学。",
+          "exVi": "Tôi đi xe đạp đến trường mỗi ngày."
+        },
+        {
+          "zh": "自由",
+          "vi": "Tự do",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这里的人很自由。",
+          "exVi": "Người ở đây rất tự do."
+        },
+        {
+          "zh": "字典",
+          "vi": "Từ điển",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我买了一本新字典。",
+          "exVi": "Tôi đã mua một cuốn từ điển mới."
+        },
+        {
+          "zh": "走过",
+          "vi": "Đi qua",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他走过那家商店。",
+          "exVi": "Anh ấy đi qua cửa hàng đó."
+        },
+        {
+          "zh": "走进",
+          "vi": "Đi vào",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他慢慢地走进房间。",
+          "exVi": "Anh ấy chậm rãi đi vào phòng."
+        },
+        {
+          "zh": "走开",
+          "vi": "Đi ra xa",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请你走开一下。",
+          "exVi": "Bạn vui lòng đi ra một chút."
+        },
+        {
+          "zh": "租",
+          "vi": "Thuê",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我租了一间房子。",
+          "exVi": "Tôi đã thuê một căn phòng."
+        },
+        {
+          "zh": "组",
+          "vi": "Nhóm, tổ",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "我们被分成了三组。",
+          "exVi": "Chúng tôi được chia thành ba nhóm."
+        },
+        {
+          "zh": "组成",
+          "vi": "Cấu thành",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这个团队由五个人组成。",
+          "exVi": "Nhóm này được cấu thành bởi 5 người."
+        },
+        {
+          "zh": "组长",
+          "vi": "Tổ trưởng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他是我们班的组长。",
+          "exVi": "Anh ấy là tổ trưởng lớp chúng tôi."
+        },
+        {
+          "zh": "嘴",
+          "vi": "Miệng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他的嘴很大。",
+          "exVi": "Miệng của anh ấy rất to."
+        },
+        {
+          "zh": "最近",
+          "vi": "Gần đây",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "最近天气很冷。",
+          "exVi": "Gần đây thời tiết rất lạnh."
+        },
+        {
+          "zh": "作家",
+          "vi": "Nhà văn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "他是一位有名的作家。",
+          "exVi": "Anh ấy là một nhà văn nổi tiếng."
+        },
+        {
+          "zh": "作文",
+          "vi": "Bài văn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今天的作文很难写。",
+          "exVi": "Bài văn hôm nay rất khó viết."
+        },
+        {
+          "zh": "作业",
+          "vi": "Bài tập",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "今天的作业很多。",
+          "exVi": "Hôm nay có rất nhiều bài tập."
+        },
+        {
+          "zh": "作用",
+          "vi": "Tác dụng, ảnh hưởng",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这本书对我的学习很有作用。",
+          "exVi": "Cuốn sách này có tác dụng lớn đối với việc học của tôi."
+        },
+        {
+          "zh": "座",
+          "vi": "Tòa (dùng cho núi, cầu, công trình lớn)",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这座山非常高。",
+          "exVi": "Ngọn núi này rất cao."
+        },
+        {
+          "zh": "座位",
+          "vi": "Chỗ ngồi",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "请找到你的座位。",
+          "exVi": "Vui lòng tìm chỗ ngồi của bạn."
+        },
+        {
+          "zh": "做到",
+          "vi": "Làm được",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "只要努力，你一定可以做到。",
+          "exVi": "Chỉ cần cố gắng, bạn chắc chắn có thể làm được."
+        },
+        {
+          "zh": "做法",
+          "vi": "Cách làm, phương pháp",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "这种做法很有效。",
+          "exVi": "Cách làm này rất hiệu quả."
+        },
+        {
+          "zh": "做饭",
+          "vi": "Nấu ăn",
+          "hanViet": "",
+          "zhDef": "",
+          "memoryTip": "",
+          "exZh": "妈妈每天做饭给我们吃。",
+          "exVi": "Mẹ nấu ăn cho chúng tôi mỗi ngày."
+        }
+      ]
+    }
+  ]
+}
