@@ -1673,25 +1673,15 @@ body:not(.dark) .hsk-admin-form {
 
 /* ── Memorized button ──────────────────────────────────────────────────────── */
 .hsk-memorized-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  display: inline-flex; align-items: center; gap: 8px;
   padding: 11px 22px;
-  background: #1a1a2e;
-  color: #c9a84c;
-  border: 1.5px solid #c9a84c55;
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
-  transition: all 0.15s;
+  background: #1a1a2e; color: #c9a84c;
+  border: 1.5px solid #c9a84c55; border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; transition: all 0.15s;
 }
 .hsk-memorized-btn:hover {
-  background: #c9a84c;
-  color: #1a1a2e;
-  border-color: #c9a84c;
-  transform: translateY(-1px);
-  box-shadow: 0 5px 16px #c9a84c44;
+  background: #c9a84c; color: #1a1a2e; border-color: #c9a84c;
+  transform: translateY(-1px); box-shadow: 0 5px 16px #c9a84c44;
 }
 .hsk-memorized-btn:active { transform: none; }
