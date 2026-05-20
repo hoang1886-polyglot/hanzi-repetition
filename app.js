@@ -1945,7 +1945,7 @@ function hskRenderWordReader() {
           ${srsBadge}
           <div class="hsk-card-actions">
             ${isMastered
-              ? `<button class="hsk-detail-add-btn added" disabled>✓ Đã có trong từ điển</button>`
+              ? `<button class="hsk-detail-add-btn added" disabled title="Từ này đã thuộc lòng, không cần học SRS">🎓 Đã thuộc lòng</button>`
               : inDict
                 ? `<button class="hsk-detail-add-btn added" disabled>✓ Đã có trong từ điển</button>`
                 : `<button class="hsk-detail-add-btn" id="hsk-add-btn">＋ Thêm vào từ điển</button>`}
@@ -2121,6 +2121,8 @@ async function hskSaveAdminData(book) {
 
 // ── Add word to SRS dict ──────────────────────────────────────────────────────
 function hskAddWordToDict(hskWord) {
+  const mastered = db.words.find(w => w.zh === hskWord.zh && w.status === 'mastered');
+  if (mastered) { toast('🎓 Từ này đã thuộc lòng rồi, không cần thêm vào SRS!'); return; }
   if (hskIsInDict(hskWord.zh)) { toast('Từ này đã có trong từ điển rồi!'); return; }
   const book = hskGetBook(hskState.bookId);
   const newWord = {
