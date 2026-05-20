@@ -228,6 +228,7 @@ function setupListeners(){
   // ─────────────────────────────────────────────────────────────────────
   ['dashboard','review','add','wordlist','articles'].forEach(p=>{ const el=$(`nav-${p}`); if(el)el.addEventListener('click',()=>nav(p)); });
   initHskNav();
+  initHskAddModal();
   $('card-all').addEventListener('click',()=>navWordlistFilter('all'));
   $('card-due').addEventListener('click',()=>navWordlistFilter('due'));
   $('card-learned').addEventListener('click',()=>navWordlistFilter('learned'));
@@ -1955,9 +1956,10 @@ function hskRenderWordReader() {
     ? `<span class="hsk-srs-badge" style="background:${srs.color}22;color:${srs.color};border-color:${srs.color}44">${srs.status} · ôn ${srs.next}</span>`
     : '';
 
-  // Admin add-word button
+  // Admin add-word button + edit memory tip button
   const adminBtn = isAdmin
-    ? `<button class="hsk-admin-btn" id="hsk-admin-add-btn">⚙️ Thêm từ mới vào unit</button>`
+    ? `<button class="hsk-admin-btn" id="hsk-admin-add-btn">⚙️ Thêm từ mới vào unit</button>
+       <button class="hsk-admin-btn" id="hsk-admin-tip-btn" style="background:linear-gradient(135deg,#7C3AED22,#7C3AED11);border-color:#7C3AED55;color:#7C3AED">✏️ ${word.memoryTip ? 'Sửa mẹo nhớ' : 'Thêm mẹo nhớ'}</button>`
     : '';
 
   const reader = $('hsk-word-reader');
@@ -2038,6 +2040,16 @@ function hskRenderWordReader() {
       </button>
     </div>
 
+    <!-- Admin: memory tip editor (hidden by default) -->
+    ${isAdmin ? `<div id="hsk-tip-editor" style="display:none;margin-top:16px;background:var(--surface2);border:1.5px solid #7C3AED44;border-radius:12px;padding:18px 20px">
+      <div style="font-size:12px;font-weight:700;color:#7C3AED;letter-spacing:0.07em;margin-bottom:10px">✏️ MẸO NHỚ (ADMIN — hiển thị cho tất cả user)</div>
+      <textarea id="hsk-tip-inp" rows="4" placeholder="Nhập mẹo nhớ, giải thích, liên tưởng..." style="width:100%;padding:10px 12px;border-radius:8px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;box-sizing:border-box">${word.memoryTip || ''}</textarea>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button id="hsk-tip-save-btn" style="padding:8px 20px;background:#7C3AED;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">💾 Lưu mẹo nhớ</button>
+        <button id="hsk-tip-cancel-btn" style="padding:8px 16px;background:var(--surface);border:1.5px solid var(--border2);border-radius:8px;font-size:13px;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">Huỷ</button>
+      </div>
+    </div>` : ''}
+
     <!-- Admin: add word form (hidden by default) -->
     ${isAdmin ? `<div id="hsk-admin-form" class="hsk-admin-form" style="display:none">
       <div class="hsk-admin-form-title">⚙️ Thêm từ mới vào "${unit.title}"</div>
@@ -2111,9 +2123,20 @@ function hskRenderWordReader() {
     $('hsk-admin-add-btn')?.addEventListener('click', () => {
       const f = $('hsk-admin-form');
       f.style.display = f.style.display === 'none' ? 'block' : 'none';
+      $('hsk-tip-editor').style.display = 'none';
     });
     $('adm-cancel-btn')?.addEventListener('click', () => { $('hsk-admin-form').style.display = 'none'; });
     $('adm-save-btn')?.addEventListener('click', () => hskAdminSaveWord(book, hskState.unitIndex));
+
+    // Memory tip editor
+    $('hsk-admin-tip-btn')?.addEventListener('click', () => {
+      const te = $('hsk-tip-editor');
+      te.style.display = te.style.display === 'none' ? 'block' : 'none';
+      $('hsk-admin-form').style.display = 'none';
+      if (te.style.display === 'block') $('hsk-tip-inp')?.focus();
+    });
+    $('hsk-tip-cancel-btn')?.addEventListener('click', () => { $('hsk-tip-editor').style.display = 'none'; });
+    $('hsk-tip-save-btn')?.addEventListener('click', () => hskAdminSaveTip(book, hskState.unitIndex, idx));
   }
 }
 
@@ -2144,6 +2167,15 @@ function hskAdminSaveWord(book, unitIndex) {
   toast(`✓ Đã thêm từ "${zh}" vào unit!`);
 }
 
+function hskAdminSaveTip(book, unitIndex, wordIndex) {
+  const tip = $('hsk-tip-inp')?.value.trim() || '';
+  book.units[unitIndex].words[wordIndex].memoryTip = tip;
+  hskSaveAdminData(book);
+  $('hsk-tip-editor').style.display = 'none';
+  hskRenderWordReader();
+  toast(`✓ Đã lưu mẹo nhớ cho "${book.units[unitIndex].words[wordIndex].zh}"!`);
+}
+
 async function hskSaveAdminData(book) {
   if (!DB_DOC || !currentUserId) return;
   try {
@@ -2159,22 +2191,39 @@ async function hskSaveAdminData(book) {
 
 
 
-// ── Add word to SRS dict ──────────────────────────────────────────────────────
+// ── Add word to SRS dict — opens modal for wordType + extra fields ────────────
 function hskAddWordToDict(hskWord) {
   if (hskIsMemorized(hskWord.zh)) { toast('🎓 Từ này đã thuộc lòng rồi, không cần thêm vào SRS!'); return; }
   if (hskIsInDict(hskWord.zh)) { toast('Từ này đã có trong từ điển rồi!'); return; }
+  // Populate & open the HSK add modal
+  $('hsk-modal-zh').textContent   = hskWord.zh;
+  $('hsk-modal-py').textContent   = getPinyin(hskWord.zh);
+  $('hsk-modal-vi-val').textContent = hskWord.vi;
+  $('hsk-modal-zhdef-inp').value  = hskWord.zhDef || '';
+  $('hsk-modal-exzh-inp').value   = hskWord.exZh  || '';
+  $('hsk-modal-exvi-inp').value   = hskWord.exVi  || '';
+  $('hsk-modal-note-inp').value   = hskWord.memoryTip || '';
+  window._hskModalWord = hskWord;
+  window._hskModalSelectedType = '';
+  buildWordTypeSelector('hsk-modal-wtype', '_hskModalSelectedType');
+  $('hsk-add-modal-overlay').style.display = 'flex';
+}
+
+function hskConfirmAddWord() {
+  const hskWord = window._hskModalWord;
+  if (!hskWord) return;
   const book = hskGetBook(hskState.bookId);
   const newWord = {
     id: Date.now() + Math.random(),
     zh: hskWord.zh,
     vi: hskWord.vi,
     pinyin: getPinyin(hskWord.zh),
-    zhDef: hskWord.zhDef || '',
-    exZh: hskWord.exZh || '',
-    exVi: hskWord.exVi || '',
-    note: hskWord.memoryTip || '',
-    wordType: '',
-    wordTypes: [],
+    zhDef: $('hsk-modal-zhdef-inp')?.value.trim() || hskWord.zhDef || '',
+    exZh: $('hsk-modal-exzh-inp')?.value.trim()   || hskWord.exZh  || '',
+    exVi: $('hsk-modal-exvi-inp')?.value.trim()   || hskWord.exVi  || '',
+    note: $('hsk-modal-note-inp')?.value.trim()   || hskWord.memoryTip || '',
+    wordType: window._hskModalSelectedType || '',
+    wordTypes: window._hskModalSelectedType ? [window._hskModalSelectedType] : [],
     source: `${book?.id || 'hsk'}-unit${hskState.unitIndex + 1}`,
     status: 'new',
     ef: 2.5, interval: 0, repetitions: 0,
@@ -2183,11 +2232,18 @@ function hskAddWordToDict(hskWord) {
   };
   db.words.push(newWord);
   save();
+  $('hsk-add-modal-overlay').style.display = 'none';
   toast(`✓ Đã thêm "${hskWord.zh}" vào từ điển!`);
   hskRenderWordReader();
 }
 
-// ── Mark word as memorized ───────────────────────────────────────────────────
+function initHskAddModal() {
+  $('hsk-modal-confirm-btn')?.addEventListener('click', hskConfirmAddWord);
+  $('hsk-modal-cancel-btn')?.addEventListener('click', () => { $('hsk-add-modal-overlay').style.display = 'none'; });
+  $('hsk-add-modal-overlay')?.addEventListener('click', e => { if (e.target === $('hsk-add-modal-overlay')) $('hsk-add-modal-overlay').style.display = 'none'; });
+}
+
+
 function hskMarkMemorized(hskWord) {
   if (!db.memorized) db.memorized = [];
   if (!db.memorized.includes(hskWord.zh)) {
