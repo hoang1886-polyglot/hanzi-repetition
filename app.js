@@ -49,7 +49,7 @@ const HIGHLIGHT_COLORS = [
 function getWtInfo(key){ return WORD_TYPES.find(t=>t.key===key)||null; }
 
 // ─── APP STATE ────────────────────────────────────────────────────────────────
-let db             = { words:[], sessions:{}, correct:0, total:0, articles:[] };
+let db             = { words:[], sessions:{}, correct:0, total:0, articles:[], memorized:[] };
 let reviewQueue    = [], currentCard = null, answered = false, saveTimer = null;
 let _wf            = 'all';
 let lastSaveAt     = 0;
@@ -138,7 +138,7 @@ async function init(){
       getDoc(DB_DOC),
       new Promise((_,reject)=>setTimeout(()=>reject(new Error('firebase_timeout')),6000))
     ]);
-    if(snap.exists()){ const d=snap.data(); db={words:d.words||[],sessions:d.sessions||{},correct:d.correct||0,total:d.total||0,articles:d.articles||[]}; }
+    if(snap.exists()){ const d=snap.data(); db={words:d.words||[],sessions:d.sessions||{},correct:d.correct||0,total:d.total||0,articles:d.articles||[],memorized:d.memorized||[]}; }
     else{ if(!bk) seedWords(); await setDoc(DB_DOC,JSON.parse(JSON.stringify(db))); }
   }catch(e){
     if(e.message==='firebase_timeout'){
@@ -153,7 +153,7 @@ async function init(){
   if(!listenersReady){ setupListeners(); listenersReady=true; }
   onSnapshot(DB_DOC,snap=>{
     if(!snap.exists())return; if(Date.now()-lastSaveAt<5000)return;
-    const d=snap.data(); db={words:d.words||[],sessions:d.sessions||{},correct:d.correct||0,total:d.total||0,articles:d.articles||[]};
+    const d=snap.data(); db={words:d.words||[],sessions:d.sessions||{},correct:d.correct||0,total:d.total||0,articles:d.articles||[],memorized:d.memorized||[]};
     try{ localStorage.setItem('hanzi_bk_'+(currentUserId||'anon'),JSON.stringify(db)); }catch(e){}
     const ap=document.querySelector('.page.active')?.id;
     if(ap==='dashboard')renderDashboard(); if(ap==='wordlist')renderWordList('');
@@ -1748,10 +1748,12 @@ function hskCountAdded(bookId, unitIndex) {
   const book = hskGetBook(bookId);
   if (!book) return 0;
   const words = unitIndex != null ? book.units[unitIndex]?.words || [] : book.units.flatMap(u => u.words);
-  return words.filter(w => db.words.some(d => d.zh === w.zh)).length;
+  return words.filter(w => hskIsInDict(w.zh) || hskIsMemorized(w.zh)).length;
 }
 
 function hskIsInDict(zh) { return db.words.some(w => w.zh === zh); }
+
+function hskIsMemorized(zh) { return (db.memorized || []).includes(zh); }
 
 function hskGetSRSInfo(zh) {
   const w = db.words.find(x => x.zh === zh);
@@ -1923,7 +1925,7 @@ function hskRenderWordReader() {
   _hskWriters = [];
 
   const inDict     = hskIsInDict(word.zh);
-  const isMastered = currentUserId ? db.words.some(w => w.zh === word.zh && w.status === 'mastered') : false;
+  const isMastered = currentUserId ? hskIsMemorized(word.zh) : false;
   const srs        = hskGetSRSInfo(word.zh);
   const chars   = [...word.zh];
   const pinyin  = getPinyin(word.zh);
@@ -1936,7 +1938,7 @@ function hskRenderWordReader() {
   const dots = Array.from({length: maxDots}, (_, i) => {
     const actual = Math.floor(i * words.length / maxDots);
     const active = actual === idx;
-    const done   = hskIsInDict(words[actual]?.zh);
+    const done   = hskIsInDict(words[actual]?.zh) || hskIsMemorized(words[actual]?.zh);
     return `<div class="hsk-dot ${active ? 'active' : done ? 'done' : ''}" data-i="${actual}"></div>`;
   }).join('');
 
@@ -2159,8 +2161,7 @@ async function hskSaveAdminData(book) {
 
 // ── Add word to SRS dict ──────────────────────────────────────────────────────
 function hskAddWordToDict(hskWord) {
-  const mastered = db.words.find(w => w.zh === hskWord.zh && w.status === 'mastered');
-  if (mastered) { toast('🎓 Từ này đã thuộc lòng rồi, không cần thêm vào SRS!'); return; }
+  if (hskIsMemorized(hskWord.zh)) { toast('🎓 Từ này đã thuộc lòng rồi, không cần thêm vào SRS!'); return; }
   if (hskIsInDict(hskWord.zh)) { toast('Từ này đã có trong từ điển rồi!'); return; }
   const book = hskGetBook(hskState.bookId);
   const newWord = {
@@ -2188,27 +2189,9 @@ function hskAddWordToDict(hskWord) {
 
 // ── Mark word as memorized ───────────────────────────────────────────────────
 function hskMarkMemorized(hskWord) {
-  const existing = db.words.find(w => w.zh === hskWord.zh);
-  if (existing) {
-    existing.status = 'mastered';
-    existing.repetitions = 99;
-    existing.ef = 2.5;
-    existing.interval = 36500;
-    existing.nextReview = Date.now() + 36500 * 86400000;
-    existing.lastReview = Date.now();
-  } else {
-    const book = hskGetBook(hskState.bookId);
-    db.words.push({
-      id: Date.now() + Math.random(),
-      zh: hskWord.zh, vi: hskWord.vi,
-      pinyin: getPinyin(hskWord.zh),
-      zhDef: hskWord.zhDef || '', exZh: hskWord.exZh || '', exVi: hskWord.exVi || '',
-      note: hskWord.memoryTip || '', wordType: '', wordTypes: [],
-      source: `${book?.id || 'hsk'}-unit${hskState.unitIndex + 1}`,
-      status: 'mastered', ef: 2.5, interval: 36500, repetitions: 99,
-      nextReview: Date.now() + 36500 * 86400000, lastReview: Date.now(),
-      added: Date.now(), memorizedDirectly: true,
-    });
+  if (!db.memorized) db.memorized = [];
+  if (!db.memorized.includes(hskWord.zh)) {
+    db.memorized.push(hskWord.zh);
   }
   save();
   toast(`✓ Đã đánh dấu thuộc lòng!`);
