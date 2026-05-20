@@ -1762,6 +1762,43 @@ function hskGetSRSInfo(zh) {
   return { status: sl[w.status] || 'Mới', color: sc[w.status] || '#A09D96', next: nextReview };
 }
 
+// ── Lazy-load book data from GitHub ──────────────────────────────────────────
+const HSK_BOOK_URLS = {
+  hsk2: 'https://raw.githubusercontent.com/hoang1886-polyglot/hanzi-repetition/main/data/hsk2.json',
+  hsk3: 'https://raw.githubusercontent.com/hoang1886-polyglot/hanzi-repetition/main/data/hsk3.json',
+};
+const _hskLoadingBooks = new Set();
+
+async function hskLoadBookData(bookId) {
+  const book = hskGetBook(bookId);
+  if (!book || book.units.length > 0) return;
+  if (_hskLoadingBooks.has(bookId)) return;
+  const url = HSK_BOOK_URLS[bookId];
+  if (!url) return;
+
+  _hskLoadingBooks.add(bookId);
+  const descEl = $('hsk-book-desc');
+  const gridEl = $('hsk-units-grid');
+  if (descEl) descEl.textContent = 'Đang tải dữ liệu...';
+  if (gridEl) gridEl.innerHTML = '<div style="padding:24px;text-align:center;color:var(--text3)">⏳ Đang tải từ vựng...</div>';
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    book.units = data.units || [];
+    book.desc  = data.desc  || book.desc;
+    book.icon  = data.icon  || book.icon;
+    hskRenderUnits();
+  } catch(e) {
+    console.warn('hskLoadBookData error:', e);
+    if (descEl) descEl.textContent = '⚠️ Không tải được dữ liệu. Kiểm tra kết nối mạng.';
+    if (gridEl) gridEl.innerHTML = '<div style="padding:24px;text-align:center;color:var(--red)">Tải thất bại. Thử lại sau.</div>';
+  } finally {
+    _hskLoadingBooks.delete(bookId);
+  }
+}
+
 // ── Nav ───────────────────────────────────────────────────────────────────────
 function hskNav(view, bookId = null, unitIndex = null, wordIndex = null) {
   hskState = { view, bookId, unitIndex, wordIndex };
@@ -1840,6 +1877,7 @@ function hskRenderUnits() {
   $('hsk-book-title').textContent = `${book.icon} ${book.title}`;
   $('hsk-book-desc').textContent = book.desc;
   const grid = $('hsk-units-grid');
+  if (book.units.length === 0) { hskLoadBookData(hskState.bookId); return; }
   grid.innerHTML = book.units.map((unit, i) => {
     const total = unit.words.length;
     const added = hskCountAdded(book.id, i);
