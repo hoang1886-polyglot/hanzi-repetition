@@ -539,9 +539,8 @@ body{
 .form-group label{display:block;font-size:13px;font-weight:500;color:var(--text2);margin-bottom:7px}
 .form-group input,.form-group textarea{
   width:100%;padding:11px 15px;
-  box-sizing:border-box;
   border:1.5px solid var(--border2);border-radius:var(--radius-xs);
-  font-size:14px;font-family:'Be Vietnam Pro',sans-serif;font-weight:600;
+  font-size:14px;font-family:'DM Sans',sans-serif;
   background:var(--surface);color:var(--text);outline:none;
   transition:border-color 0.2s,box-shadow 0.2s;
 }
@@ -1671,3 +1670,34 @@ body:not(.dark) .hsk-admin-form {
   .hsk-card-zh { font-size: 48px; }
   .hsk-arrow-btn { display: none; }
 }
+
+/* ── Memorized button ──────────────────────────────────────────────────────── */
+.hsk-memorized-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 22px;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Be Vietnam Pro', sans-serif;
+  transition: all 0.15s;
+  box-shadow: 0 3px 10px rgba(23,122,71,0.3);
+}
+.hsk-memorized-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 16px rgba(23,122,71,0.4);
+}
+.hsk-memorized-btn:active { transform: none; }
+.hsk-memorized-btn.done {
+  background: var(--green);
+  opacity: 0.75;
+  cursor: default;
+  box-shadow: none;
+}
+.hsk-memorized-btn.done:hover { transform: none; filter: none; }
