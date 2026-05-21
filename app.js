@@ -1803,8 +1803,10 @@ async function hskLoadBookData(bookId) {
 }
 
 // ── Nav ───────────────────────────────────────────────────────────────────────
-function hskNav(view, bookId = null, unitIndex = null, wordIndex = null) {
+async function hskNav(view, bookId = null, unitIndex = null, wordIndex = null) {
   hskState = { view, bookId, unitIndex, wordIndex };
+  // Load tips từ Firestore trước khi hiển thị từ vựng (chỉ load 1 lần mỗi bookId)
+  if (view === 'words' && bookId) await hskLoadTipsFromFirestore(bookId);
   ['hsk-view-books', 'hsk-view-units', 'hsk-view-words']
     .forEach(id => { const el = $(id); if (el) el.style.display = 'none'; });
   const viewEl = $(`hsk-view-${view}`);
@@ -2170,6 +2172,8 @@ function hskAdminSaveWord(book, unitIndex) {
 function hskAdminSaveTip(book, unitIndex, wordIndex) {
   const tip = $('hsk-tip-inp')?.value.trim() || '';
   book.units[unitIndex].words[wordIndex].memoryTip = tip;
+  // Xoá cache tips của book này để lần sau load lại từ Firestore
+  _hskTipsLoaded.delete(book.id);
   hskSaveAdminData(book);
   $('hsk-tip-editor').style.display = 'none';
   hskRenderWordReader();
@@ -2177,15 +2181,51 @@ function hskAdminSaveTip(book, unitIndex, wordIndex) {
 }
 
 async function hskSaveAdminData(book) {
-  if (!DB_DOC || !currentUserId) return;
+  // Chỉ cho phép owner duy nhất lưu lên Firebase
+  if (auth.currentUser?.email !== 'hoang1886@gmail.com') {
+    toast('⛔ Chỉ admin mới có quyền lưu dữ liệu này!');
+    return;
+  }
   try {
-    const { doc: fsDoc, setDoc: fsSetDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    const bookDocRef = fsDoc(firestore, 'hsk_books', book.id);
-    await fsSetDoc(bookDocRef, { units: book.units }, { merge: true });
-    toast('☁️ Đã đồng bộ dữ liệu sách lên Firebase!');
+    // Chỉ lưu map { zh → memoryTip } thay vì toàn bộ units (tránh vượt 1MB limit)
+    const tips = {};
+    book.units.forEach(unit => {
+      unit.words.forEach(w => {
+        if (w.memoryTip) tips[w.zh] = w.memoryTip;
+      });
+    });
+    // Dùng doc/setDoc đã import sẵn ở top-level, lưu vào hsk_tips collection
+    const tipsDocRef = doc(firestore, 'hsk_tips', book.id);
+    await setDoc(tipsDocRef, { tips }, { merge: false });
+    toast('☁️ Đã đồng bộ mẹo nhớ lên Firebase!');
   } catch(e) {
     console.warn('HSK admin save error:', e);
-    toast('⚠️ Lưu local thành công, Firebase sync thất bại.');
+    toast('⚠️ Firebase sync thất bại: ' + (e.message || e));
+  }
+}
+
+// Cache để không load tips nhiều lần cho cùng một bookId
+const _hskTipsLoaded = new Set();
+
+async function hskLoadTipsFromFirestore(bookId) {
+  if (_hskTipsLoaded.has(bookId)) return; // đã load rồi, bỏ qua
+  _hskTipsLoaded.add(bookId);
+  try {
+    const tipsDocRef = doc(firestore, 'hsk_tips', bookId);
+    const snap = await getDoc(tipsDocRef);
+    if (!snap.exists()) return;
+    const { tips } = snap.data();
+    if (!tips) return;
+    const book = hskGetBook(bookId);
+    if (!book) return;
+    // Áp đè memoryTip từ Firestore vào dữ liệu local
+    book.units.forEach(unit => {
+      unit.words.forEach(w => {
+        if (tips[w.zh] !== undefined) w.memoryTip = tips[w.zh];
+      });
+    });
+  } catch(e) {
+    console.warn('hskLoadTipsFromFirestore error:', e);
   }
 }
 
