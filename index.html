@@ -343,6 +343,36 @@
         <button class="submit-btn" id="art-add-word-btn" style="width:100%;padding:10px">+ Thêm từ</button>
       </div>
 
+    <!-- SVO ANALYSIS PANEL — thêm vào right panel của read-article -->
+    <div class="card" id="svo-panel" style="margin:0;display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div class="card-title" style="margin:0;">PHÂN TÍCH CÚ PHÁP</div>
+        <button id="svo-close-btn" style="background:none;border:none;font-size:16px;cursor:pointer;color:var(--text3);padding:0 4px;">✕</button>
+      </div>
+     
+      <!-- Câu đang phân tích -->
+      <div id="svo-sentence" style="font-family:'Noto Sans SC',sans-serif;font-size:15px;color:var(--text);margin-bottom:12px;padding:10px 12px;background:var(--surface2);border-radius:8px;line-height:1.6;"></div>
+     
+      <!-- Loading -->
+      <div id="svo-loading" style="display:none;text-align:center;padding:16px;color:var(--text3);font-size:13px;">
+        <div class="spinner" style="width:20px;height:20px;margin:0 auto 8px;"></div>
+        Đang phân tích...
+      </div>
+     
+      <!-- Error -->
+      <div id="svo-error" style="display:none;padding:10px 12px;background:#FEE2E2;color:#991B1B;border-radius:8px;font-size:13px;"></div>
+     
+      <!-- Result: visual blocks -->
+      <div id="svo-result" style="display:none;">
+        <div id="svo-blocks" style="display:flex;border-radius:8px;overflow:hidden;border:1px solid var(--border);margin-bottom:12px;"></div>
+     
+        <!-- S V O cards -->
+        <div id="svo-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:8px;margin-bottom:12px;"></div>
+     
+        <!-- Explanation -->
+        <div id="svo-explanation" style="font-size:12px;color:var(--text2);line-height:1.6;padding:10px 12px;background:var(--surface2);border-radius:8px;"></div>
+      </div>
+    </div>
       <!-- Words added from this article -->
       <div class="card" style="margin:0">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
@@ -405,6 +435,7 @@
   <div id="choice-selected-text" style="font-size:11px;color:#888;margin-bottom:8px;font-family:'Noto Sans SC',sans-serif;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
   <div style="display:flex;gap:6px;">
     <button id="choice-add-word-btn" style="flex:1;padding:8px 12px;background:#C8281E;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">✏️ Thêm từ mới</button>
+    <button id="choice-analyze-btn" style="flex:1;padding:8px 12px;background:#1D6FA4;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">🔍 Phân tích câu</button>
     <button id="choice-highlight-btn" style="flex:1;padding:8px 12px;background:#333;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">🎨 Highlight</button>
     <button id="choice-cancel-btn" style="padding:8px 10px;background:#222;color:#888;border:none;border-radius:6px;font-size:12px;cursor:pointer;">✕</button>
   </div>
