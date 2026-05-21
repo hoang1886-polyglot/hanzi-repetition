@@ -13,21 +13,17 @@ export default async function handler(req, res) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return res.status(500).json({ error: 'API key chưa được cấu hình' });
 
-  // Escape câu input — tránh dấu đặc biệt tiếng Trung làm vỡ JSON trong prompt
+  // Escape input an toàn
   const safeSentence = sentence.trim()
     .replace(/\\/g, '\\\\')
     .replace(/"/g, '\\"')
-    .replace(/\n/g, ' ')
-    .replace(/\r/g, '');
+    .replace(/[\r\n]+/g, ' ');
 
-  // Truyền câu qua system+user message thay vì nhúng thẳng vào prompt string
-  const systemInstruction = `You are a Chinese grammar analyzer. 
-When given a Chinese sentence, analyze its grammatical structure and return ONLY valid JSON.
-Never include markdown, code fences, comments, or any text outside the JSON object.`;
+  const prompt = `You are a Chinese grammar analyzer. Analyze the grammar of this Chinese sentence and return ONLY a valid JSON object with no markdown, no code fences, no extra text before or after.
 
-  const userPrompt = `Analyze the grammar of this Chinese sentence: ${safeSentence}
+Chinese sentence: ${safeSentence}
 
-Return this exact JSON structure:
+Return exactly this JSON structure (all strings must be properly JSON-escaped):
 {
   "segments": [
     {"text": "词", "role": "S", "pinyin": "cí", "meaning": "nghĩa tiếng Việt"}
@@ -36,8 +32,7 @@ Return this exact JSON structure:
   "explanation": "1-2 câu tiếng Việt giải thích cấu trúc ngữ pháp"
 }
 
-Role values: S (chủ ngữ), V (vị ngữ), O (tân ngữ), adv (trạng ngữ), other (hư từ/dấu câu)
-Important: all string values in JSON must be properly escaped. Return valid JSON only.`;
+Role values: S (chủ ngữ), V (vị ngữ), O (tân ngữ), adv (trạng ngữ), other (hư từ/dấu câu)`;
 
   try {
     const geminiRes = await fetch(
@@ -46,50 +41,56 @@ Important: all string values in JSON must be properly escaped. Return valid JSON
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          systemInstruction: { parts: [{ text: systemInstruction }] },
-          contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
           generationConfig: {
             temperature: 0.1,
-            maxOutputTokens: 1024,
-            responseMimeType: 'application/json'
+            maxOutputTokens: 1024
+            // Không dùng responseMimeType — tránh conflict với thinking mode
           }
         })
       }
     );
 
+    // Log HTTP status
+    console.log('Gemini HTTP status:', geminiRes.status);
+
     if (!geminiRes.ok) {
-      const err = await geminiRes.json().catch(() => ({}));
-      return res.status(502).json({ error: 'Gemini API lỗi: ' + (err.error?.message || geminiRes.status) });
+      const errBody = await geminiRes.text();
+      console.error('Gemini error body:', errBody);
+      return res.status(502).json({ error: 'Gemini API lỗi: ' + geminiRes.status, detail: errBody.slice(0, 300) });
     }
 
     const geminiData = await geminiRes.json();
 
-    // Gemini 2.5 Flash có thinking parts — luôn lấy part cuối
-    const parts = geminiData.candidates?.[0]?.content?.parts || [];
-    const raw = parts[parts.length - 1]?.text || '';
+    // Log toàn bộ response để debug
+    console.log('Gemini response:', JSON.stringify(geminiData).slice(0, 1000));
 
-    // Làm sạch phòng thủ
-    const clean = raw
+    // Gemini 2.5 có thinking parts — lấy text part cuối cùng
+    const parts = geminiData.candidates?.[0]?.content?.parts || [];
+    console.log('Parts count:', parts.length, '| types:', parts.map(p => p.thought ? 'thought' : 'text'));
+
+    // Lọc chỉ lấy part KHÔNG phải thought
+    const textPart = parts.filter(p => !p.thought).map(p => p.text).join('');
+    console.log('Text part raw:', textPart.slice(0, 500));
+
+    // Bóc markdown fence nếu còn
+    const clean = textPart
       .replace(/^```(?:json)?\s*/i, '')
       .replace(/\s*```$/i, '')
       .trim();
 
-    // Parse với try riêng để trả lỗi rõ hơn
-    let parsed;
-    try {
-      parsed = JSON.parse(clean);
-    } catch (parseErr) {
-      // Log raw để debug trên Vercel logs
-      console.error('JSON parse failed. Raw response:', raw);
-      return res.status(500).json({
-        error: 'Model trả về dữ liệu không hợp lệ, vui lòng thử lại.',
-        debug: raw.slice(0, 200)
-      });
+    // Tìm JSON object trong string (phòng trường hợp có text thừa đầu/cuối)
+    const jsonMatch = clean.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      console.error('No JSON object found in:', clean);
+      return res.status(500).json({ error: 'Model không trả về JSON, vui lòng thử lại.' });
     }
 
+    const parsed = JSON.parse(jsonMatch[0]);
     return res.status(200).json(parsed);
 
   } catch (e) {
+    console.error('Handler error:', e.message, e.stack);
     return res.status(500).json({ error: 'Lỗi phân tích: ' + e.message });
   }
 }
