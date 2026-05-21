@@ -1139,7 +1139,7 @@ body.dark .rich-toolbar{background:var(--surface2);border-color:var(--border2);}
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Be Vietnam Pro', sans-serif;
   transition: all 0.15s;
   box-shadow: 0 3px 10px var(--red-glow);
 }
@@ -1207,7 +1207,7 @@ body.dark .rich-toolbar{background:var(--surface2);border-color:var(--border2);}
   font-weight: 600;
   cursor: pointer;
   color: var(--text2);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Be Vietnam Pro', sans-serif;
   transition: all 0.15s;
 }
 .hsk-stroke-btn:hover { border-color: var(--red); color: var(--red); background: var(--red-light); }
@@ -1293,7 +1293,7 @@ body.dark .rich-toolbar{background:var(--surface2);border-color:var(--border2);}
   font-weight: 600;
   cursor: pointer;
   color: var(--text2);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Be Vietnam Pro', sans-serif;
   transition: all 0.15s;
   text-align: center;
 }
@@ -1597,7 +1597,7 @@ body.dark .hsk-stroke-canvas {
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Be Vietnam Pro', sans-serif;
   transition: all 0.15s;
 }
 .hsk-admin-btn:hover { background: #1E1A00; }
@@ -1644,7 +1644,7 @@ body:not(.dark) .hsk-admin-form {
   background: var(--surface);
   color: var(--text);
   font-size: 13px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Be Vietnam Pro', sans-serif;
   outline: none;
   box-sizing: border-box;
   resize: vertical;
