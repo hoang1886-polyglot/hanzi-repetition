@@ -872,8 +872,6 @@ function highlightWord(zh){
   body.innerHTML=applyWordHighlight(body.innerHTML,tr(zh));
 }
 
-
-
 // ─── TEXT SELECTION ───────────────────────────────────────────────────────────
 function setupTextSelection(){
   const body=$('article-reader-body');
@@ -904,6 +902,13 @@ function setupTextSelection(){
     choicePopup.style.display='block';
     popup.style.display='none';
     hlPopup.style.display='none';
+  });
+
+  $('choice-analyze-btn').addEventListener('click',()=>{
+    if(!savedText)return;
+    choicePopup.style.display='none';
+    window.getSelection()?.removeAllRanges();
+    showSvoPanel(savedText);
   });
 
   $('choice-cancel-btn').addEventListener('click',()=>{
@@ -2260,30 +2265,33 @@ function hskMarkMemorized(hskWord) {
 function initHskNav() {
   const navEl = $('nav-hsk-books');
   if (navEl) navEl.addEventListener('click', () => nav('hsk-books'));
+}
+
+
+// ================================================================
+// SVO ANALYZER — Phân tích cú pháp S-V-O tiếng Trung
+// Gọi backend /api/analyze (Vercel serverless → Gemini API)
+// ================================================================
 
 const SVO_COLORS = {
-  S:   { bg:'#DBEAFE', border:'#3B82F6', text:'#1E3A8A', label:'Chủ ngữ' },
-  V:   { bg:'#D1FAE5', border:'#10B981', text:'#064E3B', label:'Vị ngữ' },
-  O:   { bg:'#FEF3C7', border:'#F59E0B', text:'#78350F', label:'Tân ngữ' },
-  adv: { bg:'var(--surface2)', border:'var(--border2)', text:'var(--text2)', label:'Trạng ngữ' },
+  S:    { bg:'#DBEAFE', border:'#3B82F6', text:'#1E3A8A', label:'Chủ ngữ' },
+  V:    { bg:'#D1FAE5', border:'#10B981', text:'#064E3B', label:'Vị ngữ' },
+  O:    { bg:'#FEF3C7', border:'#F59E0B', text:'#78350F', label:'Tân ngữ' },
+  adv:  { bg:'var(--surface2)', border:'var(--border2)', text:'var(--text2)', label:'Trạng ngữ' },
   other:{ bg:'var(--surface2)', border:'var(--border2)', text:'var(--text3)', label:'Khác' }
 };
- 
+
 function showSvoPanel(sentence) {
   const panel = document.getElementById('svo-panel');
   if (!panel) return;
- 
-  // Reset state
+
   document.getElementById('svo-sentence').textContent = sentence;
   document.getElementById('svo-loading').style.display = 'block';
   document.getElementById('svo-error').style.display = 'none';
   document.getElementById('svo-result').style.display = 'none';
   panel.style.display = 'block';
- 
-  // Scroll panel into view smoothly
   panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
- 
-  // Call backend
+
   fetch('/api/analyze', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -2295,24 +2303,24 @@ function showSvoPanel(sentence) {
     renderSvoResult(data);
   })
   .catch(err => {
-    document.getElementById('svo-error').style.display = 'block';
-    document.getElementById('svo-error').textContent = 'Lỗi: ' + err.message;
+    const el = document.getElementById('svo-error');
+    el.style.display = 'block';
+    el.textContent = 'Lỗi: ' + err.message;
   })
   .finally(() => {
     document.getElementById('svo-loading').style.display = 'none';
   });
 }
- 
+
 function renderSvoResult(data) {
   const blocksEl = document.getElementById('svo-blocks');
   const cardsEl  = document.getElementById('svo-cards');
   const expl     = document.getElementById('svo-explanation');
   blocksEl.innerHTML = '';
   cardsEl.innerHTML  = '';
- 
+
   const segs = data.segments || [];
- 
-  // Visual word blocks
+
   segs.forEach((seg, i) => {
     const role = SVO_COLORS[seg.role] ? seg.role : 'other';
     const c = SVO_COLORS[role];
@@ -2329,10 +2337,10 @@ function renderSvoResult(data) {
       'gap:4px',
       'min-width:44px',
     ].join(';');
- 
+
     if (isMain) {
       block.innerHTML = `
-        <span style="font-size:10px;font-weight:700;color:${c.text};background:${c.border};color:#fff;padding:1px 7px;border-radius:20px;letter-spacing:0.04em">${seg.role}</span>
+        <span style="font-size:10px;font-weight:700;background:${c.border};color:#fff;padding:1px 7px;border-radius:20px;letter-spacing:0.04em">${seg.role}</span>
         <span style="font-size:18px;font-weight:600;color:${c.text};font-family:'Noto Sans SC',sans-serif">${seg.text}</span>
         <span style="font-size:10px;color:${c.text};opacity:0.7">${seg.pinyin}</span>`;
     } else {
@@ -2343,14 +2351,7 @@ function renderSvoResult(data) {
     }
     blocksEl.appendChild(block);
   });
- 
-  // S V O detail cards
-  const res = await fetch('/api/analyze', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ sentence: selectedText })
-});
-         
+
   segs.filter(s => ['S','V','O'].includes(s.role)).forEach(seg => {
     const c = SVO_COLORS[seg.role];
     const card = document.createElement('div');
@@ -2362,18 +2363,15 @@ function renderSvoResult(data) {
       <div style="font-size:12px;color:var(--text2);margin-top:4px">${seg.meaning}</div>`;
     cardsEl.appendChild(card);
   });
- 
+
   expl.textContent = data.explanation || '';
   document.getElementById('svo-result').style.display = 'block';
 }
- 
-// Close button
+
+// Close SVO panel
 document.addEventListener('DOMContentLoaded', () => {
   const closeBtn = document.getElementById('svo-close-btn');
   if (closeBtn) closeBtn.addEventListener('click', () => {
     document.getElementById('svo-panel').style.display = 'none';
   });
-});         
-}
-
-
+});
