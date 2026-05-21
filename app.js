@@ -2045,10 +2045,18 @@ function hskRenderWordReader() {
     <!-- Admin: memory tip editor (hidden by default) -->
     ${isAdmin ? `<div id="hsk-tip-editor" style="display:none;margin-top:16px;background:var(--surface2);border:1.5px solid #7C3AED44;border-radius:12px;padding:18px 20px">
       <div style="font-size:12px;font-weight:700;color:#7C3AED;letter-spacing:0.07em;margin-bottom:10px">✏️ MẸO NHỚ (ADMIN — hiển thị cho tất cả user)</div>
-      <textarea id="hsk-tip-inp" rows="4" placeholder="Nhập mẹo nhớ, giải thích, liên tưởng..." style="width:100%;padding:10px 12px;border-radius:8px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);font-size:13px;font-family:'Be Vietnam Pro',sans-serif;outline:none;resize:vertical;box-sizing:border-box">${word.memoryTip || ''}</textarea>
-      <div style="display:flex;gap:8px;margin-top:10px">
+      <div style="display:flex;gap:4px;margin-bottom:8px">
+        <button class="hsk-tip-fmt-btn" data-tag="b" title="In đậm (Ctrl+B)" style="width:32px;height:32px;border-radius:6px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s"><b>B</b></button>
+        <button class="hsk-tip-fmt-btn" data-tag="i" title="In nghiêng (Ctrl+I)" style="width:32px;height:32px;border-radius:6px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s"><i>I</i></button>
+        <button class="hsk-tip-fmt-btn" data-tag="u" title="Gạch chân (Ctrl+U)" style="width:32px;height:32px;border-radius:6px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s"><u>U</u></button>
+        <div style="width:1px;background:var(--border2);margin:4px 2px"></div>
+        <button class="hsk-tip-fmt-btn" data-tag="mark" title="Highlight" style="width:32px;height:32px;border-radius:6px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s"><mark style="padding:0 2px;border-radius:2px">A</mark></button>
+      </div>
+      <textarea id="hsk-tip-inp" rows="5" placeholder="Nhập mẹo nhớ, giải thích, liên tưởng... (hỗ trợ <b>đậm</b>, <i>nghiêng</i>, <u>gạch chân</u>)" style="width:100%;padding:10px 12px;border-radius:8px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);font-size:13px;font-family:'Be Vietnam Pro',sans-serif;outline:none;resize:vertical;box-sizing:border-box;line-height:1.7">${word.memoryTip || ''}</textarea>
+      <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
         <button id="hsk-tip-save-btn" style="padding:8px 20px;background:#7C3AED;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Be Vietnam Pro',sans-serif">💾 Lưu mẹo nhớ</button>
         <button id="hsk-tip-cancel-btn" style="padding:8px 16px;background:var(--surface);border:1.5px solid var(--border2);border-radius:8px;font-size:13px;cursor:pointer;color:var(--text2);font-family:'Be Vietnam Pro',sans-serif">Huỷ</button>
+        <span style="font-size:11px;color:var(--text3);margin-left:4px">Chọn chữ rồi bấm B/I/U để định dạng</span>
       </div>
     </div>` : ''}
 
@@ -2139,6 +2147,53 @@ function hskRenderWordReader() {
     });
     $('hsk-tip-cancel-btn')?.addEventListener('click', () => { $('hsk-tip-editor').style.display = 'none'; });
     $('hsk-tip-save-btn')?.addEventListener('click', () => hskAdminSaveTip(book, hskState.unitIndex, idx));
+
+    // Formatting toolbar: B / I / U / highlight
+    document.querySelectorAll('.hsk-tip-fmt-btn').forEach(btn => {
+      btn.addEventListener('mousedown', (e) => {
+        e.preventDefault(); // giữ selection trong textarea
+        const ta = $('hsk-tip-inp');
+        const tag = btn.dataset.tag;
+        const start = ta.selectionStart;
+        const end   = ta.selectionEnd;
+        const sel   = ta.value.slice(start, end);
+        if (start === end) { // không chọn gì → đặt con trỏ giữa tag
+          const ins = `<${tag}></${tag}>`;
+          ta.setRangeText(ins, start, end, 'end');
+          // đặt cursor vào giữa
+          const cur = start + tag.length + 2;
+          ta.setSelectionRange(cur, cur);
+        } else {
+          ta.setRangeText(`<${tag}>${sel}</${tag}>`, start, end, 'end');
+        }
+        ta.focus();
+        // Visual feedback
+        btn.style.background = '#7C3AED22';
+        btn.style.borderColor = '#7C3AED66';
+        setTimeout(() => { btn.style.background = ''; btn.style.borderColor = ''; }, 300);
+      });
+    });
+
+    // Ctrl+B / Ctrl+I / Ctrl+U shortcuts trong textarea
+    $('hsk-tip-inp')?.addEventListener('keydown', (e) => {
+      const shortcuts = { b: 'b', i: 'i', u: 'u' };
+      if ((e.ctrlKey || e.metaKey) && shortcuts[e.key]) {
+        e.preventDefault();
+        const ta = $('hsk-tip-inp');
+        const tag = shortcuts[e.key];
+        const start = ta.selectionStart;
+        const end   = ta.selectionEnd;
+        const sel   = ta.value.slice(start, end);
+        if (start === end) {
+          const ins = `<${tag}></${tag}>`;
+          ta.setRangeText(ins, start, end, 'end');
+          const cur = start + tag.length + 2;
+          ta.setSelectionRange(cur, cur);
+        } else {
+          ta.setRangeText(`<${tag}>${sel}</${tag}>`, start, end, 'end');
+        }
+      }
+    });
   }
 }
 
