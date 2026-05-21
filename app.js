@@ -1805,7 +1805,6 @@ async function hskLoadBookData(bookId) {
 // ── Nav ───────────────────────────────────────────────────────────────────────
 async function hskNav(view, bookId = null, unitIndex = null, wordIndex = null) {
   hskState = { view, bookId, unitIndex, wordIndex };
-  // Load tips từ Firestore trước khi hiển thị từ vựng (chỉ load 1 lần mỗi bookId)
   if (view === 'words' && bookId) await hskLoadTipsFromFirestore(bookId);
   ['hsk-view-books', 'hsk-view-units', 'hsk-view-words']
     .forEach(id => { const el = $(id); if (el) el.style.display = 'none'; });
@@ -2045,18 +2044,18 @@ function hskRenderWordReader() {
     <!-- Admin: memory tip editor (hidden by default) -->
     ${isAdmin ? `<div id="hsk-tip-editor" style="display:none;margin-top:16px;background:var(--surface2);border:1.5px solid #7C3AED44;border-radius:12px;padding:18px 20px">
       <div style="font-size:12px;font-weight:700;color:#7C3AED;letter-spacing:0.07em;margin-bottom:10px">✏️ MẸO NHỚ (ADMIN — hiển thị cho tất cả user)</div>
-      <div style="display:flex;gap:4px;margin-bottom:8px">
-        <button class="hsk-tip-fmt-btn" data-tag="b" title="In đậm (Ctrl+B)" style="width:32px;height:32px;border-radius:6px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s"><b>B</b></button>
-        <button class="hsk-tip-fmt-btn" data-tag="i" title="In nghiêng (Ctrl+I)" style="width:32px;height:32px;border-radius:6px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s"><i>I</i></button>
-        <button class="hsk-tip-fmt-btn" data-tag="u" title="Gạch chân (Ctrl+U)" style="width:32px;height:32px;border-radius:6px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s"><u>U</u></button>
-        <div style="width:1px;background:var(--border2);margin:4px 2px"></div>
-        <button class="hsk-tip-fmt-btn" data-tag="mark" title="Highlight" style="width:32px;height:32px;border-radius:6px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s"><mark style="padding:0 2px;border-radius:2px">A</mark></button>
+      <div id="hsk-fmt-toolbar" style="display:flex;flex-direction:row;gap:4px;margin-bottom:8px;flex-wrap:wrap">
+        <button type="button" class="hsk-tip-fmt-btn" data-tag="b" title="In đậm (Ctrl+B)" style="min-width:32px;height:32px;padding:0 8px;border-radius:6px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);font-size:14px;font-weight:700;cursor:pointer;font-family:serif;line-height:1">B</button>
+        <button type="button" class="hsk-tip-fmt-btn" data-tag="i" title="In nghiêng (Ctrl+I)" style="min-width:32px;height:32px;padding:0 8px;border-radius:6px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);font-size:14px;cursor:pointer;font-style:italic;font-family:serif;line-height:1">I</button>
+        <button type="button" class="hsk-tip-fmt-btn" data-tag="u" title="Gạch chân (Ctrl+U)" style="min-width:32px;height:32px;padding:0 8px;border-radius:6px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);font-size:14px;cursor:pointer;text-decoration:underline;font-family:serif;line-height:1">U</button>
+        <div style="width:1px;height:24px;background:var(--border2);align-self:center;margin:0 2px"></div>
+        <button type="button" class="hsk-tip-fmt-btn" data-tag="mark" title="Highlight vàng" style="min-width:32px;height:32px;padding:0 8px;border-radius:6px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);font-size:13px;cursor:pointer;line-height:1">🖊</button>
       </div>
-      <textarea id="hsk-tip-inp" rows="5" placeholder="Nhập mẹo nhớ, giải thích, liên tưởng... (hỗ trợ <b>đậm</b>, <i>nghiêng</i>, <u>gạch chân</u>)" style="width:100%;padding:10px 12px;border-radius:8px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);font-size:13px;font-family:'Be Vietnam Pro',sans-serif;outline:none;resize:vertical;box-sizing:border-box;line-height:1.7">${word.memoryTip || ''}</textarea>
-      <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+      <textarea id="hsk-tip-inp" rows="5" placeholder="Nhập mẹo nhớ... Chọn chữ rồi bấm B/I/U để định dạng" style="width:100%;padding:10px 12px;border-radius:8px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);font-size:13px;font-family:'Be Vietnam Pro',sans-serif;outline:none;resize:vertical;box-sizing:border-box;line-height:1.7">${word.memoryTip || ''}</textarea>
+      <div style="display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap">
         <button id="hsk-tip-save-btn" style="padding:8px 20px;background:#7C3AED;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Be Vietnam Pro',sans-serif">💾 Lưu mẹo nhớ</button>
         <button id="hsk-tip-cancel-btn" style="padding:8px 16px;background:var(--surface);border:1.5px solid var(--border2);border-radius:8px;font-size:13px;cursor:pointer;color:var(--text2);font-family:'Be Vietnam Pro',sans-serif">Huỷ</button>
-        <span style="font-size:11px;color:var(--text3);margin-left:4px">Chọn chữ rồi bấm B/I/U để định dạng</span>
+        <span style="font-size:11px;color:var(--text3)">Ctrl+B / Ctrl+I / Ctrl+U</span>
       </div>
     </div>` : ''}
 
@@ -2148,50 +2147,38 @@ function hskRenderWordReader() {
     $('hsk-tip-cancel-btn')?.addEventListener('click', () => { $('hsk-tip-editor').style.display = 'none'; });
     $('hsk-tip-save-btn')?.addEventListener('click', () => hskAdminSaveTip(book, hskState.unitIndex, idx));
 
-    // Formatting toolbar: B / I / U / highlight
+    // ── B/I/U formatting toolbar ─────────────────────────────────────────────
+    function applyFmt(tag) {
+      const ta = $('hsk-tip-inp');
+      if (!ta) return;
+      const s = ta.selectionStart, e = ta.selectionEnd;
+      const sel = ta.value.slice(s, e);
+      if (s === e) {
+        // No selection: insert empty tag and put cursor inside
+        ta.setRangeText('<' + tag + '></' + tag + '>', s, e, 'end');
+        const cur = s + tag.length + 2;
+        ta.setSelectionRange(cur, cur);
+      } else {
+        ta.setRangeText('<' + tag + '>' + sel + '</' + tag + '>', s, e, 'end');
+      }
+      ta.focus();
+    }
+
     document.querySelectorAll('.hsk-tip-fmt-btn').forEach(btn => {
-      btn.addEventListener('mousedown', (e) => {
-        e.preventDefault(); // giữ selection trong textarea
-        const ta = $('hsk-tip-inp');
-        const tag = btn.dataset.tag;
-        const start = ta.selectionStart;
-        const end   = ta.selectionEnd;
-        const sel   = ta.value.slice(start, end);
-        if (start === end) { // không chọn gì → đặt con trỏ giữa tag
-          const ins = `<${tag}></${tag}>`;
-          ta.setRangeText(ins, start, end, 'end');
-          // đặt cursor vào giữa
-          const cur = start + tag.length + 2;
-          ta.setSelectionRange(cur, cur);
-        } else {
-          ta.setRangeText(`<${tag}>${sel}</${tag}>`, start, end, 'end');
-        }
-        ta.focus();
-        // Visual feedback
-        btn.style.background = '#7C3AED22';
-        btn.style.borderColor = '#7C3AED66';
-        setTimeout(() => { btn.style.background = ''; btn.style.borderColor = ''; }, 300);
+      btn.addEventListener('mousedown', (ev) => {
+        ev.preventDefault();
+        applyFmt(btn.dataset.tag);
+        btn.style.background = 'var(--surface2)';
+        btn.style.borderColor = '#7C3AED';
+        setTimeout(() => { btn.style.background = ''; btn.style.borderColor = ''; }, 250);
       });
     });
 
-    // Ctrl+B / Ctrl+I / Ctrl+U shortcuts trong textarea
-    $('hsk-tip-inp')?.addEventListener('keydown', (e) => {
-      const shortcuts = { b: 'b', i: 'i', u: 'u' };
-      if ((e.ctrlKey || e.metaKey) && shortcuts[e.key]) {
-        e.preventDefault();
-        const ta = $('hsk-tip-inp');
-        const tag = shortcuts[e.key];
-        const start = ta.selectionStart;
-        const end   = ta.selectionEnd;
-        const sel   = ta.value.slice(start, end);
-        if (start === end) {
-          const ins = `<${tag}></${tag}>`;
-          ta.setRangeText(ins, start, end, 'end');
-          const cur = start + tag.length + 2;
-          ta.setSelectionRange(cur, cur);
-        } else {
-          ta.setRangeText(`<${tag}>${sel}</${tag}>`, start, end, 'end');
-        }
+    $('hsk-tip-inp')?.addEventListener('keydown', (ev) => {
+      if (ev.ctrlKey || ev.metaKey) {
+        if (ev.key === 'b') { ev.preventDefault(); applyFmt('b'); }
+        if (ev.key === 'i') { ev.preventDefault(); applyFmt('i'); }
+        if (ev.key === 'u') { ev.preventDefault(); applyFmt('u'); }
       }
     });
   }
@@ -2227,8 +2214,6 @@ function hskAdminSaveWord(book, unitIndex) {
 function hskAdminSaveTip(book, unitIndex, wordIndex) {
   const tip = $('hsk-tip-inp')?.value.trim() || '';
   book.units[unitIndex].words[wordIndex].memoryTip = tip;
-  // Xoá cache tips của book này để lần sau load lại từ Firestore
-  _hskTipsLoaded.delete(book.id);
   hskSaveAdminData(book);
   $('hsk-tip-editor').style.display = 'none';
   hskRenderWordReader();
@@ -2236,20 +2221,15 @@ function hskAdminSaveTip(book, unitIndex, wordIndex) {
 }
 
 async function hskSaveAdminData(book) {
-  // Chỉ cho phép owner duy nhất lưu lên Firebase
   if (auth.currentUser?.email !== 'hoang1886@gmail.com') {
     toast('⛔ Chỉ admin mới có quyền lưu dữ liệu này!');
     return;
   }
   try {
-    // Chỉ lưu map { zh → memoryTip } thay vì toàn bộ units (tránh vượt 1MB limit)
     const tips = {};
     book.units.forEach(unit => {
-      unit.words.forEach(w => {
-        if (w.memoryTip) tips[w.zh] = w.memoryTip;
-      });
+      unit.words.forEach(w => { if (w.memoryTip) tips[w.zh] = w.memoryTip; });
     });
-    // Dùng doc/setDoc đã import sẵn ở top-level, lưu vào hsk_tips collection
     const tipsDocRef = doc(firestore, 'hsk_tips', book.id);
     await setDoc(tipsDocRef, { tips }, { merge: false });
     toast('☁️ Đã đồng bộ mẹo nhớ lên Firebase!');
@@ -2259,11 +2239,10 @@ async function hskSaveAdminData(book) {
   }
 }
 
-// Cache để không load tips nhiều lần cho cùng một bookId
 const _hskTipsLoaded = new Set();
 
 async function hskLoadTipsFromFirestore(bookId) {
-  if (_hskTipsLoaded.has(bookId)) return; // đã load rồi, bỏ qua
+  if (_hskTipsLoaded.has(bookId)) return;
   _hskTipsLoaded.add(bookId);
   try {
     const tipsDocRef = doc(firestore, 'hsk_tips', bookId);
@@ -2273,11 +2252,8 @@ async function hskLoadTipsFromFirestore(bookId) {
     if (!tips) return;
     const book = hskGetBook(bookId);
     if (!book) return;
-    // Áp đè memoryTip từ Firestore vào dữ liệu local
     book.units.forEach(unit => {
-      unit.words.forEach(w => {
-        if (tips[w.zh] !== undefined) w.memoryTip = tips[w.zh];
-      });
+      unit.words.forEach(w => { if (tips[w.zh] !== undefined) w.memoryTip = tips[w.zh]; });
     });
   } catch(e) {
     console.warn('hskLoadTipsFromFirestore error:', e);
