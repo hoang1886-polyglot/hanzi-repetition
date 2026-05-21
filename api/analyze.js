@@ -13,20 +13,31 @@ export default async function handler(req, res) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return res.status(500).json({ error: 'API key chưa được cấu hình' });
 
-  const prompt = `Analyze this Chinese sentence for grammar structure.
+  // Escape câu input — tránh dấu đặc biệt tiếng Trung làm vỡ JSON trong prompt
+  const safeSentence = sentence.trim()
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, ' ')
+    .replace(/\r/g, '');
 
-Sentence: "${sentence.trim()}"
+  // Truyền câu qua system+user message thay vì nhúng thẳng vào prompt string
+  const systemInstruction = `You are a Chinese grammar analyzer. 
+When given a Chinese sentence, analyze its grammatical structure and return ONLY valid JSON.
+Never include markdown, code fences, comments, or any text outside the JSON object.`;
 
-Return a JSON object with this exact structure:
+  const userPrompt = `Analyze the grammar of this Chinese sentence: ${safeSentence}
+
+Return this exact JSON structure:
 {
   "segments": [
-    {"text": "word/phrase", "role": "S", "pinyin": "pinyin with tones", "meaning": "nghĩa tiếng Việt"}
+    {"text": "词", "role": "S", "pinyin": "cí", "meaning": "nghĩa tiếng Việt"}
   ],
-  "summary": {"S": "subject text or null", "V": "verb text or null", "O": "object text or null"},
+  "summary": {"S": "subject or null", "V": "verb or null", "O": "object or null"},
   "explanation": "1-2 câu tiếng Việt giải thích cấu trúc ngữ pháp"
 }
 
-Role values: S (subject/chủ ngữ), V (verb/vị ngữ), O (object/tân ngữ), adv (trạng ngữ), other (hư từ)`;
+Role values: S (chủ ngữ), V (vị ngữ), O (tân ngữ), adv (trạng ngữ), other (hư từ/dấu câu)
+Important: all string values in JSON must be properly escaped. Return valid JSON only.`;
 
   try {
     const geminiRes = await fetch(
@@ -35,11 +46,12 @@ Role values: S (subject/chủ ngữ), V (verb/vị ngữ), O (object/tân ngữ)
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
+          systemInstruction: { parts: [{ text: systemInstruction }] },
+          contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
           generationConfig: {
             temperature: 0.1,
             maxOutputTokens: 1024,
-            responseMimeType: 'application/json'   // ← ép Gemini trả JSON thuần
+            responseMimeType: 'application/json'
           }
         })
       }
@@ -52,18 +64,29 @@ Role values: S (subject/chủ ngữ), V (verb/vị ngữ), O (object/tân ngữ)
 
     const geminiData = await geminiRes.json();
 
-    // Gemini 2.5 Flash có thể trả về nhiều parts (thinking + answer)
-    // Lấy part cuối cùng là output thực sự
+    // Gemini 2.5 Flash có thinking parts — luôn lấy part cuối
     const parts = geminiData.candidates?.[0]?.content?.parts || [];
     const raw = parts[parts.length - 1]?.text || '';
 
-    // Làm sạch phòng thủ: bóc markdown fence nếu vẫn còn
+    // Làm sạch phòng thủ
     const clean = raw
       .replace(/^```(?:json)?\s*/i, '')
       .replace(/\s*```$/i, '')
       .trim();
 
-    const parsed = JSON.parse(clean);
+    // Parse với try riêng để trả lỗi rõ hơn
+    let parsed;
+    try {
+      parsed = JSON.parse(clean);
+    } catch (parseErr) {
+      // Log raw để debug trên Vercel logs
+      console.error('JSON parse failed. Raw response:', raw);
+      return res.status(500).json({
+        error: 'Model trả về dữ liệu không hợp lệ, vui lòng thử lại.',
+        debug: raw.slice(0, 200)
+      });
+    }
+
     return res.status(200).json(parsed);
 
   } catch (e) {
