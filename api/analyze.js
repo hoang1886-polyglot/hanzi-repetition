@@ -13,84 +13,60 @@ export default async function handler(req, res) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return res.status(500).json({ error: 'API key chưa được cấu hình' });
 
-  // Escape input an toàn
-  const safeSentence = sentence.trim()
-    .replace(/\\/g, '\\\\')
-    .replace(/"/g, '\\"')
-    .replace(/[\r\n]+/g, ' ');
+  const prompt = `Analyze the grammar of this Chinese sentence.
+Sentence: ${sentence.trim()}
 
-  const prompt = `You are a Chinese grammar analyzer. Analyze the grammar of this Chinese sentence and return ONLY a valid JSON object with no markdown, no code fences, no extra text before or after.
+Return ONLY a JSON object. No markdown. No explanation outside JSON.
 
-Chinese sentence: ${safeSentence}
+Example output format:
+{"segments":[{"text":"我","role":"S","pinyin":"wǒ","meaning":"tôi"},{"text":"爱","role":"V","pinyin":"ài","meaning":"yêu"},{"text":"你","role":"O","pinyin":"nǐ","meaning":"bạn"}],"summary":{"S":"我","V":"爱","O":"你"},"explanation":"Câu đơn giản S-V-O."}
 
-Return exactly this JSON structure (all strings must be properly JSON-escaped):
-{
-  "segments": [
-    {"text": "词", "role": "S", "pinyin": "cí", "meaning": "nghĩa tiếng Việt"}
-  ],
-  "summary": {"S": "subject or null", "V": "verb or null", "O": "object or null"},
-  "explanation": "1-2 câu tiếng Việt giải thích cấu trúc ngữ pháp"
-}
-
-Role values: S (chủ ngữ), V (vị ngữ), O (tân ngữ), adv (trạng ngữ), other (hư từ/dấu câu)`;
+Role values: S=chủ ngữ, V=vị ngữ, O=tân ngữ, adv=trạng ngữ, other=hư từ`;
 
   try {
     const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ role: 'user', parts: [{ text: prompt }] }],
           generationConfig: {
-            temperature: 0.1,
-            maxOutputTokens: 1024
-            // Không dùng responseMimeType — tránh conflict với thinking mode
+            temperature: 0,
+            maxOutputTokens: 1024,
+            responseMimeType: 'application/json'
           }
         })
       }
     );
 
-    // Log HTTP status
-    console.log('Gemini HTTP status:', geminiRes.status);
-
     if (!geminiRes.ok) {
       const errBody = await geminiRes.text();
-      console.error('Gemini error body:', errBody);
-      return res.status(502).json({ error: 'Gemini API lỗi: ' + geminiRes.status, detail: errBody.slice(0, 300) });
+      console.error('Gemini HTTP error:', geminiRes.status, errBody.slice(0, 300));
+      return res.status(502).json({ error: 'Gemini API lỗi ' + geminiRes.status });
     }
 
     const geminiData = await geminiRes.json();
+    console.log('Gemini raw:', JSON.stringify(geminiData).slice(0, 800));
 
-    // Log toàn bộ response để debug
-    console.log('Gemini response:', JSON.stringify(geminiData).slice(0, 1000));
-
-    // Gemini 2.5 có thinking parts — lấy text part cuối cùng
     const parts = geminiData.candidates?.[0]?.content?.parts || [];
-    console.log('Parts count:', parts.length, '| types:', parts.map(p => p.thought ? 'thought' : 'text'));
+    const raw = parts.map(p => p.text || '').join('').trim();
 
-    // Lọc chỉ lấy part KHÔNG phải thought
-    const textPart = parts.filter(p => !p.thought).map(p => p.text).join('');
-    console.log('Text part raw:', textPart.slice(0, 500));
+    // Strip markdown fences nếu có
+    const clean = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
 
-    // Bóc markdown fence nếu còn
-    const clean = textPart
-      .replace(/^```(?:json)?\s*/i, '')
-      .replace(/\s*```$/i, '')
-      .trim();
-
-    // Tìm JSON object trong string (phòng trường hợp có text thừa đầu/cuối)
-    const jsonMatch = clean.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      console.error('No JSON object found in:', clean);
-      return res.status(500).json({ error: 'Model không trả về JSON, vui lòng thử lại.' });
+    // Extract JSON object
+    const match = clean.match(/\{[\s\S]*\}/);
+    if (!match) {
+      console.error('No JSON found:', clean.slice(0, 300));
+      return res.status(500).json({ error: 'Model không trả về JSON hợp lệ, thử lại.' });
     }
 
-    const parsed = JSON.parse(jsonMatch[0]);
+    const parsed = JSON.parse(match[0]);
     return res.status(200).json(parsed);
 
   } catch (e) {
-    console.error('Handler error:', e.message, e.stack);
-    return res.status(500).json({ error: 'Lỗi phân tích: ' + e.message });
+    console.error('Error:', e.message);
+    return res.status(500).json({ error: 'Lỗi: ' + e.message });
   }
 }
