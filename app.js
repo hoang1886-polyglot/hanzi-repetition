@@ -2045,10 +2045,10 @@ function hskRenderWordReader() {
     <!-- Admin: memory tip editor (hidden by default) -->
     ${isAdmin ? `<div id="hsk-tip-editor" style="display:none;margin-top:16px;background:var(--surface2);border:1.5px solid #7C3AED44;border-radius:12px;padding:18px 20px">
       <div style="font-size:12px;font-weight:700;color:#7C3AED;letter-spacing:0.07em;margin-bottom:10px">✏️ MẸO NHỚ (ADMIN — hiển thị cho tất cả user)</div>
-      <textarea id="hsk-tip-inp" rows="4" placeholder="Nhập mẹo nhớ, giải thích, liên tưởng..." style="width:100%;padding:10px 12px;border-radius:8px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;box-sizing:border-box">${word.memoryTip || ''}</textarea>
+      <textarea id="hsk-tip-inp" rows="4" placeholder="Nhập mẹo nhớ, giải thích, liên tưởng..." style="width:100%;padding:10px 12px;border-radius:8px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text);font-size:13px;font-family:'Be Vietnam Pro',sans-serif;outline:none;resize:vertical;box-sizing:border-box">${word.memoryTip || ''}</textarea>
       <div style="display:flex;gap:8px;margin-top:10px">
-        <button id="hsk-tip-save-btn" style="padding:8px 20px;background:#7C3AED;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">💾 Lưu mẹo nhớ</button>
-        <button id="hsk-tip-cancel-btn" style="padding:8px 16px;background:var(--surface);border:1.5px solid var(--border2);border-radius:8px;font-size:13px;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">Huỷ</button>
+        <button id="hsk-tip-save-btn" style="padding:8px 20px;background:#7C3AED;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Be Vietnam Pro',sans-serif">💾 Lưu mẹo nhớ</button>
+        <button id="hsk-tip-cancel-btn" style="padding:8px 16px;background:var(--surface);border:1.5px solid var(--border2);border-radius:8px;font-size:13px;cursor:pointer;color:var(--text2);font-family:'Be Vietnam Pro',sans-serif">Huỷ</button>
       </div>
     </div>` : ''}
 
