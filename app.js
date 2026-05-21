@@ -2259,3 +2259,9 @@ function initHskNav() {
   const navEl = $('nav-hsk-books');
   if (navEl) navEl.addEventListener('click', () => nav('hsk-books'));
 }
+
+const res = await fetch('/api/analyze', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ sentence: selectedText })
+});
