@@ -149,7 +149,11 @@ async function init(){
     }
   }
   document.getElementById('loading').style.display='none';
-  renderDashboard();
+  // ── Đọc URL để hiển thị đúng trang ──
+  const urlPage = location.pathname.replace(/\//g,'') || 'dashboard';
+  const startPage = VALID_PAGES.includes(urlPage) ? urlPage : 'dashboard';
+  history.replaceState({page: startPage}, '', `/${startPage}`);
+  nav(startPage, false);
   if(!listenersReady){ setupListeners(); listenersReady=true; }
   onSnapshot(DB_DOC,snap=>{
     if(!snap.exists())return; if(Date.now()-lastSaveAt<5000)return;
@@ -176,7 +180,9 @@ function toast(msg){ const t=document.createElement('div'); t.className='toast';
 function $(id){ return document.getElementById(id); }
 
 // ─── NAV ─────────────────────────────────────────────────────────────────────
-function nav(page){
+const VALID_PAGES = ['dashboard','review','add','wordlist','articles','hsk-books'];
+
+function nav(page, pushState=true){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById(page).classList.add('active');
@@ -189,8 +195,16 @@ function nav(page){
   if(page==='articles')renderArticlesList();
   if(page==='add'){ buildWordTypeSelector('word-type-selector','_selectedType'); window._selectedType=''; }
   if(page==='hsk-books') hskNav(hskState.view==='books'?'books':hskState.view==='units'?'units':'words', hskState.bookId, hskState.unitIndex, hskState.wordIndex);
+  // ── History API: cập nhật URL ──
+  if(pushState) history.pushState({page}, '', `/${page}`);
 }
 function navWordlistFilter(f){ _wf=f; nav('wordlist'); }
+
+// ── Xử lý nút Back/Forward trình duyệt ──
+window.addEventListener('popstate', e=>{
+  const page = e.state?.page || 'dashboard';
+  if(VALID_PAGES.includes(page)) nav(page, false);
+});
 
 // ─── LISTENERS ────────────────────────────────────────────────────────────────
 function setupListeners(){
