@@ -149,12 +149,13 @@ async function init(){
     }
   }
   document.getElementById('loading').style.display='none';
+  // ── Setup listeners trước, rồi mới nav ──
+  if(!listenersReady){ setupListeners(); listenersReady=true; }
   // ── Đọc URL để hiển thị đúng trang ──
   const urlPage = location.pathname.replace(/\//g,'') || 'dashboard';
   const startPage = VALID_PAGES.includes(urlPage) ? urlPage : 'dashboard';
   history.replaceState({page: startPage}, '', `/${startPage}`);
   nav(startPage, false);
-  if(!listenersReady){ setupListeners(); listenersReady=true; }
   onSnapshot(DB_DOC,snap=>{
     if(!snap.exists())return; if(Date.now()-lastSaveAt<5000)return;
     const d=snap.data(); db={words:d.words||[],sessions:d.sessions||{},correct:d.correct||0,total:d.total||0,articles:d.articles||[],memorized:d.memorized||[]};
