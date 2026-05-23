@@ -2533,8 +2533,12 @@ async function tbRenderBooks() {
     } else {
       const typeLabel = { jiaocheng:'📗 Giáo trình', exam:'📝 Đề thi', other:'📖 Khác' };
       list.innerHTML = books.map(b => `
-        <div class="tb-book-card" data-bookid="${b.id}">
+        <div class="tb-book-card" data-bookid="${b.id}" style="align-items:stretch">
           <div class="tb-book-color-bar" style="background:${lvl?.grad||'var(--red)'}"></div>
+          ${b.imageUrl ? `<div style="width:90px;min-height:90px;flex-shrink:0;overflow:hidden;background:var(--surface2)">
+            <img src="${b.imageUrl}" alt="" style="width:100%;height:100%;object-fit:cover;display:block"
+              onerror="this.parentElement.style.display='none'">
+          </div>` : ''}
           <div class="tb-book-content">
             <div class="tb-book-title">${b.title}</div>
             ${b.subtitle ? `<div class="tb-book-subtitle">${b.subtitle}</div>` : ''}
@@ -3448,7 +3452,10 @@ function tbShowAddBookModal(level) {
   $('tb-add-book-level').textContent = `HSK ${level}`;
   $('tb-book-title-inp').value    = '';
   $('tb-book-subtitle-inp').value = '';
+  const imgInp = $('tb-book-img-inp'); if (imgInp) imgInp.value = '';
+  $('tb-book-img-preview').style.display = 'none';
   overlay.style.display = 'flex';
+  tbSetupBookImgPreview();
 }
 
 function tbShowEditBookModal(book) {
@@ -3460,7 +3467,31 @@ function tbShowEditBookModal(book) {
   $('tb-book-subtitle-inp').value     = book.subtitle || '';
   const sel = $('tb-book-type-select');
   if (sel) sel.value = book.type || 'jiaocheng';
+  const imgInp = $('tb-book-img-inp');
+  if (imgInp) imgInp.value = book.imageUrl || '';
+  tbUpdateBookImgPreview(book.imageUrl || '');
   overlay.style.display = 'flex';
+  tbSetupBookImgPreview();
+}
+
+function tbSetupBookImgPreview() {
+  const inp = $('tb-book-img-inp');
+  if (!inp) return;
+  inp.oninput = () => tbUpdateBookImgPreview(inp.value.trim());
+}
+
+function tbUpdateBookImgPreview(url) {
+  const wrap = $('tb-book-img-preview');
+  const img  = $('tb-book-img-preview-img');
+  if (!wrap || !img) return;
+  if (url) {
+    img.src = url;
+    img.onerror = () => { wrap.style.display = 'none'; };
+    img.onload  = () => { wrap.style.display = 'block'; };
+    wrap.style.display = 'block';
+  } else {
+    wrap.style.display = 'none';
+  }
 }
 
 async function tbSaveBook() {
@@ -3468,10 +3499,11 @@ async function tbSaveBook() {
   const title    = $('tb-book-title-inp').value.trim();
   const subtitle = $('tb-book-subtitle-inp').value.trim();
   const type     = $('tb-book-type-select').value;
+  const imageUrl = $('tb-book-img-inp')?.value.trim() || '';
   if (!title) { toast('Vui lòng nhập tiêu đề sách'); return; }
   try {
     if (_tbBookEditId) {
-      await updateDoc(doc(firestore, 'textbooks', _tbBookEditId), { title, subtitle, type });
+      await updateDoc(doc(firestore, 'textbooks', _tbBookEditId), { title, subtitle, type, imageUrl });
       $('tb-add-book-overlay').style.display = 'none';
       toast('✓ Đã cập nhật sách!');
       _tbBookEditId = null;
@@ -3479,7 +3511,7 @@ async function tbSaveBook() {
     } else {
       const existing = tbState.booksCache[tbState.level] || [];
       await addDoc(collection(firestore, 'textbooks'), {
-        level:tbState.level, title, subtitle, type,
+        level:tbState.level, title, subtitle, type, imageUrl,
         order:existing.length + 1, words:[],
         createdAt:new Date().toISOString()
       });
