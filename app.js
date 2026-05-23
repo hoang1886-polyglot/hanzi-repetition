@@ -2725,13 +2725,14 @@ async function tbRenderWordsList(book, container) {
   if (allWords.length === 0) {
     html += `<p style="color:var(--text3);font-size:14px">Chưa có từ vựng nào.</p>`;
   } else {
-    html += `<table><thead><tr><th>Chữ Hán</th><th>Pinyin</th><th>Nghĩa tiếng Việt</th><th>Ví dụ</th><th></th></tr></thead><tbody>`;
+    html += `<table><thead><tr><th>Chữ Hán</th><th>Pinyin</th><th>Từ loại</th><th>Nghĩa tiếng Việt</th><th>Ví dụ</th><th></th></tr></thead><tbody>`;
     allWords.forEach((w, i) => {
       const py = getPinyin(w.zh);
       const inDict = db.words.some(dw => dw.zh === w.zh);
       html += `<tr>
         <td style="font-family:'Noto Serif SC',serif;font-size:18px;font-weight:600">${w.zh}</td>
         <td style="font-size:13px;color:var(--red);font-weight:500">${py}</td>
+        <td style="font-size:12px">${w.pos ? `<span style="font-weight:700;color:var(--text3);background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:1px 7px;letter-spacing:.4px">${w.pos}</span>` : ''}</td>
         <td style="font-size:13px;color:var(--text2)">${w.vi||''}</td>
         <td style="font-size:12px;color:var(--text3);max-width:200px">${w.exZh ? `<span style="font-family:'Noto Sans SC',sans-serif">${w.exZh}</span>` : ''}</td>
         <td>
@@ -3074,7 +3075,9 @@ function tbRenderArticleVocabPanel(words) {
         return `<div style="display:flex;align-items:flex-start;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:8px">
           <div style="flex:1;min-width:0">
             <div style="font-family:'Noto Serif SC',serif;font-size:17px;font-weight:600;color:var(--text)">${w.zh}</div>
-            <div style="font-size:11px;color:var(--red);font-weight:500">${py}</div>
+            <div style="font-size:11px;color:var(--red);font-weight:500;display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+              ${py}${w.pos ? `<span style="font-size:10px;font-weight:700;color:var(--text3);background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:0 5px;letter-spacing:.4px;line-height:1.6">${w.pos}</span>` : ''}
+            </div>
             <div style="font-size:12px;color:var(--text2);margin-top:2px">${w.vi||''}</div>
             ${w.exZh ? `<div style="font-size:11px;color:var(--text3);font-family:'Noto Sans SC',sans-serif;margin-top:3px">${w.exZh}</div>` : ''}
           </div>
@@ -3143,7 +3146,7 @@ function tbParseCSV(text) {
   return lines.slice(1).map(line => {
     const vals = tbSplitCSVLine(line);
     const get  = (...keys) => { for (const k of keys) { const i=headers.indexOf(k); if (i>=0) return (vals[i]||'').trim(); } return ''; };
-    return { zh:get('zh'), vi:get('vi'), exZh:get('exzh','exzh'), exVi:get('exvi','exvi'), note:get('note') };
+    return { zh:get('zh'), vi:get('vi'), exZh:get('exzh'), exVi:get('exvi'), note:get('note'), pos:get('pos','type','loai','wordtype') };
   });
 }
 
@@ -3178,6 +3181,7 @@ function tbShowImportPreview(newWords) {
           <thead>
             <tr style="background:var(--surface2);position:sticky;top:0">
               <th style="padding:8px 12px;text-align:left;color:var(--text3);font-weight:500;font-size:11px">CHỮ HÁN</th>
+              <th style="padding:8px;text-align:left;color:var(--text3);font-weight:500;font-size:11px">TỪ LOẠI</th>
               <th style="padding:8px;text-align:left;color:var(--text3);font-weight:500;font-size:11px">NGHĨA</th>
               <th style="padding:8px;text-align:left;color:var(--text3);font-weight:500;font-size:11px">VÍ DỤ</th>
             </tr>
@@ -3186,6 +3190,7 @@ function tbShowImportPreview(newWords) {
             ${toAdd.slice(0,100).map(w=>`
               <tr style="border-top:1px solid var(--border)">
                 <td style="padding:7px 12px;font-family:'Noto Serif SC',serif;font-size:15px;font-weight:600">${w.zh}</td>
+                <td style="padding:7px 8px;font-size:11px">${w.pos ? `<span style="font-weight:700;color:var(--text3);background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:1px 6px;letter-spacing:.4px">${w.pos}</span>` : ''}</td>
                 <td style="padding:7px 8px;color:var(--text2);font-size:12px">${w.vi}</td>
                 <td style="padding:7px 8px;color:var(--text3);font-size:11px;font-family:'Noto Sans SC',sans-serif">${w.exZh||''}</td>
               </tr>`).join('')}
