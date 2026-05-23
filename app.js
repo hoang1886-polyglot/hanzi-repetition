@@ -1023,6 +1023,13 @@ function setupTextSelection(){
     window.getSelection()?.removeAllRanges();
   };
 
+  $('choice-grammar-btn').onclick=()=>{
+    if(!savedText)return;
+    choicePopup.style.display='none';
+    window.getSelection()?.removeAllRanges();
+    analyzeGrammar(savedText);
+  };
+
   $('highlight-popup').querySelectorAll('.hl-color-btn').forEach(btn=>{
     btn.onclick=()=>{
       const text=hlPopup.dataset.text;if(!text)return;
@@ -3337,6 +3344,13 @@ function setupTbArtTextSelection() {
     window.getSelection()?.removeAllRanges();
   };
 
+  $('choice-grammar-btn').onclick = () => {
+    if (!savedText) return;
+    choicePopup.style.display = 'none';
+    window.getSelection()?.removeAllRanges();
+    analyzeGrammar(savedText);
+  };
+
   hlPopup?.querySelectorAll('.hl-color-btn').forEach(btn => {
     btn.onclick = () => {
       const text = hlPopup.dataset.text; if (!text) return;
@@ -3733,6 +3747,110 @@ async function tbSaveWord() {
     toast('✓ Đã thêm từ!');
     await tbRenderWords();
   } catch(e) { toast('Lỗi: ' + e.message); }
+}
+
+// ── Grammar / dependency analysis ─────────────────────────────────────────────
+// Universal Dependencies relations → Vietnamese labels + colors
+const DEP_ROLES = {
+  // Subject (blue)
+  'nsubj':       { vi: 'Chủ ngữ',         color: '#3b82f6' },
+  'nsubj:pass':  { vi: 'Chủ ngữ bị động', color: '#3b82f6' },
+  'csubj':       { vi: 'Chủ ngữ',         color: '#3b82f6' },
+  // Root / main verb (red)
+  'root':        { vi: 'Động từ chính',    color: '#ef4444' },
+  // Direct / indirect object (green)
+  'obj':         { vi: 'Tân ngữ',          color: '#10b981' },
+  'iobj':        { vi: 'Tân ngữ GT',       color: '#10b981' },
+  // Oblique / clausal complement (amber)
+  'obl':         { vi: 'Bổ ngữ',           color: '#f59e0b' },
+  'obl:tmod':    { vi: 'Thời gian',        color: '#f59e0b' },
+  'obl:lmod':    { vi: 'Địa điểm',         color: '#f59e0b' },
+  'ccomp':       { vi: 'Mệnh đề phụ',      color: '#f59e0b' },
+  'xcomp':       { vi: 'Bổ ngữ',           color: '#f59e0b' },
+  'advcl':       { vi: 'Trạng ngữ câu',    color: '#f59e0b' },
+  // Modifier (purple)
+  'advmod':      { vi: 'Trạng ngữ',        color: '#8b5cf6' },
+  'advmod:df':   { vi: 'Trạng ngữ',        color: '#8b5cf6' },
+  'amod':        { vi: 'Tính từ',          color: '#8b5cf6' },
+};
+
+async function analyzeGrammar(text) {
+  showGrammarModal(text, null, true);   // show loading immediately
+  try {
+    const r = await fetch('/api/parse-zh', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+    const bodyEl = $('grammar-modal-body');
+    if (bodyEl) bodyEl.innerHTML = renderGrammarResult(data);
+  } catch(e) {
+    const bodyEl = $('grammar-modal-body');
+    if (bodyEl) bodyEl.innerHTML = `<p style="color:var(--red);font-size:13px;text-align:center;padding:12px">⚠️ ${e.message}</p>`;
+  }
+}
+
+function showGrammarModal(text, _data, loading) {
+  document.querySelector('#grammar-modal')?.remove();
+  const modal = document.createElement('div');
+  modal.id = 'grammar-modal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:3000;display:flex;align-items:center;justify-content:center;padding:16px';
+  modal.innerHTML = `
+    <div style="background:var(--surface);border-radius:16px;padding:24px 22px;width:min(680px,100%);max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <h3 style="font-size:16px;font-weight:700;margin:0">🔍 Phân tích ngữ pháp</h3>
+        <button id="grammar-modal-close" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text3);line-height:1">✕</button>
+      </div>
+      <p style="font-size:12px;color:var(--text3);margin:0 0 16px;font-family:'Noto Sans SC',sans-serif">${text.slice(0,80)}${text.length>80?'…':''}</p>
+      <div id="grammar-modal-body">
+        ${loading ? `<div style="text-align:center;padding:28px 0"><div class="spinner" style="margin:0 auto 12px"></div><p style="color:var(--text3);font-size:13px">Đang phân tích...</p></div>` : ''}
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+  modal.querySelector('#grammar-modal-close').onclick = () => modal.remove();
+  modal.onclick = e => { if (e.target === modal) modal.remove(); };
+}
+
+function renderGrammarResult(data) {
+  const sentences = data['tok/fine'] || [];
+  const deps      = data['dep']      || [];
+  if (!sentences.length) return `<p style="color:var(--text3);font-size:13px;text-align:center">Không có dữ liệu.</p>`;
+
+  const legendItems = [
+    { color:'#3b82f6', label:'Chủ ngữ' },
+    { color:'#ef4444', label:'Động từ chính' },
+    { color:'#10b981', label:'Tân ngữ' },
+    { color:'#f59e0b', label:'Bổ ngữ / Trạng thái' },
+    { color:'#8b5cf6', label:'Trạng ngữ / Tính từ' },
+  ];
+  const legend = `<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;padding:10px 14px;background:var(--surface2);border-radius:8px">
+    ${legendItems.map(l=>`<span style="font-size:11px;font-weight:700;color:${l.color};display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:50%;background:${l.color};flex-shrink:0;display:inline-block"></span>${l.label}</span>`).join('')}
+    <span style="font-size:11px;font-weight:600;color:var(--text3);display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:50%;background:var(--border2);flex-shrink:0;display:inline-block"></span>Thành phần khác</span>
+  </div>`;
+
+  const sentencesHtml = sentences.map((toks, si) => {
+    const depRels = deps[si] || [];
+    const tokHtml = toks.map((tok, ti) => {
+      const [, rel] = depRels[ti] || [0, ''];
+      const role  = DEP_ROLES[rel] || DEP_ROLES[rel?.split(':')[0]];
+      const color = role?.color || null;
+      const label = role?.vi    || '';
+      const py    = getPinyin(tok);
+      const boxBg     = color ? color + '18' : 'var(--surface2)';
+      const boxBorder = color ? color + '55' : 'var(--border)';
+      const textColor = color || 'var(--text)';
+      return `<div style="display:inline-flex;flex-direction:column;align-items:center;margin:2px 3px 8px;vertical-align:bottom">
+        <span style="font-size:10px;font-weight:700;color:${color||'transparent'};min-height:14px;line-height:14px;white-space:nowrap">${label}</span>
+        <span style="font-size:10px;color:var(--red);font-weight:500;min-height:13px;line-height:13px;letter-spacing:0.03em">${py}</span>
+        <span style="font-family:'Noto Serif SC',serif;font-size:22px;font-weight:700;padding:4px 7px;border-radius:7px;background:${boxBg};color:${textColor};border:1.5px solid ${boxBorder};margin-top:2px">${tok}</span>
+      </div>`;
+    }).join('');
+    return `<div style="margin-bottom:18px;display:flex;flex-wrap:wrap;align-items:flex-end;gap:0">${tokHtml}</div>`;
+  }).join(`<div style="height:1px;background:var(--border);margin:4px 0 18px"></div>`);
+
+  return legend + sentencesHtml;
 }
 
 // ── Init textbooks nav ─────────────────────────────────────────────────────────
