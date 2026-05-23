@@ -3776,20 +3776,34 @@ const DEP_ROLES = {
 
 async function analyzeGrammar(text) {
   showGrammarModal(text, null, true);   // show loading immediately
+  const HANLP = 'https://www.hanlp.com/api';
+  const BODY  = JSON.stringify({ text, tasks: ['tok/fine', 'dep'], language: 'zh' });
+  const HDRS  = { 'Content-Type': 'application/json', Accept: 'application/json' };
+  let data;
   try {
-    const r = await fetch('/api/parse-zh', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text }),
-    });
-    const data = await r.json();
-    if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
-    const bodyEl = $('grammar-modal-body');
-    if (bodyEl) bodyEl.innerHTML = renderGrammarResult(data);
-  } catch(e) {
-    const bodyEl = $('grammar-modal-body');
-    if (bodyEl) bodyEl.innerHTML = `<p style="color:var(--red);font-size:13px;text-align:center;padding:12px">⚠️ ${e.message}</p>`;
+    // Attempt 1: call HanLP directly from browser (works if CORS allowed)
+    const r1 = await fetch(HANLP, { method:'POST', headers:HDRS, body:BODY });
+    if (r1.ok) { data = await r1.json(); }
+  } catch(_) { /* CORS blocked — fall through to Vercel proxy */ }
+
+  if (!data) {
+    try {
+      // Attempt 2: go through Vercel serverless proxy (no token needed)
+      const r2 = await fetch('/api/parse-zh', {
+        method: 'POST', headers: HDRS, body: JSON.stringify({ text })
+      });
+      const d2 = await r2.json();
+      if (!r2.ok) throw new Error(d2.error || `HTTP ${r2.status}`);
+      data = d2;
+    } catch(e) {
+      const bodyEl = $('grammar-modal-body');
+      if (bodyEl) bodyEl.innerHTML = `<p style="color:var(--red);font-size:13px;text-align:center;padding:12px">⚠️ ${e.message}</p>`;
+      return;
+    }
   }
+
+  const bodyEl = $('grammar-modal-body');
+  if (bodyEl) bodyEl.innerHTML = renderGrammarResult(data);
 }
 
 function showGrammarModal(text, _data, loading) {

@@ -1,6 +1,5 @@
-// Vercel serverless function — proxies to HanLP REST API for Chinese dependency parsing.
-// Set HANLP_TOKEN in Vercel Dashboard > Settings > Environment Variables.
-// Register for a free token at: https://hanlp.hankcs.com/
+// Vercel serverless function — CORS proxy to HanLP public REST API.
+// No API key or registration required; HanLP public tier is free (auth=None).
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -12,14 +11,10 @@ export default async function handler(req, res) {
   const text = (req.body?.text || '').trim().slice(0, 500);
   if (!text) return res.status(400).json({ error: 'text is required' });
 
-  const token = process.env.HANLP_TOKEN;
-  if (!token) return res.status(500).json({ error: 'HANLP_TOKEN not configured on server' });
-
   try {
-    const r = await fetch('https://hanlp.hankcs.com/api/', {
+    const r = await fetch('https://www.hanlp.com/api', {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
         Accept: 'application/json',
       },
@@ -28,7 +23,7 @@ export default async function handler(req, res) {
 
     if (!r.ok) {
       const msg = await r.text().catch(() => String(r.status));
-      return res.status(r.status).json({ error: `HanLP API: ${msg}` });
+      return res.status(r.status).json({ error: `HanLP: ${msg}` });
     }
 
     const data = await r.json();
