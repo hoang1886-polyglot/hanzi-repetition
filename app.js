@@ -193,7 +193,7 @@ function nav(page, pushState=true){
   const navEl=document.getElementById(`nav-${page}`); if(navEl)navEl.classList.add('active');
   if(['upload-article','read-article','article-review'].includes(page))document.getElementById('nav-articles').classList.add('active');
   if(page!=='hsk-books') hskState={view:'books',bookId:null,unitIndex:null,wordIndex:null};
-  if(page!=='textbooks') tbState={view:'levels',level:null,bookId:null,bookData:null,booksCache:{},bookTab:'words',articleId:null,articleData:null,tbPinyinMode:false};
+  if(page!=='textbooks') tbState={view:'levels',level:null,bookId:null,bookData:null,booksCache:{},bookTab:'articles',articleId:null,articleData:null,tbPinyinMode:false};
   if(page==='dashboard')renderDashboard();
   if(page==='review')startReview();
   if(page==='wordlist')renderWordList('');
@@ -2418,11 +2418,13 @@ let tbState = {
   bookId: null,
   bookData: null,
   booksCache: {},      // { [level]: bookArray }
-  bookTab: 'words',    // 'words' | 'articles'
+  bookTab: 'articles', // 'words' | 'articles'
   articleId: null,
   articleData: null,
   tbPinyinMode: false,
 };
+let _tbArticleEditId = null;
+let _tbBookEditId = null;
 
 // ── Level metadata ─────────────────────────────────────────────────────────────
 const TB_LEVELS = [
@@ -2572,10 +2574,22 @@ async function tbRenderWords() {
     $('tb-book-title-header').textContent   = book.title;
     $('tb-book-subtitle-header').textContent = book.subtitle || '';
 
+    const isAdmin = (auth.currentUser?.email === 'hoang1886@gmail.com');
+    let bookEditBtn = $('tb-book-edit-inline-btn');
+    if (!bookEditBtn) {
+      bookEditBtn = document.createElement('button');
+      bookEditBtn.id = 'tb-book-edit-inline-btn';
+      bookEditBtn.style.cssText = 'margin-top:8px;padding:7px 16px;background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);font-family:"DM Sans",sans-serif';
+      bookEditBtn.textContent = '✎ Sửa thông tin sách';
+      $('tb-view-words')?.querySelector('.page-header')?.appendChild(bookEditBtn);
+    }
+    bookEditBtn.style.display = isAdmin ? '' : 'none';
+    bookEditBtn.onclick = () => tbShowEditBookModal(book);
+
     container.innerHTML = `
       <div style="display:flex;gap:0;margin-bottom:18px;border-bottom:2px solid var(--border)">
-        <button class="tb-tab-btn" data-tab="words"    style="padding:10px 22px;font-size:14px;font-weight:600;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;margin-bottom:-2px;font-family:'DM Sans',sans-serif;transition:color 0.15s">Từ vựng</button>
         <button class="tb-tab-btn" data-tab="articles" style="padding:10px 22px;font-size:14px;font-weight:600;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;margin-bottom:-2px;font-family:'DM Sans',sans-serif;transition:color 0.15s">Bài đọc</button>
+        <button class="tb-tab-btn" data-tab="words"    style="padding:10px 22px;font-size:14px;font-weight:600;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;margin-bottom:-2px;font-family:'DM Sans',sans-serif;transition:color 0.15s">Từ vựng</button>
       </div>
       <div id="tb-tab-content"></div>`;
 
@@ -2606,24 +2620,36 @@ async function tbRenderWords() {
 async function tbRenderBookTabContent(book) {
   const content = $('tb-tab-content');
   if (!content) return;
-  if (tbState.bookTab === 'words') tbRenderWordsList(book, content);
+  if (tbState.bookTab === 'words') await tbRenderWordsList(book, content);
   else await tbRenderArticlesList(book, content);
 }
 
-function tbRenderWordsList(book, container) {
+async function tbRenderWordsList(book, container) {
   const isAdmin = (auth.currentUser?.email === 'hoang1886@gmail.com');
-  const words   = book.words || [];
+  container.innerHTML = `<div class="hsk-loading"><div class="spinner"></div><p>Đang tải từ vựng...</p></div>`;
+
+  // Aggregate words from book-level list + all article vocabulary
+  const allWords = [...(book.words || [])];
+  try {
+    const artSnap = await getDocs(query(collection(firestore, 'textbooks', book.id, 'articles'), orderBy('order')));
+    artSnap.docs.forEach(d => {
+      (d.data().words || []).forEach(w => {
+        if (w.zh && !allWords.some(aw => aw.zh === w.zh)) allWords.push(w);
+      });
+    });
+  } catch(e) { /* ignore */ }
+
   let html = `<div class="card" style="max-width:820px">`;
   if (isAdmin) {
     html += `<div style="display:flex;justify-content:flex-end;margin-bottom:14px">
       <button class="submit-btn" id="tb-add-word-btn" style="padding:8px 18px;font-size:13px">+ Thêm từ mới</button>
     </div>`;
   }
-  if (words.length === 0) {
+  if (allWords.length === 0) {
     html += `<p style="color:var(--text3);font-size:14px">Chưa có từ vựng nào.</p>`;
   } else {
     html += `<table><thead><tr><th>Chữ Hán</th><th>Pinyin</th><th>Nghĩa tiếng Việt</th><th>Ví dụ</th><th></th></tr></thead><tbody>`;
-    words.forEach((w, i) => {
+    allWords.forEach((w, i) => {
       const py = getPinyin(w.zh);
       const inDict = db.words.some(dw => dw.zh === w.zh);
       html += `<tr>
@@ -2650,7 +2676,7 @@ function tbRenderWordsList(book, container) {
 
   container.querySelectorAll('.tb-add-dict-btn:not(.added)').forEach(btn => {
     btn.addEventListener('click', () => {
-      const w = words[parseInt(btn.dataset.i)];
+      const w = allWords[parseInt(btn.dataset.i)];
       addWordFromTextbook(w.zh, w.vi||'', w.exZh||'', w.exVi||'', w.note||'');
       btn.textContent = '✓ Đã thêm';
       btn.classList.add('added');
@@ -2737,6 +2763,18 @@ async function tbRenderArticle() {
     if (titleEl)  titleEl.textContent  = article.title  || '';
     if (sourceEl) sourceEl.textContent = article.source || '';
 
+    const isAdmin = (auth.currentUser?.email === 'hoang1886@gmail.com');
+    let artEditBtn = $('tb-art-edit-btn');
+    if (!artEditBtn) {
+      artEditBtn = document.createElement('button');
+      artEditBtn.id = 'tb-art-edit-btn';
+      artEditBtn.style.cssText = 'background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-sm);padding:8px 16px;font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);font-family:"DM Sans",sans-serif;transition:all 0.15s';
+      artEditBtn.textContent = '✎ Sửa bài';
+      $('tb-view-article')?.querySelector('.page-header > div')?.appendChild(artEditBtn);
+    }
+    artEditBtn.style.display = isAdmin ? '' : 'none';
+    artEditBtn.onclick = () => tbShowEditArticleModal(article);
+
     tbRenderTbArticleBody(article);
 
     if (ptb) {
@@ -2747,47 +2785,7 @@ async function tbRenderArticle() {
       };
     }
 
-    if (vocabEl) {
-      const words = article.words || [];
-      if (words.length === 0) {
-        vocabEl.innerHTML = '<p style="font-size:13px;color:var(--text3)">Không có từ vựng.</p>';
-      } else {
-        vocabEl.innerHTML = words.map((w, i) => {
-          const py     = getPinyin(w.zh);
-          const inDict = db.words.some(dw => dw.zh === w.zh);
-          return `<div style="display:flex;align-items:flex-start;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:8px">
-            <div style="flex:1;min-width:0">
-              <div style="font-family:'Noto Serif SC',serif;font-size:17px;font-weight:600;color:var(--text)">${w.zh}</div>
-              <div style="font-size:11px;color:var(--red);font-weight:500">${py}</div>
-              <div style="font-size:12px;color:var(--text2);margin-top:2px">${w.vi||''}</div>
-              ${w.exZh ? `<div style="font-size:11px;color:var(--text3);font-family:'Noto Sans SC',sans-serif;margin-top:3px">${w.exZh}</div>` : ''}
-            </div>
-            <button class="tb-vocab-add-btn${inDict?' added':''}" data-vi="${i}"
-              style="flex-shrink:0;margin-top:2px;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;
-                border:1.5px solid ${inDict?'var(--green)':'var(--red)'};
-                background:${inDict?'var(--green-light)':'transparent'};
-                color:${inDict?'var(--green)':'var(--red)'};font-family:'DM Sans',sans-serif"
-              ${inDict?'disabled':''}>
-              ${inDict ? '✓' : '+'}
-            </button>
-          </div>`;
-        }).join('');
-        vocabEl.querySelectorAll('.tb-vocab-add-btn:not(.added)').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const w = words[parseInt(btn.dataset.vi)];
-            const added = addWordFromTextbook(w.zh, w.vi||'', w.exZh||'', w.exVi||'', w.note||'');
-            if (added) {
-              btn.textContent = '✓';
-              btn.classList.add('added');
-              btn.style.borderColor = 'var(--green)';
-              btn.style.background  = 'var(--green-light)';
-              btn.style.color       = 'var(--green)';
-              btn.disabled = true;
-            }
-          });
-        });
-      }
-    }
+    if (vocabEl) tbRenderArticleVocabPanel(article.words || []);
     setupTbArtTextSelection();
   } catch(e) {
     console.error(e);
@@ -2803,6 +2801,64 @@ function tbRenderTbArticleBody(article) {
   bd.innerHTML = html;
   bd.classList.toggle('pinyin-on', tbState.tbPinyinMode);
   if (tbState.tbPinyinMode) applyRubyAnnotations(bd);
+}
+
+function tbRenderArticleVocabPanel(words) {
+  const vocabEl = $('tb-art-vocab');
+  if (!vocabEl) return;
+  if (words.length === 0) {
+    vocabEl.innerHTML = '<p style="font-size:13px;color:var(--text3)">Không có từ vựng.</p>';
+    return;
+  }
+  vocabEl.innerHTML = words.map((w, i) => {
+    const py     = getPinyin(w.zh);
+    const inDict = db.words.some(dw => dw.zh === w.zh);
+    return `<div style="display:flex;align-items:flex-start;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:8px">
+      <div style="flex:1;min-width:0">
+        <div style="font-family:'Noto Serif SC',serif;font-size:17px;font-weight:600;color:var(--text)">${w.zh}</div>
+        <div style="font-size:11px;color:var(--red);font-weight:500">${py}</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:2px">${w.vi||''}</div>
+        ${w.exZh ? `<div style="font-size:11px;color:var(--text3);font-family:'Noto Sans SC',sans-serif;margin-top:3px">${w.exZh}</div>` : ''}
+      </div>
+      <button class="tb-vocab-add-btn${inDict?' added':''}" data-vi="${i}"
+        style="flex-shrink:0;margin-top:2px;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;
+          border:1.5px solid ${inDict?'var(--green)':'var(--red)'};
+          background:${inDict?'var(--green-light)':'transparent'};
+          color:${inDict?'var(--green)':'var(--red)'};font-family:'DM Sans',sans-serif"
+        ${inDict?'disabled':''}>
+        ${inDict ? '✓' : '+'}
+      </button>
+    </div>`;
+  }).join('');
+  vocabEl.querySelectorAll('.tb-vocab-add-btn:not(.added)').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const w = words[parseInt(btn.dataset.vi)];
+      const added = addWordFromTextbook(w.zh, w.vi||'', w.exZh||'', w.exVi||'', w.note||'');
+      if (added) {
+        btn.textContent = '✓';
+        btn.classList.add('added');
+        btn.style.borderColor = 'var(--green)';
+        btn.style.background  = 'var(--green-light)';
+        btn.style.color       = 'var(--green)';
+        btn.disabled = true;
+      }
+    });
+  });
+}
+
+async function tbSaveWordToArticle(zh, vi, exZh, exVi, note) {
+  if (!tbState.bookId || !tbState.articleId) return;
+  try {
+    const artRef  = doc(firestore, 'textbooks', tbState.bookId, 'articles', tbState.articleId);
+    const snap    = await getDoc(artRef);
+    if (!snap.exists()) return;
+    const existing = snap.data().words || [];
+    if (existing.some(w => w.zh === zh)) return;
+    const updated = [...existing, { zh, vi, exZh: exZh||'', exVi: exVi||'', note: note||'' }];
+    await updateDoc(artRef, { words: updated });
+    if (tbState.articleData) tbState.articleData.words = updated;
+    tbRenderArticleVocabPanel(updated);
+  } catch(e) { console.error(e); }
 }
 
 function setupTbArtTextSelection() {
@@ -2864,8 +2920,12 @@ function setupTbArtTextSelection() {
     const exVi = $('popup-ex-vi-inp').value.trim();
     const note = $('popup-note-inp')?.value.trim() || '';
     const w = addWordFromTextbook(zh, vi, exZh, exVi, note);
-    if (w) { toast(`✓ Đã thêm: ${zh}`); popup.style.display='none'; window.getSelection()?.removeAllRanges(); }
-    else toast('Vui lòng nhập nghĩa!');
+    if (w) {
+      toast(`✓ Đã thêm: ${zh}`);
+      popup.style.display='none';
+      window.getSelection()?.removeAllRanges();
+      tbSaveWordToArticle(zh, vi, exZh, exVi, note);
+    } else toast('Vui lòng nhập nghĩa!');
   };
 }
 
@@ -2873,6 +2933,7 @@ function setupTbArtTextSelection() {
 function tbShowAddArticleModal(book) {
   const overlay = $('tb-add-article-overlay');
   if (!overlay) return;
+  _tbArticleEditId = null;
   $('tb-add-art-book-name').textContent = book.title;
   $('tb-art-title-inp').value  = '';
   $('tb-art-source-inp').value = '';
@@ -2889,6 +2950,26 @@ function tbShowAddArticleModal(book) {
         document.execCommand(btn.dataset.cmd, false, btn.dataset.val || null);
         bodyInp.focus();
       };
+    });
+  }
+}
+
+function tbShowEditArticleModal(article) {
+  const overlay = $('tb-add-article-overlay');
+  if (!overlay) return;
+  _tbArticleEditId = article.id;
+  $('tb-add-art-book-name').textContent = tbState.bookData?.title || '';
+  $('tb-art-title-inp').value  = article.title  || '';
+  $('tb-art-source-inp').value = article.source || '';
+  const bodyInp = $('tb-art-body-inp');
+  if (bodyInp) bodyInp.innerHTML = article.body || '';
+  const rows = $('tb-art-vocab-rows');
+  if (rows) { rows.innerHTML = ''; (article.words || []).forEach(w => tbAddVocabRow(w)); }
+  overlay.style.display = 'flex';
+  const toolbar = $('tb-art-rich-toolbar');
+  if (toolbar && bodyInp) {
+    toolbar.querySelectorAll('.rtb-btn').forEach(btn => {
+      btn.onclick = e => { e.preventDefault(); document.execCommand(btn.dataset.cmd, false, btn.dataset.val || null); bodyInp.focus(); };
     });
   }
 }
@@ -2926,12 +3007,21 @@ async function tbSaveArticle() {
   })).filter(w => w.zh && w.vi);
 
   try {
-    const colRef  = collection(firestore, 'textbooks', tbState.bookId, 'articles');
-    const existing = await getDocs(query(colRef, orderBy('order')));
-    await addDoc(colRef, { title, source, body, words, order:existing.size + 1, createdAt:new Date().toISOString() });
-    $('tb-add-article-overlay').style.display = 'none';
-    toast('✓ Đã thêm bài đọc!');
-    if (tbState.bookData) await tbRenderBookTabContent(tbState.bookData);
+    if (_tbArticleEditId) {
+      await updateDoc(doc(firestore, 'textbooks', tbState.bookId, 'articles', _tbArticleEditId), { title, source, body, words });
+      $('tb-add-article-overlay').style.display = 'none';
+      toast('✓ Đã cập nhật bài đọc!');
+      _tbArticleEditId = null;
+      if (tbState.view === 'article') await tbRenderArticle();
+      else if (tbState.bookData) await tbRenderBookTabContent(tbState.bookData);
+    } else {
+      const colRef   = collection(firestore, 'textbooks', tbState.bookId, 'articles');
+      const existing = await getDocs(query(colRef, orderBy('order')));
+      await addDoc(colRef, { title, source, body, words, order:existing.size + 1, createdAt:new Date().toISOString() });
+      $('tb-add-article-overlay').style.display = 'none';
+      toast('✓ Đã thêm bài đọc!');
+      if (tbState.bookData) await tbRenderBookTabContent(tbState.bookData);
+    }
   } catch(e) { toast('Lỗi: ' + e.message); }
 }
 
@@ -2955,7 +3045,22 @@ function addWordFromTextbook(zh, vi, exZh='', exVi='', note='') {
 function tbShowAddBookModal(level) {
   const overlay = $('tb-add-book-overlay');
   if (!overlay) return;
+  _tbBookEditId = null;
   $('tb-add-book-level').textContent = `HSK ${level}`;
+  $('tb-book-title-inp').value    = '';
+  $('tb-book-subtitle-inp').value = '';
+  overlay.style.display = 'flex';
+}
+
+function tbShowEditBookModal(book) {
+  const overlay = $('tb-add-book-overlay');
+  if (!overlay) return;
+  _tbBookEditId = book.id;
+  $('tb-add-book-level').textContent  = `HSK ${tbState.level}`;
+  $('tb-book-title-inp').value        = book.title    || '';
+  $('tb-book-subtitle-inp').value     = book.subtitle || '';
+  const sel = $('tb-book-type-select');
+  if (sel) sel.value = book.type || 'jiaocheng';
   overlay.style.display = 'flex';
 }
 
@@ -2965,18 +3070,26 @@ async function tbSaveBook() {
   const subtitle = $('tb-book-subtitle-inp').value.trim();
   const type     = $('tb-book-type-select').value;
   if (!title) { toast('Vui lòng nhập tiêu đề sách'); return; }
-  const existing = tbState.booksCache[tbState.level] || [];
   try {
-    await addDoc(collection(firestore, 'textbooks'), {
-      level:tbState.level, title, subtitle, type,
-      order:existing.length + 1, words:[],
-      createdAt:new Date().toISOString()
-    });
-    $('tb-add-book-overlay').style.display = 'none';
-    $('tb-book-title-inp').value    = '';
-    $('tb-book-subtitle-inp').value = '';
-    toast('✓ Đã thêm sách!');
-    await tbRenderBooks();
+    if (_tbBookEditId) {
+      await updateDoc(doc(firestore, 'textbooks', _tbBookEditId), { title, subtitle, type });
+      $('tb-add-book-overlay').style.display = 'none';
+      toast('✓ Đã cập nhật sách!');
+      _tbBookEditId = null;
+      await tbRenderWords();
+    } else {
+      const existing = tbState.booksCache[tbState.level] || [];
+      await addDoc(collection(firestore, 'textbooks'), {
+        level:tbState.level, title, subtitle, type,
+        order:existing.length + 1, words:[],
+        createdAt:new Date().toISOString()
+      });
+      $('tb-add-book-overlay').style.display = 'none';
+      $('tb-book-title-inp').value    = '';
+      $('tb-book-subtitle-inp').value = '';
+      toast('✓ Đã thêm sách!');
+      await tbRenderBooks();
+    }
   } catch(e) { toast('Lỗi: ' + e.message); }
 }
 
