@@ -2796,6 +2796,7 @@ async function tbRenderArticle() {
 function tbRenderTbArticleBody(article) {
   let html = article.body || '';
   if (isTraditional && _openccConverter) html = _openccConverter(html);
+  (article.freeHighlights || []).forEach(h => { html = applyFreeHighlight(html, h); });
   const bd = $('tb-art-reader-body');
   if (!bd) return;
   bd.innerHTML = html;
@@ -2861,6 +2862,35 @@ async function tbSaveWordToArticle(zh, vi, exZh, exVi, note) {
   } catch(e) { console.error(e); }
 }
 
+async function tbApplyAndSaveFreeHighlight(text, color) {
+  if (!tbState.articleData) return;
+  const article = tbState.articleData;
+  if (!article.freeHighlights) article.freeHighlights = [];
+  article.freeHighlights = article.freeHighlights.filter(h => h.text !== text);
+  article.freeHighlights.push({ text, color });
+  const bd = $('tb-art-reader-body');
+  if (bd) bd.innerHTML = applyFreeHighlight(bd.innerHTML, { text, color });
+  if (tbState.bookId && tbState.articleId) {
+    try {
+      await updateDoc(doc(firestore, 'textbooks', tbState.bookId, 'articles', tbState.articleId),
+        { freeHighlights: article.freeHighlights });
+    } catch(e) { console.error(e); }
+  }
+}
+
+async function tbRemoveFreeHighlight(text) {
+  if (!tbState.articleData) return;
+  const article = tbState.articleData;
+  article.freeHighlights = (article.freeHighlights || []).filter(h => h.text !== text);
+  if (tbState.bookId && tbState.articleId) {
+    try {
+      await updateDoc(doc(firestore, 'textbooks', tbState.bookId, 'articles', tbState.articleId),
+        { freeHighlights: article.freeHighlights });
+    } catch(e) { console.error(e); }
+  }
+  tbRenderTbArticleBody(article);
+}
+
 function setupTbArtTextSelection() {
   const bodyEl = $('tb-art-reader-body');
   if (!bodyEl) return;
@@ -2873,11 +2903,11 @@ function setupTbArtTextSelection() {
   const hlPopup     = $('highlight-popup');
   let savedText = '', savedRect = null;
 
-  $('choice-highlight-btn').style.display = 'none';
+  $('choice-highlight-btn').style.display = '';
 
   document.addEventListener('mouseup', e => {
     if (!$('textbooks')?.classList.contains('active') || tbState.view !== 'article') return;
-    if (choicePopup.contains(e.target) || popup.contains(e.target)) return;
+    if (choicePopup.contains(e.target) || popup.contains(e.target) || hlPopup?.contains(e.target)) return;
     const sel  = window.getSelection();
     const text = sel?.toString().trim();
     if (!text || !bd.contains(sel?.anchorNode)) {
@@ -2896,6 +2926,33 @@ function setupTbArtTextSelection() {
   });
 
   $('choice-cancel-btn').onclick = () => { choicePopup.style.display='none'; window.getSelection()?.removeAllRanges(); };
+
+  $('choice-highlight-btn').onclick = () => {
+    if (!savedText) return;
+    choicePopup.style.display = 'none';
+    $('hlpopup-text').textContent = `"${savedText.slice(0,28)}${savedText.length>28?'…':''}"`;
+    hlPopup.dataset.text = savedText;
+    positionPopup(hlPopup, savedRect);
+    hlPopup.style.display = 'block';
+    window.getSelection()?.removeAllRanges();
+  };
+
+  hlPopup?.querySelectorAll('.hl-color-btn').forEach(btn => {
+    btn.onclick = () => {
+      const text = hlPopup.dataset.text; if (!text) return;
+      tbApplyAndSaveFreeHighlight(text, btn.dataset.color);
+      hlPopup.style.display = 'none';
+      window.getSelection()?.removeAllRanges();
+    };
+  });
+  $('hlpopup-cancel').onclick = () => { hlPopup.style.display='none'; window.getSelection()?.removeAllRanges(); };
+  $('hlpopup-remove').onclick = () => {
+    const text = hlPopup.dataset.text; if (!text) return;
+    tbRemoveFreeHighlight(text);
+    hlPopup.style.display = 'none';
+    window.getSelection()?.removeAllRanges();
+  };
+
   $('choice-add-word-btn').onclick = () => {
     if (!savedText) return;
     choicePopup.style.display = 'none';
@@ -2941,17 +2998,7 @@ function tbShowAddArticleModal(book) {
   if (bodyInp) bodyInp.innerHTML = '';
   $('tb-art-vocab-rows').innerHTML = '';
   overlay.style.display = 'flex';
-
-  const toolbar = $('tb-art-rich-toolbar');
-  if (toolbar && bodyInp) {
-    toolbar.querySelectorAll('.rtb-btn').forEach(btn => {
-      btn.onclick = e => {
-        e.preventDefault();
-        document.execCommand(btn.dataset.cmd, false, btn.dataset.val || null);
-        bodyInp.focus();
-      };
-    });
-  }
+  setupTbRichToolbar(bodyInp);
 }
 
 function tbShowEditArticleModal(article) {
@@ -2966,11 +3013,30 @@ function tbShowEditArticleModal(article) {
   const rows = $('tb-art-vocab-rows');
   if (rows) { rows.innerHTML = ''; (article.words || []).forEach(w => tbAddVocabRow(w)); }
   overlay.style.display = 'flex';
+  setupTbRichToolbar(bodyInp);
+}
+
+function setupTbRichToolbar(bodyInp) {
   const toolbar = $('tb-art-rich-toolbar');
-  if (toolbar && bodyInp) {
-    toolbar.querySelectorAll('.rtb-btn').forEach(btn => {
-      btn.onclick = e => { e.preventDefault(); document.execCommand(btn.dataset.cmd, false, btn.dataset.val || null); bodyInp.focus(); };
-    });
+  if (!toolbar || !bodyInp) return;
+  toolbar.querySelectorAll('.rtb-btn').forEach(btn => {
+    if (btn.id === 'tb-art-img-btn') return;
+    btn.onclick = e => {
+      e.preventDefault();
+      document.execCommand(btn.dataset.cmd, false, btn.dataset.val || null);
+      bodyInp.focus();
+    };
+  });
+  const imgBtn = $('tb-art-img-btn');
+  if (imgBtn) {
+    imgBtn.onclick = e => {
+      e.preventDefault();
+      const url = prompt('Nhập URL ảnh (link trực tiếp):');
+      if (!url?.trim()) return;
+      bodyInp.focus();
+      document.execCommand('insertHTML', false,
+        `<img src="${url.trim()}" style="max-width:100%;border-radius:8px;margin:8px 0;display:block">`);
+    };
   }
 }
 
