@@ -607,9 +607,17 @@
         </div>
         <div id="tb-art-reader-body" style="font-family:'Noto Serif SC','Noto Sans SC',sans-serif;font-size:17px;font-weight:400;line-height:1.95;color:var(--text);user-select:text;cursor:text"></div>
       </div>
-      <div class="card" style="margin:0">
-        <div class="card-title">TỪ VỰNG BÀI NÀY</div>
+      <div class="card" id="tb-art-right-card" style="margin:0">
+        <div id="tb-art-right-header">
+          <div style="display:flex;gap:0;margin-bottom:14px;border-bottom:2px solid var(--border)">
+            <button class="tb-rt-tab active" data-tab="vocab"
+              style="padding:8px 16px;font-size:13px;font-weight:600;background:none;border:none;border-bottom:2px solid var(--red);cursor:pointer;margin-bottom:-2px;color:var(--red);font-family:'DM Sans',sans-serif">Từ vựng</button>
+            <button class="tb-rt-tab" data-tab="practice"
+              style="padding:8px 16px;font-size:13px;font-weight:600;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;margin-bottom:-2px;color:var(--text2);font-family:'DM Sans',sans-serif">⚡ Luyện tập</button>
+          </div>
+        </div>
         <div id="tb-art-vocab" style="font-size:13px;color:var(--text3)">Chưa có từ vựng.</div>
+        <div id="tb-art-practice" style="display:none"></div>
       </div>
     </div>
   </div>
