@@ -1,6 +1,8 @@
 import { initializeApp }                        from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, doc, getDoc,
-         setDoc, onSnapshot }                   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+         setDoc, onSnapshot,
+         collection, getDocs, addDoc, updateDoc,
+         query, where, orderBy }                from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider,
          signInWithPopup, onAuthStateChanged,
          signOut }                              from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -182,7 +184,7 @@ function toast(msg){ const t=document.createElement('div'); t.className='toast';
 function $(id){ return document.getElementById(id); }
 
 // ─── NAV ─────────────────────────────────────────────────────────────────────
-const VALID_PAGES = ['dashboard','review','add','wordlist','articles','hsk-books'];
+const VALID_PAGES = ['dashboard','review','add','wordlist','articles','hsk-books','textbooks'];
 
 function nav(page, pushState=true){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -191,12 +193,14 @@ function nav(page, pushState=true){
   const navEl=document.getElementById(`nav-${page}`); if(navEl)navEl.classList.add('active');
   if(['upload-article','read-article','article-review'].includes(page))document.getElementById('nav-articles').classList.add('active');
   if(page!=='hsk-books') hskState={view:'books',bookId:null,unitIndex:null,wordIndex:null};
+  if(page!=='textbooks') tbState={view:'levels',level:null,bookId:null,bookData:null,booksCache:{}};
   if(page==='dashboard')renderDashboard();
   if(page==='review')startReview();
   if(page==='wordlist')renderWordList('');
   if(page==='articles')renderArticlesList();
   if(page==='add'){ buildWordTypeSelector('word-type-selector','_selectedType'); window._selectedType=''; }
   if(page==='hsk-books') hskNav(hskState.view==='books'?'books':hskState.view==='units'?'units':'words', hskState.bookId, hskState.unitIndex, hskState.wordIndex);
+  if(page==='textbooks') tbNav(tbState.view, tbState.level, tbState.bookId);
   // ── History API: cập nhật URL ──
   if(pushState) history.pushState({page}, '', `/${page}`);
 }
@@ -245,6 +249,7 @@ function setupListeners(){
   ['dashboard','review','add','wordlist','articles'].forEach(p=>{ const el=$(`nav-${p}`); if(el)el.addEventListener('click',()=>nav(p)); });
   initHskNav();
   initHskAddModal();
+  initTbNav();
   $('card-all').addEventListener('click',()=>navWordlistFilter('all'));
   $('card-due').addEventListener('click',()=>navWordlistFilter('due'));
   $('card-learned').addEventListener('click',()=>navWordlistFilter('learned'));
@@ -2397,4 +2402,300 @@ function hskMarkMemorized(hskWord) {
 function initHskNav() {
   const navEl = $('nav-hsk-books');
   if (navEl) navEl.addEventListener('click', () => nav('hsk-books'));
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TEXTBOOKS MODULE  (Sách giáo khoa)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let tbState = {
+  view: 'levels',   // 'levels' | 'books' | 'words'
+  level: null,      // 1–6
+  bookId: null,
+  bookData: null,
+  booksCache: {},   // { [level]: bookArray }
+};
+
+// ── Level metadata ─────────────────────────────────────────────────────────────
+const TB_LEVELS = [
+  { level:1, label:'HSK 1', sub:'Sơ cấp',       grad:'linear-gradient(135deg,#F6A623,#E8910E)' },
+  { level:2, label:'HSK 2', sub:'Sơ–trung cấp', grad:'linear-gradient(135deg,#F97316,#C2410C)' },
+  { level:3, label:'HSK 3', sub:'Trung cấp',     grad:'linear-gradient(135deg,#22C55E,#15803D)' },
+  { level:4, label:'HSK 4', sub:'Trung–cao cấp', grad:'linear-gradient(135deg,#3B82F6,#1D4ED8)' },
+  { level:5, label:'HSK 5', sub:'Cao cấp',       grad:'linear-gradient(135deg,#A855F7,#7C3AED)' },
+  { level:6, label:'HSK 6', sub:'Thành thạo',    grad:'linear-gradient(135deg,#EF4444,#991B1B)' },
+];
+
+// ── Navigate ───────────────────────────────────────────────────────────────────
+async function tbNav(view, level = null, bookId = null) {
+  tbState.view   = view;
+  tbState.level  = level;
+  tbState.bookId = bookId;
+  if (view !== 'words') tbState.bookData = null;
+
+  ['tb-view-levels','tb-view-books','tb-view-words'].forEach(id => {
+    const el = $(id); if (el) el.style.display = 'none';
+  });
+  const viewEl = $(`tb-view-${view}`);
+  if (viewEl) viewEl.style.display = '';
+  tbRenderBreadcrumb();
+
+  if (view === 'levels') tbRenderLevels();
+  if (view === 'books')  await tbRenderBooks();
+  if (view === 'words')  await tbRenderWords();
+}
+
+// ── Breadcrumb ─────────────────────────────────────────────────────────────────
+function tbRenderBreadcrumb() {
+  const el = $('tb-breadcrumb');
+  if (!el) return;
+  const { view, level, bookData } = tbState;
+  if (view === 'levels') { el.style.display = 'none'; return; }
+  el.style.display = 'flex';
+  const lvl = TB_LEVELS.find(l => l.level === level);
+  const parts = [{ label:'📖 Sách giáo khoa', onclick:()=>tbNav('levels') }];
+  if (lvl) {
+    const isLvlCurrent = view === 'books';
+    parts.push({ label:lvl.label, onclick:()=>tbNav('books', level), isCurrent:isLvlCurrent });
+  }
+  if (view === 'words' && bookData) {
+    parts.push({ label:bookData.title, onclick:null, isCurrent:true });
+  }
+  el.innerHTML = parts.map((p, i) => {
+    const sep = i > 0 ? `<span class="hsk-breadcrumb-sep">›</span>` : '';
+    if (p.isCurrent) return `${sep}<span class="hsk-breadcrumb-current">${p.label}</span>`;
+    return `${sep}<span class="hsk-breadcrumb-item" data-bc="${i}">${p.label}</span>`;
+  }).join('');
+  el.querySelectorAll('[data-bc]').forEach(btn => {
+    const i = parseInt(btn.dataset.bc);
+    btn.addEventListener('click', parts[i].onclick);
+  });
+}
+
+// ── Level grid ─────────────────────────────────────────────────────────────────
+function tbRenderLevels() {
+  const grid = $('tb-levels-grid');
+  if (!grid) return;
+  grid.innerHTML = TB_LEVELS.map(l => `
+    <div class="tb-level-card" data-level="${l.level}" style="background:${l.grad}">
+      <div class="tb-level-pill">HSK ${l.level}</div>
+      <div class="tb-level-sub">Sách giáo khoa</div>
+      <div class="tb-level-name">${l.label}</div>
+      <div class="tb-level-sublabel">${l.sub}</div>
+    </div>`).join('');
+  grid.querySelectorAll('[data-level]').forEach(card => {
+    card.addEventListener('click', () => tbNav('books', parseInt(card.dataset.level)));
+  });
+}
+
+// ── Book list ──────────────────────────────────────────────────────────────────
+async function tbRenderBooks() {
+  const list = $('tb-books-list');
+  if (!list) return;
+  const lvl = TB_LEVELS.find(l => l.level === tbState.level);
+  if (lvl) $('tb-level-title').textContent = lvl.label;
+  list.innerHTML = `<div class="hsk-loading"><div class="spinner"></div><p>Đang tải sách...</p></div>`;
+  try {
+    const q = query(
+      collection(firestore, 'textbooks'),
+      where('level', '==', tbState.level),
+      orderBy('order')
+    );
+    const snap = await getDocs(q);
+    const books = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+    tbState.booksCache[tbState.level] = books;
+    const isAdmin = (auth.currentUser?.email === 'hoang1886@gmail.com');
+    list.innerHTML = '';
+
+    if (books.length === 0) {
+      list.innerHTML = `<p style="color:var(--text3);font-size:14px;padding:16px 0">${isAdmin ? 'Chưa có sách nào. Nhấn "+ Thêm sách" để bắt đầu.' : 'Chưa có sách nào cho cấp độ này.'}</p>`;
+    } else {
+      const typeLabel = { jiaocheng:'📗 Giáo trình', exam:'📝 Đề thi', other:'📖 Khác' };
+      list.innerHTML = books.map(b => `
+        <div class="tb-book-card" data-bookid="${b.id}">
+          <div class="tb-book-color-bar" style="background:${lvl?.grad||'var(--red)'}"></div>
+          <div class="tb-book-content">
+            <div class="tb-book-title">${b.title}</div>
+            ${b.subtitle ? `<div class="tb-book-subtitle">${b.subtitle}</div>` : ''}
+            <div class="tb-book-meta">${(b.words||[]).length} từ vựng${b.type ? ` · ${typeLabel[b.type]||b.type}` : ''}</div>
+          </div>
+          <div class="tb-book-arrow">›</div>
+        </div>`).join('');
+      list.querySelectorAll('[data-bookid]').forEach(card => {
+        card.addEventListener('click', () => tbNav('words', tbState.level, card.dataset.bookid));
+      });
+    }
+    if (isAdmin) {
+      const btn = document.createElement('button');
+      btn.className = 'submit-btn';
+      btn.style.cssText = 'margin-top:18px;padding:10px 22px;font-size:13px';
+      btn.textContent = '+ Thêm sách mới';
+      btn.addEventListener('click', () => tbShowAddBookModal(tbState.level));
+      list.appendChild(btn);
+    }
+  } catch(e) {
+    console.error(e);
+    list.innerHTML = `<p style="color:var(--red);font-size:14px">Lỗi tải sách: ${e.message}</p>`;
+  }
+}
+
+// ── Word list ──────────────────────────────────────────────────────────────────
+async function tbRenderWords() {
+  const container = $('tb-words-container');
+  if (!container) return;
+  container.innerHTML = `<div class="hsk-loading"><div class="spinner"></div><p>Đang tải từ vựng...</p></div>`;
+  try {
+    const snap = await getDoc(doc(firestore, 'textbooks', tbState.bookId));
+    if (!snap.exists()) { container.innerHTML = '<p>Không tìm thấy sách.</p>'; return; }
+    const book = { id:snap.id, ...snap.data() };
+    tbState.bookData = book;
+    tbRenderBreadcrumb();
+
+    $('tb-book-title-header').textContent  = book.title;
+    $('tb-book-subtitle-header').textContent = book.subtitle || '';
+
+    const isAdmin = (auth.currentUser?.email === 'hoang1886@gmail.com');
+    const words   = book.words || [];
+
+    let html = `<div class="card" style="max-width:820px">`;
+    if (isAdmin) {
+      html += `<div style="display:flex;justify-content:flex-end;margin-bottom:14px">
+        <button class="submit-btn" id="tb-add-word-btn" style="padding:8px 18px;font-size:13px">+ Thêm từ mới</button>
+      </div>`;
+    }
+    if (words.length === 0) {
+      html += `<p style="color:var(--text3);font-size:14px">Chưa có từ vựng nào.</p>`;
+    } else {
+      html += `<table><thead><tr><th>Chữ Hán</th><th>Pinyin</th><th>Nghĩa tiếng Việt</th><th>Ví dụ</th><th></th></tr></thead><tbody>`;
+      words.forEach((w, i) => {
+        const py = getPinyin(w.zh);
+        const inDict = db.words.some(dw => dw.zh === w.zh);
+        html += `<tr>
+          <td style="font-family:'Noto Serif SC',serif;font-size:18px;font-weight:600">${w.zh}</td>
+          <td style="font-size:13px;color:var(--red);font-weight:500">${py}</td>
+          <td style="font-size:13px;color:var(--text2)">${w.vi||''}</td>
+          <td style="font-size:12px;color:var(--text3);max-width:200px">${w.exZh ? `<span style="font-family:'Noto Sans SC',sans-serif">${w.exZh}</span>` : ''}</td>
+          <td>
+            <button class="tb-add-dict-btn${inDict?' added':''}" data-i="${i}"
+              style="padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;
+                border:1.5px solid ${inDict?'var(--green)':'var(--red)'};
+                background:${inDict?'var(--green-light)':'transparent'};
+                color:${inDict?'var(--green)':'var(--red)'};font-family:'DM Sans',sans-serif"
+              ${inDict?'disabled':''}>
+              ${inDict ? '✓ Đã thêm' : '+ Thêm'}
+            </button>
+          </td>
+        </tr>`;
+      });
+      html += `</tbody></table>`;
+    }
+    html += `</div>`;
+    container.innerHTML = html;
+
+    container.querySelectorAll('.tb-add-dict-btn:not(.added)').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const w = words[parseInt(btn.dataset.i)];
+        addWordFromTextbook(w.zh, w.vi||'', w.exZh||'', w.exVi||'', w.note||'');
+        btn.textContent = '✓ Đã thêm';
+        btn.classList.add('added');
+        btn.style.borderColor = 'var(--green)';
+        btn.style.background  = 'var(--green-light)';
+        btn.style.color       = 'var(--green)';
+        btn.disabled = true;
+      });
+    });
+
+    if (isAdmin) {
+      $('tb-add-word-btn')?.addEventListener('click', () => tbShowAddWordModal(book));
+    }
+  } catch(e) {
+    console.error(e);
+    container.innerHTML = `<p style="color:var(--red);font-size:14px">Lỗi: ${e.message}</p>`;
+  }
+}
+
+// ── Add word to SRS dictionary from textbook ───────────────────────────────────
+function addWordFromTextbook(zh, vi, exZh='', exVi='', note='') {
+  if (!zh || !vi) { toast('Vui lòng nhập chữ Hán và nghĩa!'); return false; }
+  if (db.words.some(w => w.zh === zh)) { toast(`"${zh}" đã có trong từ điển`); return false; }
+  const newWord = {
+    id:Date.now(), zh, vi, pinyin:getPinyin(zh), zhDef:'',
+    exZh, exVi, note, wordType:'',
+    status:'new', ef:2.5, interval:0, repetitions:0,
+    nextReview:null, lastReview:null, added:Date.now()
+  };
+  db.words.push(newWord);
+  save();
+  toast(`✓ Đã thêm: ${zh}`);
+  return newWord;
+}
+
+// ── Admin: show add-book modal ─────────────────────────────────────────────────
+function tbShowAddBookModal(level) {
+  const overlay = $('tb-add-book-overlay');
+  if (!overlay) return;
+  $('tb-add-book-level').textContent = `HSK ${level}`;
+  overlay.style.display = 'flex';
+}
+
+async function tbSaveBook() {
+  if (auth.currentUser?.email !== 'hoang1886@gmail.com') return;
+  const title    = $('tb-book-title-inp').value.trim();
+  const subtitle = $('tb-book-subtitle-inp').value.trim();
+  const type     = $('tb-book-type-select').value;
+  if (!title) { toast('Vui lòng nhập tiêu đề sách'); return; }
+  const existing = tbState.booksCache[tbState.level] || [];
+  try {
+    await addDoc(collection(firestore, 'textbooks'), {
+      level:tbState.level, title, subtitle, type,
+      order:existing.length + 1, words:[],
+      createdAt:new Date().toISOString()
+    });
+    $('tb-add-book-overlay').style.display = 'none';
+    $('tb-book-title-inp').value    = '';
+    $('tb-book-subtitle-inp').value = '';
+    toast('✓ Đã thêm sách!');
+    await tbRenderBooks();
+  } catch(e) { toast('Lỗi: ' + e.message); }
+}
+
+// ── Admin: show add-word modal ─────────────────────────────────────────────────
+function tbShowAddWordModal(book) {
+  const overlay = $('tb-add-word-overlay');
+  if (!overlay) return;
+  $('tb-word-book-name').textContent = book.title;
+  overlay.style.display = 'flex';
+}
+
+async function tbSaveWord() {
+  if (auth.currentUser?.email !== 'hoang1886@gmail.com') return;
+  const zh   = $('tb-word-zh-inp').value.trim();
+  const vi   = $('tb-word-vi-inp').value.trim();
+  const exZh = $('tb-word-exzh-inp').value.trim();
+  const exVi = $('tb-word-exvi-inp').value.trim();
+  const note = $('tb-word-note-inp').value.trim();
+  if (!zh || !vi) { toast('Vui lòng nhập chữ Hán và nghĩa tiếng Việt'); return; }
+  const book = tbState.bookData;
+  if (!book) return;
+  const words = [...(book.words||[]), { zh, vi, exZh, exVi, note }];
+  try {
+    await updateDoc(doc(firestore, 'textbooks', book.id), { words });
+    $('tb-add-word-overlay').style.display = 'none';
+    ['tb-word-zh-inp','tb-word-vi-inp','tb-word-exzh-inp','tb-word-exvi-inp','tb-word-note-inp']
+      .forEach(id => { const el=$(id); if(el) el.value=''; });
+    toast('✓ Đã thêm từ!');
+    await tbRenderWords();
+  } catch(e) { toast('Lỗi: ' + e.message); }
+}
+
+// ── Init textbooks nav ─────────────────────────────────────────────────────────
+function initTbNav() {
+  $('nav-textbooks')?.addEventListener('click', () => nav('textbooks'));
+  $('tb-add-book-cancel')?.addEventListener('click',  () => { $('tb-add-book-overlay').style.display='none'; });
+  $('tb-add-book-cancel2')?.addEventListener('click', () => { $('tb-add-book-overlay').style.display='none'; });
+  $('tb-add-book-save')?.addEventListener('click', tbSaveBook);
+  $('tb-add-word-cancel')?.addEventListener('click',  () => { $('tb-add-word-overlay').style.display='none'; });
+  $('tb-add-word-cancel2')?.addEventListener('click', () => { $('tb-add-word-overlay').style.display='none'; });
+  $('tb-add-word-save')?.addEventListener('click', tbSaveWord);
 }
