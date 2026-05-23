@@ -88,6 +88,10 @@
       Từ vựng HSK
       <span class="nav-badge">Mới</span>
     </div>
+    <div class="nav-item" data-page="textbooks" id="nav-textbooks">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      Sách giáo khoa
+    </div>
   </div>
   <div class="sidebar-footer">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
@@ -553,6 +557,103 @@
   </div>
 </div>
 
+<!-- TEXTBOOKS PAGE -->
+<div id="textbooks" class="page">
+  <div id="tb-breadcrumb" class="hsk-breadcrumb" style="display:none"></div>
+
+  <!-- VIEW: HSK level grid -->
+  <div id="tb-view-levels">
+    <div class="page-header">
+      <h1>Sách giáo khoa</h1>
+      <p>Giáo trình và đề thi tiếng Trung theo cấp độ HSK</p>
+    </div>
+    <div id="tb-levels-grid" class="tb-levels-grid"></div>
+  </div>
+
+  <!-- VIEW: Book list for a level -->
+  <div id="tb-view-books" style="display:none">
+    <div class="page-header">
+      <h1 id="tb-level-title">HSK 1</h1>
+      <p>Chọn giáo trình hoặc đề thi</p>
+    </div>
+    <div id="tb-books-list" class="tb-books-list"></div>
+  </div>
+
+  <!-- VIEW: Word list for a book -->
+  <div id="tb-view-words" style="display:none">
+    <div class="page-header">
+      <h1 id="tb-book-title-header"></h1>
+      <p id="tb-book-subtitle-header" style="color:var(--text2)"></p>
+    </div>
+    <div id="tb-words-container"></div>
+  </div>
+</div>
+
 </div><!-- /#main -->
+
+<!-- ADMIN: Add book modal -->
+<div id="tb-add-book-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:3000;align-items:center;justify-content:center">
+  <div style="background:var(--surface);border-radius:16px;padding:28px;width:min(480px,92vw);box-shadow:0 20px 60px rgba(0,0,0,0.25)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <h3 style="font-size:17px;font-weight:700;margin:0">+ Thêm sách — <span id="tb-add-book-level"></span></h3>
+      <button id="tb-add-book-cancel" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text3)">✕</button>
+    </div>
+    <div class="form-group">
+      <label>Tiêu đề sách <span style="color:var(--red)">*</span></label>
+      <input type="text" id="tb-book-title-inp" placeholder="e.g. Hanyu Jiaocheng 1">
+    </div>
+    <div class="form-group">
+      <label>Phụ đề <span class="optional-tag">(tuỳ chọn)</span></label>
+      <input type="text" id="tb-book-subtitle-inp" placeholder="e.g. Bài tập luyện dịch">
+    </div>
+    <div class="form-group">
+      <label>Loại sách</label>
+      <select id="tb-book-type-select" style="width:100%;padding:10px 12px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif">
+        <option value="jiaocheng">📗 Giáo trình</option>
+        <option value="exam">📝 Đề thi / Luyện thi</option>
+        <option value="other">📖 Khác</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button id="tb-add-book-cancel2" style="flex:1;padding:12px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">Huỷ</button>
+      <button id="tb-add-book-save" style="flex:2;padding:12px;background:var(--red);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">✓ Lưu sách</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN: Add word modal -->
+<div id="tb-add-word-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:3000;align-items:center;justify-content:center">
+  <div style="background:var(--surface);border-radius:16px;padding:28px;width:min(500px,92vw);max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.25)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <h3 style="font-size:17px;font-weight:700;margin:0">+ Thêm từ — <span id="tb-word-book-name" style="font-weight:500;color:var(--text2)"></span></h3>
+      <button id="tb-add-word-cancel" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text3)">✕</button>
+    </div>
+    <div class="form-group">
+      <label>Chữ Hán <span style="color:var(--red)">*</span></label>
+      <input type="text" id="tb-word-zh-inp" placeholder="e.g. 汉语" style="font-family:'Noto Sans SC',sans-serif">
+    </div>
+    <div class="form-group">
+      <label>Nghĩa tiếng Việt <span style="color:var(--red)">*</span></label>
+      <input type="text" id="tb-word-vi-inp" placeholder="e.g. tiếng Trung">
+    </div>
+    <div class="form-group">
+      <label>Câu ví dụ (tiếng Trung) <span class="optional-tag">(tuỳ chọn)</span></label>
+      <input type="text" id="tb-word-exzh-inp" placeholder="e.g. 我喜欢学汉语" style="font-family:'Noto Sans SC',sans-serif">
+    </div>
+    <div class="form-group">
+      <label>Dịch nghĩa ví dụ <span class="optional-tag">(tuỳ chọn)</span></label>
+      <input type="text" id="tb-word-exvi-inp" placeholder="e.g. Tôi thích học tiếng Trung">
+    </div>
+    <div class="form-group">
+      <label>Ghi chú / Mẹo nhớ <span class="optional-tag">(tuỳ chọn)</span></label>
+      <textarea id="tb-word-note-inp" placeholder="Mẹo nhớ từ, ngữ cảnh..." style="min-height:72px;resize:vertical"></textarea>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button id="tb-add-word-cancel2" style="flex:1;padding:12px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">Huỷ</button>
+      <button id="tb-add-word-save" style="flex:2;padding:12px;background:var(--red);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">✓ Thêm từ</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
