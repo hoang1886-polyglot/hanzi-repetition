@@ -362,6 +362,13 @@ function renderDashboard(){
 }
 
 // ─── REVIEW ───────────────────────────────────────────────────────────────────
+function getCharHint(zh){
+  const chars=[...zh];
+  if(chars.length<2)return null;
+  const idx=Math.floor(Math.random()*chars.length);
+  return chars.map((c,i)=>i===idx?`<span style="color:var(--red);font-weight:700">${c}</span>`:'<span style="color:var(--text3)">＿</span>').join(' ');
+}
+
 let reviewCorrect=0,reviewTotal=0,reviewInitial=0,reviewWrong=[];
 function startReview(){
   reviewQueue=db.words.filter(w=>!w.nextReview||w.nextReview<=Date.now()).map(w=>({...w})).sort(()=>Math.random()-0.5);
@@ -472,6 +479,7 @@ function renderReviewCard(){
       ${wordTypeBadgeHtml(currentCard.wordType, currentCard.wordTypes)}
       ${currentCard.zhDef?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:8px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);text-align:left">🀄 <span style="font-family:'Noto Sans SC',sans-serif">${tr(currentCard.zhDef)}</span></div>`:''}
       ${currentCard.exVi?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:11px 16px;background:var(--surface2);border-radius:8px;text-align:left;border:1px solid var(--border)"><div style="font-family:'Noto Sans SC',sans-serif;font-size:14px;margin-bottom:4px">${tr(currentCard.exZh||'')}</div><div>${currentCard.exVi}</div></div>`:''}\n      ${currentCard.note?`<div style="margin-top:10px"><button id="hint-toggle-btn" style="padding:5px 14px;background:var(--surface2);border:1.5px dashed var(--border2);border-radius:6px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif">💡 Xem gợi ý</button><div id="hint-content" style="display:none;margin-top:8px;padding:12px 16px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap;text-align:left">${currentCard.note}</div></div>`:''}
+      ${[...currentCard.zh].length>=2?`<div style="margin-top:10px"><button id="char-hint-btn" style="padding:5px 14px;background:var(--surface2);border:1.5px dashed var(--border2);border-radius:6px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif">🔍 Gợi ý 1 chữ</button><div id="char-hint-display" style="display:none;margin-top:8px;padding:10px 16px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);font-size:22px;font-family:'Noto Serif SC',serif;letter-spacing:0.15em;text-align:center"></div></div>`:''}
       <div class="review-pinyin" id="live-pinyin"></div>
       <input type="text" class="answer-input" id="answer-input" placeholder="Nhập chữ Hán...">
       <div class="feedback-bar" id="feedback-bar"></div>
@@ -491,6 +499,8 @@ function renderReviewCard(){
   rc.querySelectorAll('.diff-btn').forEach(btn=>btn.addEventListener('click',()=>gradeCard(parseInt(btn.dataset.grade))));
   const hintBtn=$('hint-toggle-btn');
   if(hintBtn){hintBtn.addEventListener('click',()=>{const c=$('hint-content');if(c.style.display==='none'){c.style.display='block';hintBtn.textContent='💡 Ẩn gợi ý';}else{c.style.display='none';hintBtn.textContent='💡 Xem gợi ý';}});}
+  const charHintBtn=$('char-hint-btn');
+  if(charHintBtn){charHintBtn.addEventListener('click',()=>{const d=$('char-hint-display');d.innerHTML=getCharHint(currentCard.zh);d.style.display='block';charHintBtn.disabled=true;charHintBtn.style.opacity='0.5';charHintBtn.textContent='🔍 Đã gợi ý';});}
   setupReviewDictLookup($('review-content'));
   answered=false;
 }
@@ -562,6 +572,7 @@ function renderArtReviewCard(){
       ${wordTypeBadgeHtml(artReviewCard.wordType, artReviewCard.wordTypes)}
       ${artReviewCard.zhDef?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:8px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);text-align:left">🀄 <span style="font-family:'Noto Sans SC',sans-serif">${tr(artReviewCard.zhDef)}</span></div>`:''}
       ${artReviewCard.exVi?`<div style="font-size:13px;color:var(--text2);margin-top:10px;padding:11px 16px;background:var(--surface2);border-radius:8px;text-align:left;border:1px solid var(--border)"><div style="font-family:'Noto Sans SC',sans-serif;font-size:14px;margin-bottom:4px">${tr(artReviewCard.exZh||'')}</div><div>${artReviewCard.exVi}</div></div>`:''}\n      ${artReviewCard.note?`<div style="margin-top:10px"><button id="art-hint-toggle-btn" style="padding:5px 14px;background:var(--surface2);border:1.5px dashed var(--border2);border-radius:6px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif">💡 Xem gợi ý</button><div id="art-hint-content" style="display:none;margin-top:8px;padding:12px 16px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap;text-align:left">${artReviewCard.note}</div></div>`:''}
+      ${[...artReviewCard.zh].length>=2?`<div style="margin-top:10px"><button id="art-char-hint-btn" style="padding:5px 14px;background:var(--surface2);border:1.5px dashed var(--border2);border-radius:6px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif">🔍 Gợi ý 1 chữ</button><div id="art-char-hint-display" style="display:none;margin-top:8px;padding:10px 16px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);font-size:22px;font-family:'Noto Serif SC',serif;letter-spacing:0.15em;text-align:center"></div></div>`:''}
       <div class="review-pinyin" id="art-live-pinyin"></div>
       <input type="text" class="answer-input" id="art-answer-input" placeholder="Nhập chữ Hán...">
       <div class="feedback-bar" id="art-feedback-bar"></div>
@@ -581,6 +592,8 @@ function renderArtReviewCard(){
   rc.querySelectorAll('.diff-btn').forEach(btn=>btn.addEventListener('click',()=>artGradeCard(parseInt(btn.dataset.grade))));
   const artHintBtn=$('art-hint-toggle-btn');
   if(artHintBtn){artHintBtn.addEventListener('click',()=>{const c=$('art-hint-content');if(c.style.display==='none'){c.style.display='block';artHintBtn.textContent='💡 Ẩn gợi ý';}else{c.style.display='none';artHintBtn.textContent='💡 Xem gợi ý';}});}
+  const artCharHintBtn=$('art-char-hint-btn');
+  if(artCharHintBtn){artCharHintBtn.addEventListener('click',()=>{const d=$('art-char-hint-display');d.innerHTML=getCharHint(artReviewCard.zh);d.style.display='block';artCharHintBtn.disabled=true;artCharHintBtn.style.opacity='0.5';artCharHintBtn.textContent='🔍 Đã gợi ý';});}
   setupReviewDictLookup($('art-review-content'));
   artReviewAnswered=false;
 }
