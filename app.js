@@ -2426,6 +2426,8 @@ let tbState = {
 let _tbArticleEditId = null;
 let _tbBookEditId = null;
 let _tbPractice = { queue:[], card:null, answered:false, correct:0, total:0, initial:0, container:'tb-art-practice', restartFn:null };
+let _tbBlocks = [];
+let _tbLastFocusedEditor = null;
 
 // ── Level metadata ─────────────────────────────────────────────────────────────
 const TB_LEVELS = [
@@ -2917,14 +2919,28 @@ async function tbRenderArticle() {
 }
 
 function tbRenderTbArticleBody(article) {
-  let html = article.body || '';
-  if (isTraditional && _openccConverter) html = _openccConverter(html);
-  // Highlight each vocab word in the text
-  (article.words || []).forEach(w => { if (w.zh) html = applyWordHighlight(html, w.zh); });
-  (article.freeHighlights || []).forEach(h => { html = applyFreeHighlight(html, h); });
   const bd = $('tb-art-reader-body');
   if (!bd) return;
-  bd.innerHTML = html;
+  // Support both old single-body and new multi-block articles
+  const blocks = (article.blocks?.length)
+    ? article.blocks
+    : [{ type: 'text', content: article.body || '' }];
+
+  bd.innerHTML = blocks.map(b => {
+    if (b.type === 'audio') {
+      return `<div class="tb-audio-block">
+        ${b.label ? `<div class="tb-audio-block-lbl">${b.label}</div>` : ''}
+        <audio controls preload="metadata" src="${(b.url||'').replace(/"/g,'&quot;')}" style="width:100%"></audio>
+      </div>`;
+    }
+    // text block
+    let html = b.content || '';
+    if (isTraditional && _openccConverter) html = _openccConverter(html);
+    (article.words || []).forEach(w => { if (w.zh) html = applyWordHighlight(html, w.zh); });
+    (article.freeHighlights || []).forEach(h => { html = applyFreeHighlight(html, h); });
+    return `<div class="tb-text-block">${html}</div>`;
+  }).join('');
+
   bd.classList.toggle('pinyin-on', tbState.tbPinyinMode);
   if (tbState.tbPinyinMode) applyRubyAnnotations(bd);
 }
@@ -3362,6 +3378,117 @@ function setupTbArtTextSelection() {
 }
 
 // ── Admin: show add-article modal ──────────────────────────────────────────────
+// ── Block editor (text + audio interleaving) ───────────────────────────────────
+function tbInitBlocksEditor(article) {
+  _tbBlocks = (article?.blocks?.length)
+    ? article.blocks.map(b => ({ ...b }))
+    : [{ type: 'text', content: article?.body || '' }];
+  tbRenderBlocksEditor();
+  const addTextBtn  = $('tb-blk-add-text');
+  const addAudioBtn = $('tb-blk-add-audio');
+  if (addTextBtn)  addTextBtn.onclick  = () => { tbCollectBlocksFromDOM(); _tbBlocks.push({ type:'text', content:'' }); tbRenderBlocksEditor(); };
+  if (addAudioBtn) addAudioBtn.onclick = () => { tbCollectBlocksFromDOM(); _tbBlocks.push({ type:'audio', url:'', label:'' }); tbRenderBlocksEditor(); };
+}
+
+function tbCollectBlocksFromDOM() {
+  const container = $('tb-art-blocks-container');
+  if (!container) return;
+  container.querySelectorAll('.tb-block-item').forEach(el => {
+    const i = parseInt(el.dataset.bidx);
+    if (isNaN(i) || i < 0 || i >= _tbBlocks.length) return;
+    const b = _tbBlocks[i];
+    if (b.type === 'text') {
+      b.content = el.querySelector('.tb-block-editor')?.innerHTML || '';
+    } else {
+      b.url   = (el.querySelector('.tb-blk-url')?.value   || '').trim();
+      b.label = (el.querySelector('.tb-blk-label')?.value || '').trim();
+    }
+  });
+}
+
+function tbRenderBlocksEditor() {
+  const container = $('tb-art-blocks-container');
+  if (!container) return;
+  const n = _tbBlocks.length;
+  const inpStyle = 'width:100%;padding:7px 10px;border:1.5px solid var(--border2);border-radius:6px;background:var(--surface);color:var(--text);font-size:13px;font-family:\'DM Sans\',sans-serif;box-sizing:border-box;outline:none';
+  container.innerHTML = _tbBlocks.map((b, i) => {
+    const up  = i > 0   ? `<button type="button" class="tb-blk-btn tb-blk-up"  title="Lên">▲</button>` : '';
+    const dn  = i < n-1 ? `<button type="button" class="tb-blk-btn tb-blk-dn"  title="Xuống">▼</button>` : '';
+    const del = n > 1   ? `<button type="button" class="tb-blk-btn tb-blk-del" title="Xoá" style="color:var(--red)">✕</button>` : '';
+    const lbl  = b.type === 'audio' ? '🎵 Audio' : '📝 Văn bản';
+    const body = b.type === 'audio'
+      ? `<div class="tb-audio-inputs">
+          <input class="tb-blk-label" type="text" placeholder="Nhãn hiển thị (e.g. Hội thoại, Phần 1...)" value="${(b.label||'').replace(/"/g,'&quot;')}" style="${inpStyle}">
+          <input class="tb-blk-url"   type="text" placeholder="URL file audio (mp3, ogg, m4a...)"          value="${(b.url||'').replace(/"/g,'&quot;')}"   style="${inpStyle}">
+          ${b.url ? `<audio controls preload="metadata" src="${b.url.replace(/"/g,'&quot;')}" style="width:100%;margin-top:2px"></audio>` : ''}
+        </div>`
+      : `<div class="tb-block-editor" contenteditable="true" data-placeholder="Dán nội dung tiếng Trung vào đây...">${b.content||''}</div>`;
+    return `<div class="tb-block-item" data-bidx="${i}">
+      <div class="tb-block-hdr">
+        <span class="tb-block-type-lbl">${lbl}</span>
+        <div style="display:flex;gap:3px">${up}${dn}${del}</div>
+      </div>
+      ${body}
+    </div>`;
+  }).join('');
+
+  // Move up
+  container.querySelectorAll('.tb-blk-up').forEach(btn => {
+    btn.onclick = () => {
+      tbCollectBlocksFromDOM();
+      const i = parseInt(btn.closest('.tb-block-item').dataset.bidx);
+      [_tbBlocks[i-1], _tbBlocks[i]] = [_tbBlocks[i], _tbBlocks[i-1]];
+      tbRenderBlocksEditor();
+    };
+  });
+  // Move down
+  container.querySelectorAll('.tb-blk-dn').forEach(btn => {
+    btn.onclick = () => {
+      tbCollectBlocksFromDOM();
+      const i = parseInt(btn.closest('.tb-block-item').dataset.bidx);
+      [_tbBlocks[i], _tbBlocks[i+1]] = [_tbBlocks[i+1], _tbBlocks[i]];
+      tbRenderBlocksEditor();
+    };
+  });
+  // Delete
+  container.querySelectorAll('.tb-blk-del').forEach(btn => {
+    btn.onclick = () => {
+      if (!confirm('Xoá khối nội dung này?')) return;
+      tbCollectBlocksFromDOM();
+      const i = parseInt(btn.closest('.tb-block-item').dataset.bidx);
+      _tbBlocks.splice(i, 1);
+      tbRenderBlocksEditor();
+    };
+  });
+  // Track focused text editor for toolbar (image insert)
+  container.querySelectorAll('.tb-block-editor').forEach(ed => {
+    ed.addEventListener('focus', () => { _tbLastFocusedEditor = ed; });
+  });
+  // Live audio preview when URL changes
+  container.querySelectorAll('.tb-blk-url').forEach(inp => {
+    inp.addEventListener('change', () => {
+      const url = inp.value.trim();
+      const wrap = inp.closest('.tb-audio-inputs');
+      let audio = wrap?.querySelector('audio');
+      if (url) {
+        if (!audio) {
+          audio = Object.assign(document.createElement('audio'), { controls:true, preload:'metadata' });
+          audio.style.cssText = 'width:100%;margin-top:2px';
+          wrap.appendChild(audio);
+        }
+        audio.src = url;
+        audio.load();
+      } else if (audio) {
+        audio.remove();
+      }
+    });
+  });
+  // Focus last focused editor or first one
+  if (!_tbLastFocusedEditor || !container.contains(_tbLastFocusedEditor)) {
+    _tbLastFocusedEditor = container.querySelector('.tb-block-editor') || null;
+  }
+}
+
 function tbShowAddArticleModal(book) {
   const overlay = $('tb-add-article-overlay');
   if (!overlay) return;
@@ -3369,11 +3496,11 @@ function tbShowAddArticleModal(book) {
   $('tb-add-art-book-name').textContent = book.title;
   $('tb-art-title-inp').value  = '';
   $('tb-art-source-inp').value = '';
-  const bodyInp = $('tb-art-body-inp');
-  if (bodyInp) bodyInp.innerHTML = '';
   $('tb-art-vocab-rows').innerHTML = '';
   overlay.style.display = 'flex';
-  setupTbRichToolbar(bodyInp);
+  _tbLastFocusedEditor = null;
+  tbInitBlocksEditor(null);
+  setupTbRichToolbar();
 }
 
 function tbShowEditArticleModal(article) {
@@ -3383,32 +3510,34 @@ function tbShowEditArticleModal(article) {
   $('tb-add-art-book-name').textContent = tbState.bookData?.title || '';
   $('tb-art-title-inp').value  = article.title  || '';
   $('tb-art-source-inp').value = article.source || '';
-  const bodyInp = $('tb-art-body-inp');
-  if (bodyInp) bodyInp.innerHTML = article.body || '';
   const rows = $('tb-art-vocab-rows');
   if (rows) { rows.innerHTML = ''; (article.words || []).forEach(w => tbAddVocabRow(w)); }
   overlay.style.display = 'flex';
-  setupTbRichToolbar(bodyInp);
+  _tbLastFocusedEditor = null;
+  tbInitBlocksEditor(article);
+  setupTbRichToolbar();
 }
 
-function setupTbRichToolbar(bodyInp) {
+function setupTbRichToolbar() {
   const toolbar = $('tb-art-rich-toolbar');
-  if (!toolbar || !bodyInp) return;
+  if (!toolbar) return;
   toolbar.querySelectorAll('.rtb-btn').forEach(btn => {
     if (btn.id === 'tb-art-img-btn') return;
+    // prevent mousedown from stealing focus away from the active editor
+    btn.onmousedown = e => e.preventDefault();
     btn.onclick = e => {
       e.preventDefault();
       document.execCommand(btn.dataset.cmd, false, btn.dataset.val || null);
-      bodyInp.focus();
     };
   });
   const imgBtn = $('tb-art-img-btn');
   if (imgBtn) {
+    imgBtn.onmousedown = e => e.preventDefault();
     imgBtn.onclick = e => {
       e.preventDefault();
       const url = prompt('Nhập URL ảnh (link trực tiếp):');
       if (!url?.trim()) return;
-      bodyInp.focus();
+      if (_tbLastFocusedEditor) _tbLastFocusedEditor.focus();
       document.execCommand('insertHTML', false,
         `<img src="${url.trim()}" style="max-width:100%;border-radius:8px;margin:8px 0;display:block">`);
     };
@@ -3436,9 +3565,15 @@ async function tbSaveArticle() {
   if (auth.currentUser?.email !== 'hoang1886@gmail.com') return;
   const title  = $('tb-art-title-inp').value.trim();
   const source = $('tb-art-source-inp').value.trim();
-  const body   = $('tb-art-body-inp')?.innerHTML || '';
   if (!title) { toast('Vui lòng nhập tiêu đề bài đọc'); return; }
-  if (!body.replace(/<[^>]*>/g,'').trim()) { toast('Vui lòng nhập nội dung bài đọc'); return; }
+
+  tbCollectBlocksFromDOM();
+  const blocks = _tbBlocks.filter(b =>
+    b.type === 'audio' ? b.url?.trim() : b.content?.replace(/<[^>]*>/g,'').trim()
+  );
+  if (!blocks.length) { toast('Vui lòng nhập nội dung bài đọc'); return; }
+  // Keep body = first text block for backward compat
+  const body = blocks.find(b => b.type === 'text')?.content || '';
 
   const words = [...($('tb-art-vocab-rows')?.querySelectorAll('div') || [])].map(row => ({
     zh:   row.querySelector('.tb-vr-zh')?.value.trim()   || '',
@@ -3449,7 +3584,7 @@ async function tbSaveArticle() {
 
   try {
     if (_tbArticleEditId) {
-      await updateDoc(doc(firestore, 'textbooks', tbState.bookId, 'articles', _tbArticleEditId), { title, source, body, words });
+      await updateDoc(doc(firestore, 'textbooks', tbState.bookId, 'articles', _tbArticleEditId), { title, source, body, blocks, words });
       $('tb-add-article-overlay').style.display = 'none';
       toast('✓ Đã cập nhật bài đọc!');
       _tbArticleEditId = null;
@@ -3458,7 +3593,7 @@ async function tbSaveArticle() {
     } else {
       const colRef   = collection(firestore, 'textbooks', tbState.bookId, 'articles');
       const existing = await getDocs(query(colRef, orderBy('order')));
-      await addDoc(colRef, { title, source, body, words, order:existing.size + 1, createdAt:new Date().toISOString() });
+      await addDoc(colRef, { title, source, body, blocks, words, order:existing.size + 1, createdAt:new Date().toISOString() });
       $('tb-add-article-overlay').style.display = 'none';
       toast('✓ Đã thêm bài đọc!');
       if (tbState.bookData) await tbRenderBookTabContent(tbState.bookData);
