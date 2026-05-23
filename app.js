@@ -3751,61 +3751,33 @@ async function tbSaveWord() {
 
 // ── Grammar / dependency analysis ─────────────────────────────────────────────
 // Universal Dependencies relations → Vietnamese labels + colors
+// Simplified role map — keys match what Gemini returns
 const DEP_ROLES = {
-  // Subject (blue)
-  'nsubj':       { vi: 'Chủ ngữ',         color: '#3b82f6' },
-  'nsubj:pass':  { vi: 'Chủ ngữ bị động', color: '#3b82f6' },
-  'csubj':       { vi: 'Chủ ngữ',         color: '#3b82f6' },
-  // Root / main verb (red)
-  'root':        { vi: 'Động từ chính',    color: '#ef4444' },
-  // Direct / indirect object (green)
-  'obj':         { vi: 'Tân ngữ',          color: '#10b981' },
-  'iobj':        { vi: 'Tân ngữ GT',       color: '#10b981' },
-  // Oblique / clausal complement (amber)
-  'obl':         { vi: 'Bổ ngữ',           color: '#f59e0b' },
-  'obl:tmod':    { vi: 'Thời gian',        color: '#f59e0b' },
-  'obl:lmod':    { vi: 'Địa điểm',         color: '#f59e0b' },
-  'ccomp':       { vi: 'Mệnh đề phụ',      color: '#f59e0b' },
-  'xcomp':       { vi: 'Bổ ngữ',           color: '#f59e0b' },
-  'advcl':       { vi: 'Trạng ngữ câu',    color: '#f59e0b' },
-  // Modifier (purple)
-  'advmod':      { vi: 'Trạng ngữ',        color: '#8b5cf6' },
-  'advmod:df':   { vi: 'Trạng ngữ',        color: '#8b5cf6' },
-  'amod':        { vi: 'Tính từ',          color: '#8b5cf6' },
+  subject:    { vi: 'Chủ ngữ',          color: '#3b82f6' },
+  predicate:  { vi: 'Vị ngữ / ĐT',      color: '#ef4444' },
+  object:     { vi: 'Tân ngữ',          color: '#10b981' },
+  complement: { vi: 'Bổ ngữ',           color: '#f59e0b' },
+  modifier:   { vi: 'Trạng / Định ngữ', color: '#8b5cf6' },
 };
 
 async function analyzeGrammar(text) {
-  showGrammarModal(text, null, true);   // show loading immediately
-  const HANLP = 'https://www.hanlp.com/api';
-  const BODY  = JSON.stringify({ text, tasks: ['tok/fine', 'dep'], language: 'zh' });
-  const HDRS  = { 'Content-Type': 'application/json', Accept: 'application/json' };
-  let data;
+  showGrammarModal(text, null, true);
   try {
-    // Attempt 1: call HanLP directly from browser (works if CORS allowed)
-    const r1 = await fetch(HANLP, { method:'POST', headers:HDRS, body:BODY });
-    if (r1.ok) { data = await r1.json(); }
-  } catch(_) { /* CORS blocked — fall through to Vercel proxy */ }
-
-  if (!data) {
-    try {
-      // Attempt 2: go through Vercel serverless proxy (no token needed)
-      const r2  = await fetch('/api/parse-zh', {
-        method: 'POST', headers: HDRS, body: JSON.stringify({ text })
-      });
-      const raw = await r2.text();
-      let d2;
-      try { d2 = JSON.parse(raw); } catch(_) { throw new Error(`Proxy error ${r2.status}`); }
-      if (!r2.ok) throw new Error(d2.error || `HTTP ${r2.status}`);
-      data = d2;
-    } catch(e) {
-      const bodyEl = $('grammar-modal-body');
-      if (bodyEl) bodyEl.innerHTML = `<p style="color:var(--red);font-size:13px;text-align:center;padding:12px">⚠️ ${e.message}</p>`;
-      return;
-    }
+    const r   = await fetch('/api/parse-zh', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+    });
+    const raw = await r.text();
+    let data;
+    try { data = JSON.parse(raw); } catch(_) { throw new Error(`Server error ${r.status}`); }
+    if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+    const bodyEl = $('grammar-modal-body');
+    if (bodyEl) bodyEl.innerHTML = renderGrammarResult(data);
+  } catch(e) {
+    const bodyEl = $('grammar-modal-body');
+    if (bodyEl) bodyEl.innerHTML = `<p style="color:var(--red);font-size:13px;text-align:center;padding:12px">⚠️ ${e.message}</p>`;
   }
-
-  const bodyEl = $('grammar-modal-body');
-  if (bodyEl) bodyEl.innerHTML = renderGrammarResult(data);
 }
 
 function showGrammarModal(text, _data, loading) {
@@ -3830,37 +3802,27 @@ function showGrammarModal(text, _data, loading) {
 }
 
 function renderGrammarResult(data) {
-  const sentences = data['tok/fine'] || [];
-  const deps      = data['dep']      || [];
+  const sentences = data.sentences || [];
   if (!sentences.length) return `<p style="color:var(--text3);font-size:13px;text-align:center">Không có dữ liệu.</p>`;
 
-  const legendItems = [
-    { color:'#3b82f6', label:'Chủ ngữ' },
-    { color:'#ef4444', label:'Động từ chính' },
-    { color:'#10b981', label:'Tân ngữ' },
-    { color:'#f59e0b', label:'Bổ ngữ / Trạng thái' },
-    { color:'#8b5cf6', label:'Trạng ngữ / Tính từ' },
-  ];
   const legend = `<div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;padding:10px 14px;background:var(--surface2);border-radius:8px">
-    ${legendItems.map(l=>`<span style="font-size:11px;font-weight:700;color:${l.color};display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:50%;background:${l.color};flex-shrink:0;display:inline-block"></span>${l.label}</span>`).join('')}
-    <span style="font-size:11px;font-weight:600;color:var(--text3);display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:50%;background:var(--border2);flex-shrink:0;display:inline-block"></span>Thành phần khác</span>
+    ${Object.values(DEP_ROLES).map(r=>`<span style="font-size:11px;font-weight:700;color:${r.color};display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:50%;background:${r.color};flex-shrink:0;display:inline-block"></span>${r.vi}</span>`).join('')}
+    <span style="font-size:11px;font-weight:600;color:var(--text3);display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:50%;background:var(--border2);flex-shrink:0;display:inline-block"></span>Hư từ / Khác</span>
   </div>`;
 
-  const sentencesHtml = sentences.map((toks, si) => {
-    const depRels = deps[si] || [];
-    const tokHtml = toks.map((tok, ti) => {
-      const [, rel] = depRels[ti] || [0, ''];
-      const role  = DEP_ROLES[rel] || DEP_ROLES[rel?.split(':')[0]];
+  const sentencesHtml = sentences.map(sent => {
+    const tokHtml = (sent.tokens || []).map(tok => {
+      const role  = DEP_ROLES[tok.role];
       const color = role?.color || null;
       const label = role?.vi    || '';
-      const py    = getPinyin(tok);
+      const py    = getPinyin(tok.text);
       const boxBg     = color ? color + '18' : 'var(--surface2)';
       const boxBorder = color ? color + '55' : 'var(--border)';
       const textColor = color || 'var(--text)';
       return `<div style="display:inline-flex;flex-direction:column;align-items:center;margin:2px 3px 8px;vertical-align:bottom">
         <span style="font-size:10px;font-weight:700;color:${color||'transparent'};min-height:14px;line-height:14px;white-space:nowrap">${label}</span>
         <span style="font-size:10px;color:var(--red);font-weight:500;min-height:13px;line-height:13px;letter-spacing:0.03em">${py}</span>
-        <span style="font-family:'Noto Serif SC',serif;font-size:22px;font-weight:700;padding:4px 7px;border-radius:7px;background:${boxBg};color:${textColor};border:1.5px solid ${boxBorder};margin-top:2px">${tok}</span>
+        <span style="font-family:'Noto Serif SC',serif;font-size:22px;font-weight:700;padding:4px 7px;border-radius:7px;background:${boxBg};color:${textColor};border:1.5px solid ${boxBorder};margin-top:2px">${tok.text}</span>
       </div>`;
     }).join('');
     return `<div style="margin-bottom:18px;display:flex;flex-wrap:wrap;align-items:flex-end;gap:0">${tokHtml}</div>`;
