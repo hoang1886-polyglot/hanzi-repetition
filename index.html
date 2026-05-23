@@ -679,7 +679,7 @@
     </div>
     <div class="form-group">
       <label>Nội dung bài đọc <span style="color:var(--red)">*</span></label>
-      <div class="rich-toolbar" id="tb-art-rich-toolbar">
+      <div class="rich-toolbar" id="tb-art-rich-toolbar" style="border-radius:var(--radius-sm);border-bottom:1.5px solid var(--border2);margin-bottom:8px">
         <button type="button" class="rtb-btn" data-cmd="bold"><b>B</b></button>
         <button type="button" class="rtb-btn" data-cmd="italic"><i>I</i></button>
         <button type="button" class="rtb-btn" data-cmd="underline"><u>U</u></button>
@@ -693,7 +693,11 @@
         <div class="rtb-sep"></div>
         <button type="button" class="rtb-btn" id="tb-art-img-btn" title="Chèn ảnh từ URL">🖼</button>
       </div>
-      <div id="tb-art-body-inp" contenteditable="true" class="rich-editor" data-placeholder="Dán nội dung tiếng Trung vào đây..."></div>
+      <div id="tb-art-blocks-container"></div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button type="button" id="tb-blk-add-text"  style="flex:1;padding:7px 0;background:var(--surface2);border:1.5px dashed var(--border2);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">+ Thêm đoạn văn</button>
+        <button type="button" id="tb-blk-add-audio" style="flex:1;padding:7px 0;background:var(--surface2);border:1.5px dashed var(--border2);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">🎵 Thêm audio</button>
+      </div>
     </div>
     <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
