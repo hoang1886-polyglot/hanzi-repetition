@@ -1,7 +1,8 @@
 // Vercel serverless function — CORS proxy to HanLP public REST API.
 // No API key or registration required; HanLP public tier is free (auth=None).
+// Uses CommonJS (module.exports) — no package.json "type":"module" needed.
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
