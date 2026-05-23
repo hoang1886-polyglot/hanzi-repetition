@@ -648,6 +648,13 @@
         <option value="other">📖 Khác</option>
       </select>
     </div>
+    <div class="form-group">
+      <label>URL ảnh bìa <span class="optional-tag">(tuỳ chọn)</span></label>
+      <input type="text" id="tb-book-img-inp" placeholder="https://... (link ảnh trực tiếp)">
+      <div id="tb-book-img-preview" style="display:none;margin-top:10px;text-align:center">
+        <img id="tb-book-img-preview-img" style="max-height:140px;max-width:100%;border-radius:10px;object-fit:cover;box-shadow:0 4px 16px rgba(0,0,0,0.12)">
+      </div>
+    </div>
     <div style="display:flex;gap:10px;margin-top:8px">
       <button id="tb-add-book-cancel2" style="flex:1;padding:12px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">Huỷ</button>
       <button id="tb-add-book-save" style="flex:2;padding:12px;background:var(--red);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">✓ Lưu sách</button>

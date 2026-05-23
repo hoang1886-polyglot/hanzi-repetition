@@ -2425,7 +2425,7 @@ let tbState = {
 };
 let _tbArticleEditId = null;
 let _tbBookEditId = null;
-let _tbPractice = { queue:[], card:null, answered:false, correct:0, total:0, initial:0 };
+let _tbPractice = { queue:[], card:null, answered:false, correct:0, total:0, initial:0, container:'tb-art-practice', restartFn:null };
 
 // ── Level metadata ─────────────────────────────────────────────────────────────
 const TB_LEVELS = [
@@ -2533,8 +2533,12 @@ async function tbRenderBooks() {
     } else {
       const typeLabel = { jiaocheng:'📗 Giáo trình', exam:'📝 Đề thi', other:'📖 Khác' };
       list.innerHTML = books.map(b => `
-        <div class="tb-book-card" data-bookid="${b.id}">
+        <div class="tb-book-card" data-bookid="${b.id}" style="align-items:stretch">
           <div class="tb-book-color-bar" style="background:${lvl?.grad||'var(--red)'}"></div>
+          ${b.imageUrl ? `<div style="width:90px;min-height:90px;flex-shrink:0;overflow:hidden;background:var(--surface2)">
+            <img src="${b.imageUrl}" alt="" style="width:100%;height:100%;object-fit:cover;display:block"
+              onerror="this.parentElement.style.display='none'">
+          </div>` : ''}
           <div class="tb-book-content">
             <div class="tb-book-title">${b.title}</div>
             ${b.subtitle ? `<div class="tb-book-subtitle">${b.subtitle}</div>` : ''}
@@ -2591,6 +2595,7 @@ async function tbRenderWords() {
       <div style="display:flex;gap:0;margin-bottom:18px;border-bottom:2px solid var(--border)">
         <button class="tb-tab-btn" data-tab="articles" style="padding:10px 22px;font-size:14px;font-weight:600;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;margin-bottom:-2px;font-family:'DM Sans',sans-serif;transition:color 0.15s">Bài đọc</button>
         <button class="tb-tab-btn" data-tab="words"    style="padding:10px 22px;font-size:14px;font-weight:600;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;margin-bottom:-2px;font-family:'DM Sans',sans-serif;transition:color 0.15s">Từ vựng</button>
+        <button class="tb-tab-btn" data-tab="practice" style="padding:10px 22px;font-size:14px;font-weight:600;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;margin-bottom:-2px;font-family:'DM Sans',sans-serif;transition:color 0.15s">⚡ Ôn tập</button>
       </div>
       <div id="tb-tab-content"></div>`;
 
@@ -2622,7 +2627,70 @@ async function tbRenderBookTabContent(book) {
   const content = $('tb-tab-content');
   if (!content) return;
   if (tbState.bookTab === 'words') await tbRenderWordsList(book, content);
+  else if (tbState.bookTab === 'practice') await tbRenderBookPractice(book, content);
   else await tbRenderArticlesList(book, content);
+}
+
+async function tbRenderBookPractice(book, container) {
+  container.innerHTML = `<div class="hsk-loading"><div class="spinner"></div><p>Đang tải từ vựng...</p></div>`;
+
+  // Aggregate words from all articles (same logic as words tab)
+  const allWords = [...(book.words || [])];
+  try {
+    const artSnap = await getDocs(query(collection(firestore, 'textbooks', book.id, 'articles'), orderBy('order')));
+    artSnap.docs.forEach(d => {
+      (d.data().words || []).forEach(w => {
+        if (w.zh && !allWords.some(aw => aw.zh === w.zh)) allWords.push(w);
+      });
+    });
+  } catch(e) { /* ignore */ }
+
+  container.innerHTML = `
+    <div style="max-width:560px;margin:0 auto">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+        <div>
+          <div style="font-size:15px;font-weight:700;color:var(--text)">${book.title} — Ôn tập từ vựng</div>
+          <div style="font-size:13px;color:var(--text3);margin-top:3px">${allWords.length} từ · không lưu vào dữ liệu chính</div>
+        </div>
+        <button id="tb-book-prac-start-btn" class="submit-btn" style="padding:10px 22px;font-size:13px"
+          ${allWords.length === 0 ? 'disabled style="opacity:.5"' : ''}>
+          ▶ Bắt đầu
+        </button>
+      </div>
+      ${allWords.length === 0
+        ? `<div class="card" style="text-align:center;padding:32px;color:var(--text3);font-size:14px">
+             Sách này chưa có từ vựng.<br>Hãy thêm bài đọc và import từ vựng trước nhé!
+           </div>`
+        : `<div class="card" style="padding:0;overflow:hidden">
+             <table style="width:100%;font-size:13px;border-collapse:collapse">
+               <thead>
+                 <tr style="background:var(--surface2)">
+                   <th style="padding:10px 16px;text-align:left;color:var(--text3);font-weight:500;font-size:11px;text-transform:uppercase">Chữ Hán</th>
+                   <th style="padding:10px 8px;text-align:left;color:var(--text3);font-weight:500;font-size:11px;text-transform:uppercase">Nghĩa</th>
+                 </tr>
+               </thead>
+               <tbody>
+                 ${allWords.slice(0,8).map(w => `
+                   <tr style="border-top:1px solid var(--border)">
+                     <td style="padding:9px 16px;font-family:'Noto Serif SC',serif;font-size:16px;font-weight:600">${w.zh}</td>
+                     <td style="padding:9px 8px;color:var(--text2);font-size:13px">${w.vi||''}</td>
+                   </tr>`).join('')}
+                 ${allWords.length > 8 ? `
+                   <tr style="border-top:1px solid var(--border);background:var(--surface2)">
+                     <td colspan="2" style="padding:10px 16px;color:var(--text3);font-size:12px;text-align:center">
+                       ... và ${allWords.length - 8} từ khác
+                     </td>
+                   </tr>` : ''}
+               </tbody>
+             </table>
+           </div>`}
+      <div id="tb-book-practice" style="margin-top:18px"></div>
+    </div>`;
+
+  $('tb-book-prac-start-btn')?.addEventListener('click', () => {
+    $('tb-book-prac-start-btn').style.display = 'none';
+    tbStartPractice(allWords, 'tb-book-practice');
+  });
 }
 
 async function tbRenderWordsList(book, container) {
@@ -2828,11 +2896,13 @@ function tbRenderTbArticleBody(article) {
 }
 
 // ── Inline practice (SRS-style, no data side-effects) ─────────────────────────
-function tbStartPractice(words) {
-  const el = $('tb-art-practice');
+function tbStartPractice(words, containerId = 'tb-art-practice') {
+  _tbPractice.container  = containerId;
+  _tbPractice.restartFn  = () => tbStartPractice(words, containerId);
+  const el = $(containerId);
   if (!el) return;
   if (!words.length) {
-    el.innerHTML = '<p style="font-size:13px;color:var(--text3);padding:12px 0">Bài này chưa có từ vựng để luyện tập.<br>Hãy import hoặc thêm từ trước nhé!</p>';
+    el.innerHTML = '<p style="font-size:13px;color:var(--text3);padding:12px 0">Chưa có từ vựng để luyện tập.<br>Hãy thêm / import từ trước nhé!</p>';
     return;
   }
   _tbPractice.queue   = words.map(w => ({...w, ef:2.5, interval:0, repetitions:0})).sort(()=>Math.random()-0.5);
@@ -2845,7 +2915,7 @@ function tbStartPractice(words) {
 }
 
 function tbRenderPracticeCard() {
-  const el = $('tb-art-practice');
+  const el = $(_tbPractice.container || 'tb-art-practice');
   if (!el) return;
 
   if (!_tbPractice.queue.length) {
@@ -2868,7 +2938,7 @@ function tbRenderPracticeCard() {
         </div>
         <button id="tb-prac-again-btn" class="submit-btn" style="width:100%;padding:10px">🔄 Luyện lại</button>
       </div>`;
-    $('tb-prac-again-btn')?.addEventListener('click', () => tbStartPractice(tbState.articleData?.words || []));
+    $('tb-prac-again-btn')?.addEventListener('click', () => _tbPractice.restartFn?.());
     return;
   }
 
@@ -3382,7 +3452,10 @@ function tbShowAddBookModal(level) {
   $('tb-add-book-level').textContent = `HSK ${level}`;
   $('tb-book-title-inp').value    = '';
   $('tb-book-subtitle-inp').value = '';
+  const imgInp = $('tb-book-img-inp'); if (imgInp) imgInp.value = '';
+  $('tb-book-img-preview').style.display = 'none';
   overlay.style.display = 'flex';
+  tbSetupBookImgPreview();
 }
 
 function tbShowEditBookModal(book) {
@@ -3394,7 +3467,31 @@ function tbShowEditBookModal(book) {
   $('tb-book-subtitle-inp').value     = book.subtitle || '';
   const sel = $('tb-book-type-select');
   if (sel) sel.value = book.type || 'jiaocheng';
+  const imgInp = $('tb-book-img-inp');
+  if (imgInp) imgInp.value = book.imageUrl || '';
+  tbUpdateBookImgPreview(book.imageUrl || '');
   overlay.style.display = 'flex';
+  tbSetupBookImgPreview();
+}
+
+function tbSetupBookImgPreview() {
+  const inp = $('tb-book-img-inp');
+  if (!inp) return;
+  inp.oninput = () => tbUpdateBookImgPreview(inp.value.trim());
+}
+
+function tbUpdateBookImgPreview(url) {
+  const wrap = $('tb-book-img-preview');
+  const img  = $('tb-book-img-preview-img');
+  if (!wrap || !img) return;
+  if (url) {
+    img.src = url;
+    img.onerror = () => { wrap.style.display = 'none'; };
+    img.onload  = () => { wrap.style.display = 'block'; };
+    wrap.style.display = 'block';
+  } else {
+    wrap.style.display = 'none';
+  }
 }
 
 async function tbSaveBook() {
@@ -3402,10 +3499,11 @@ async function tbSaveBook() {
   const title    = $('tb-book-title-inp').value.trim();
   const subtitle = $('tb-book-subtitle-inp').value.trim();
   const type     = $('tb-book-type-select').value;
+  const imageUrl = $('tb-book-img-inp')?.value.trim() || '';
   if (!title) { toast('Vui lòng nhập tiêu đề sách'); return; }
   try {
     if (_tbBookEditId) {
-      await updateDoc(doc(firestore, 'textbooks', _tbBookEditId), { title, subtitle, type });
+      await updateDoc(doc(firestore, 'textbooks', _tbBookEditId), { title, subtitle, type, imageUrl });
       $('tb-add-book-overlay').style.display = 'none';
       toast('✓ Đã cập nhật sách!');
       _tbBookEditId = null;
@@ -3413,7 +3511,7 @@ async function tbSaveBook() {
     } else {
       const existing = tbState.booksCache[tbState.level] || [];
       await addDoc(collection(firestore, 'textbooks'), {
-        level:tbState.level, title, subtitle, type,
+        level:tbState.level, title, subtitle, type, imageUrl,
         order:existing.length + 1, words:[],
         createdAt:new Date().toISOString()
       });
