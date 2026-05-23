@@ -3789,10 +3789,12 @@ async function analyzeGrammar(text) {
   if (!data) {
     try {
       // Attempt 2: go through Vercel serverless proxy (no token needed)
-      const r2 = await fetch('/api/parse-zh', {
+      const r2  = await fetch('/api/parse-zh', {
         method: 'POST', headers: HDRS, body: JSON.stringify({ text })
       });
-      const d2 = await r2.json();
+      const raw = await r2.text();
+      let d2;
+      try { d2 = JSON.parse(raw); } catch(_) { throw new Error(`Proxy error ${r2.status}`); }
       if (!r2.ok) throw new Error(d2.error || `HTTP ${r2.status}`);
       data = d2;
     } catch(e) {
