@@ -2425,6 +2425,7 @@ let tbState = {
 };
 let _tbArticleEditId = null;
 let _tbBookEditId = null;
+let _tbPractice = { queue:[], card:null, answered:false, correct:0, total:0, initial:0 };
 
 // ── Level metadata ─────────────────────────────────────────────────────────────
 const TB_LEVELS = [
@@ -2786,6 +2787,26 @@ async function tbRenderArticle() {
     }
 
     if (vocabEl) tbRenderArticleVocabPanel(article.words || []);
+
+    // Right panel tab switching
+    document.querySelectorAll('.tb-rt-tab').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.tb-rt-tab').forEach(b => {
+          const active = b.dataset.tab === btn.dataset.tab;
+          b.style.borderBottomColor = active ? 'var(--red)' : 'transparent';
+          b.style.color = active ? 'var(--red)' : 'var(--text2)';
+          b.classList.toggle('active', active);
+        });
+        const isVocab = btn.dataset.tab === 'vocab';
+        if (vocabEl) vocabEl.style.display = isVocab ? '' : 'none';
+        const practiceEl = $('tb-art-practice');
+        if (practiceEl) {
+          practiceEl.style.display = isVocab ? 'none' : '';
+          if (!isVocab) tbStartPractice(article.words || []);
+        }
+      };
+    });
+
     setupTbArtTextSelection();
   } catch(e) {
     console.error(e);
@@ -2796,12 +2817,135 @@ async function tbRenderArticle() {
 function tbRenderTbArticleBody(article) {
   let html = article.body || '';
   if (isTraditional && _openccConverter) html = _openccConverter(html);
+  // Highlight each vocab word in the text
+  (article.words || []).forEach(w => { if (w.zh) html = applyWordHighlight(html, w.zh); });
   (article.freeHighlights || []).forEach(h => { html = applyFreeHighlight(html, h); });
   const bd = $('tb-art-reader-body');
   if (!bd) return;
   bd.innerHTML = html;
   bd.classList.toggle('pinyin-on', tbState.tbPinyinMode);
   if (tbState.tbPinyinMode) applyRubyAnnotations(bd);
+}
+
+// ── Inline practice (SRS-style, no data side-effects) ─────────────────────────
+function tbStartPractice(words) {
+  const el = $('tb-art-practice');
+  if (!el) return;
+  if (!words.length) {
+    el.innerHTML = '<p style="font-size:13px;color:var(--text3);padding:12px 0">Bài này chưa có từ vựng để luyện tập.<br>Hãy import hoặc thêm từ trước nhé!</p>';
+    return;
+  }
+  _tbPractice.queue   = words.map(w => ({...w, ef:2.5, interval:0, repetitions:0})).sort(()=>Math.random()-0.5);
+  _tbPractice.initial = _tbPractice.queue.length;
+  _tbPractice.correct = 0;
+  _tbPractice.total   = 0;
+  _tbPractice.answered= false;
+  _tbPractice.card    = null;
+  tbRenderPracticeCard();
+}
+
+function tbRenderPracticeCard() {
+  const el = $('tb-art-practice');
+  if (!el) return;
+
+  if (!_tbPractice.queue.length) {
+    const pct   = _tbPractice.total > 0 ? Math.round(_tbPractice.correct / _tbPractice.total * 100) : 0;
+    const grade = pct >= 90 ? '🏆 Xuất sắc!' : pct >= 70 ? '🎉 Tốt lắm!' : pct >= 50 ? '💪 Cố thêm nha!' : '📚 Ôn thêm nhé!';
+    el.innerHTML = `
+      <div style="text-align:center;padding:12px 0">
+        <div style="font-size:36px;margin-bottom:10px">${pct>=70?'🎉':'📖'}</div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:4px">${grade}</div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:20px">Hoàn thành luyện tập</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px">
+          <div style="background:var(--surface2);border-radius:8px;padding:12px 8px;border:1px solid var(--border)">
+            <div style="font-size:22px;font-weight:700">${_tbPractice.initial}</div>
+            <div style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase">Từ đã học</div>
+          </div>
+          <div style="background:var(--green-light);border-radius:8px;padding:12px 8px;border:1px solid var(--green-border)">
+            <div style="font-size:22px;font-weight:700;color:var(--green)">${pct}%</div>
+            <div style="font-size:10px;color:var(--green);font-weight:600;text-transform:uppercase">Chính xác</div>
+          </div>
+        </div>
+        <button id="tb-prac-again-btn" class="submit-btn" style="width:100%;padding:10px">🔄 Luyện lại</button>
+      </div>`;
+    $('tb-prac-again-btn')?.addEventListener('click', () => tbStartPractice(tbState.articleData?.words || []));
+    return;
+  }
+
+  _tbPractice.card = _tbPractice.queue[0];
+  const done = _tbPractice.initial - _tbPractice.queue.length;
+  const pct  = Math.max(0, done / _tbPractice.initial * 100);
+  const w    = _tbPractice.card;
+
+  el.innerHTML = `
+    <div class="review-progress" style="margin-bottom:6px"><div class="review-progress-fill" style="width:${pct}%"></div></div>
+    <div style="font-size:11px;color:var(--text3);text-align:right;margin-bottom:12px">${done}/${_tbPractice.initial} · ${_tbPractice.correct} đúng</div>
+    <div style="background:var(--surface2);border-radius:10px;padding:14px;border:1px solid var(--border);margin-bottom:12px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.06em;color:var(--text3);margin-bottom:6px">NGHĨA TIẾNG VIỆT</div>
+      <div style="font-size:16px;font-weight:700;color:var(--text);line-height:1.4;margin-bottom:${w.exZh?'8px':'0'}">${w.vi||''}</div>
+      ${w.exZh ? `<div style="font-size:11px;color:var(--text3);font-family:'Noto Sans SC',sans-serif;border-top:1px solid var(--border);padding-top:8px;margin-top:4px">${w.exZh}</div>` : ''}
+    </div>
+    <div style="font-size:11px;color:var(--red);font-weight:600;text-align:center;margin-bottom:6px;letter-spacing:0.03em" id="tb-prac-live-py"></div>
+    <input id="tb-prac-input" type="text" placeholder="Nhập chữ Hán..."
+      style="width:100%;box-sizing:border-box;padding:10px 12px;border:1.5px solid var(--border2);border-radius:8px;
+             font-size:15px;font-family:'Noto Sans SC',sans-serif;background:var(--surface);color:var(--text);
+             outline:none;margin-bottom:8px">
+    <div class="feedback-bar" id="tb-prac-fb" style="margin-bottom:6px"></div>
+    <div id="tb-prac-ans" style="display:none;font-size:13px;color:var(--text2);margin-bottom:10px;text-align:center"></div>
+    <button id="tb-prac-check-btn" class="check-btn" style="width:100%">Kiểm tra</button>
+    <div id="tb-prac-diff" class="diff-btns" style="display:none;margin-top:8px">
+      <button class="diff-btn again" data-grade="0"><span class="emoji">❌</span><span class="label">Lại</span><span class="interval" id="tpi0"></span></button>
+      <button class="diff-btn hard"  data-grade="1"><span class="emoji">😐</span><span class="label">Khó</span><span class="interval" id="tpi1"></span></button>
+      <button class="diff-btn good"  data-grade="2"><span class="emoji">🙂</span><span class="label">Được</span><span class="interval" id="tpi2"></span></button>
+      <button class="diff-btn easy"  data-grade="3"><span class="emoji">😎</span><span class="label">Dễ</span><span class="interval" id="tpi3"></span></button>
+    </div>`;
+
+  const inp = $('tb-prac-input');
+  inp?.focus();
+  inp?.addEventListener('input', () => { const py = $('tb-prac-live-py'); if(py) py.textContent = getPinyin(inp.value); });
+  inp?.addEventListener('keydown', e => { if(e.key==='Enter') tbCheckPracticeAnswer(); });
+  $('tb-prac-check-btn')?.addEventListener('click', tbCheckPracticeAnswer);
+  el.querySelectorAll('.diff-btn').forEach(btn =>
+    btn.addEventListener('click', () => tbGradePracticeCard(parseInt(btn.dataset.grade))));
+  _tbPractice.answered = false;
+}
+
+function tbCheckPracticeAnswer() {
+  if (_tbPractice.answered) return;
+  const inp = $('tb-prac-input');
+  if (!inp?.value.trim()) return;
+  _tbPractice.answered = true;
+  _tbPractice.total++;
+  const ok  = inp.value.trim() === _tbPractice.card.zh;
+  if (ok) _tbPractice.correct++;
+  const fb  = $('tb-prac-fb'), ans = $('tb-prac-ans');
+  if (ok) {
+    inp.classList.add('correct');
+    fb.className = 'feedback-bar correct'; fb.textContent = '✓ Chính xác!';
+    ans.style.display = 'none';
+  } else {
+    inp.classList.add('wrong');
+    fb.className = 'feedback-bar wrong'; fb.textContent = '✗ Sai rồi!';
+    ans.style.display = 'block';
+    ans.textContent = `Đáp án: ${_tbPractice.card.zh} (${getPinyin(_tbPractice.card.zh)})`;
+  }
+  $('tb-prac-diff').style.display = 'grid';
+  $('tb-prac-check-btn').textContent = 'Chọn mức độ →';
+  $('tb-prac-check-btn').disabled = true;
+  for (let g = 0; g < 4; g++) {
+    const el = $(`tpi${g}`); if (el) el.textContent = intLabel(g, _tbPractice.card);
+  }
+}
+
+function tbGradePracticeCard(g) {
+  sm2Local(_tbPractice.card, g);
+  _tbPractice.queue.shift();
+  if (g === 0 && _tbPractice.queue.length > 0) {
+    const slot = Math.min(3, _tbPractice.queue.length);
+    _tbPractice.queue.splice(slot, 0, {..._tbPractice.card});
+  }
+  _tbPractice.answered = false;
+  tbRenderPracticeCard();
 }
 
 function tbRenderArticleVocabPanel(words) {
