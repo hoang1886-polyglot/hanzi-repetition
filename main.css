@@ -1701,3 +1701,34 @@ body:not(.dark) .hsk-admin-form {
   box-shadow: none;
 }
 .hsk-memorized-btn.done:hover { transform: none; filter: none; }
+
+/* ─── PINYIN TOGGLE BUTTON ───────────────────────────────────────────────── */
+.pinyin-toggle-btn {
+  flex-shrink: 0;
+  padding: 5px 13px;
+  border: 1.5px solid var(--border2);
+  border-radius: 99px;
+  background: var(--surface2);
+  color: var(--text2);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.pinyin-toggle-btn:hover { border-color: var(--red); color: var(--red); background: var(--red-light); }
+.pinyin-toggle-btn.active { background: var(--red); border-color: var(--red); color: #fff; }
+
+/* ─── RUBY / PINYIN ANNOTATIONS ─────────────────────────────────────────── */
+#article-reader-body.pinyin-on { line-height: 3em; font-size: 18px; }
+#article-reader-body ruby { display: inline-ruby; text-align: center; }
+#article-reader-body rt {
+  font-size: 0.6em;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  color: var(--red);
+  user-select: none;
+  pointer-events: none;
+  letter-spacing: 0.02em;
+}

@@ -299,8 +299,11 @@
   <div id="article-read-grid" style="display:grid;grid-template-columns:1fr 320px;gap:18px;max-width:1060px">
     <!-- Article text -->
     <div class="card" style="margin:0">
-      <div class="card-title" style="margin-bottom:12px">NỘI DUNG — <span style="color:var(--red);font-weight:700">bôi đen từ để thêm vào danh sách học</span></div>
-      <div id="article-reader-body" style="font-family:'Be Vietnam Pro','Noto Sans SC',sans-serif;font-size:16px;font-weight:400;line-height:1.95;color:var(--text);user-select:text;cursor:text"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px">
+        <div class="card-title" style="margin:0">NỘI DUNG — <span style="color:var(--red);font-weight:700">bôi đen từ để thêm vào danh sách học</span></div>
+        <button id="pinyin-toggle-btn" class="pinyin-toggle-btn" title="Bật/tắt hiển thị phiên âm">ā 拼音</button>
+      </div>
+      <div id="article-reader-body" style="font-family:'Noto Serif SC','Noto Sans SC',sans-serif;font-size:17px;font-weight:400;line-height:1.95;color:var(--text);user-select:text;cursor:text"></div>
     </div>
 
     <!-- Right panel -->

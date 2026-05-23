@@ -51,6 +51,7 @@ function getWtInfo(key){ return WORD_TYPES.find(t=>t.key===key)||null; }
 // ─── APP STATE ────────────────────────────────────────────────────────────────
 let db             = { words:[], sessions:{}, correct:0, total:0, articles:[], memorized:[] };
 let reviewQueue    = [], currentCard = null, answered = false, saveTimer = null;
+let pinyinMode     = false;
 let _wf            = 'all';
 let lastSaveAt     = 0;
 let currentUserId  = null;
@@ -819,6 +820,32 @@ function openEditArticle(id){
   $('save-article-btn').textContent='💾 Lưu thay đổi';nav('upload-article');
 }
 
+function applyRubyAnnotations(el){
+  const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,{
+    acceptNode:n=>n.parentElement.tagName==='RT'?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT
+  });
+  const nodes=[];
+  while(walker.nextNode())nodes.push(walker.currentNode);
+  nodes.forEach(node=>{
+    const text=node.textContent;
+    if(!/[一-鿿㐀-䶿]/.test(text))return;
+    const frag=document.createDocumentFragment();
+    [...text].forEach(char=>{
+      if(/[一-鿿㐀-䶿]/.test(char)){
+        const ruby=document.createElement('ruby');
+        ruby.appendChild(document.createTextNode(char));
+        const rt=document.createElement('rt');
+        rt.textContent=getPinyin(char);
+        ruby.appendChild(rt);
+        frag.appendChild(ruby);
+      } else {
+        frag.appendChild(document.createTextNode(char));
+      }
+    });
+    node.parentNode.replaceChild(frag,node);
+  });
+}
+
 function renderArticleBody(article){
   let html=article.body||'';
   // Convert body to traditional if needed
@@ -828,7 +855,10 @@ function renderArticleBody(article){
   // Highlight using tr(w.zh) so we search for the already-converted form in body
   linkedWords.forEach(w=>{html=applyWordHighlight(html,tr(w.zh));});
   (article.freeHighlights||[]).forEach(h=>{html=applyFreeHighlight(html,h);});
-  $('article-reader-body').innerHTML=html;
+  const bd=$('article-reader-body');
+  bd.innerHTML=html;
+  bd.classList.toggle('pinyin-on',pinyinMode);
+  if(pinyinMode)applyRubyAnnotations(bd);
 }
 
 function openArticle(id){
@@ -844,7 +874,17 @@ function openArticle(id){
   }
   if(article.imageUrl){readerImgEl.src=article.imageUrl;readerImgEl.style.display='block';readerImgEl.onerror=()=>readerImgEl.style.display='none';}
   else{readerImgEl.style.display='none';readerImgEl.src='';}
+  pinyinMode=false;
   renderArticleBody(article);
+  const ptb=$('pinyin-toggle-btn');
+  if(ptb){
+    ptb.classList.remove('active');
+    ptb.onclick=()=>{
+      pinyinMode=!pinyinMode;
+      ptb.classList.toggle('active',pinyinMode);
+      renderArticleBody(db.articles.find(a=>a.id===currentArticleId));
+    };
+  }
   ['art-inp-zh','art-inp-vi','art-inp-zh-def','art-inp-ex-zh','art-inp-ex-vi']
   .forEach(id => { const el=$(id); if(el) el.value=''; });
   $('art-pinyin-preview').textContent='';
