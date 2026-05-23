@@ -2708,11 +2708,19 @@ async function tbRenderWordsList(book, container) {
     });
   } catch(e) { /* ignore */ }
 
+  const notAdded = allWords.filter(w => !db.words.some(dw => dw.zh === w.zh));
   let html = `<div class="card" style="max-width:820px">`;
-  if (isAdmin) {
-    html += `<div style="display:flex;justify-content:flex-end;margin-bottom:14px">
-      <button class="submit-btn" id="tb-add-word-btn" style="padding:8px 18px;font-size:13px">+ Thêm từ mới</button>
-    </div>`;
+  if (notAdded.length > 0 || isAdmin) {
+    html += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">`;
+    if (notAdded.length > 0) {
+      html += `<button class="submit-btn" id="tb-add-all-btn" style="padding:8px 18px;font-size:13px;background:var(--green);border-color:var(--green)">📚 Thêm tất cả ${notAdded.length} từ vào SRS</button>`;
+    } else {
+      html += `<span style="font-size:13px;color:var(--green);font-weight:600">✓ Tất cả từ đã được thêm vào SRS</span>`;
+    }
+    if (isAdmin) {
+      html += `<button class="submit-btn" id="tb-add-word-btn" style="padding:8px 18px;font-size:13px">+ Thêm từ mới</button>`;
+    }
+    html += `</div>`;
   }
   if (allWords.length === 0) {
     html += `<p style="color:var(--text3);font-size:14px">Chưa có từ vựng nào.</p>`;
@@ -2754,6 +2762,31 @@ async function tbRenderWordsList(book, container) {
       btn.style.color       = 'var(--green)';
       btn.disabled = true;
     });
+  });
+
+  $('tb-add-all-btn')?.addEventListener('click', () => {
+    const btn = $('tb-add-all-btn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Đang thêm...';
+    let count = 0;
+    notAdded.forEach(w => {
+      addWordFromTextbook(w.zh, w.vi||'', w.exZh||'', w.exVi||'', w.note||'');
+      count++;
+    });
+    // Update all per-row buttons to ✓ Đã thêm
+    container.querySelectorAll('.tb-add-dict-btn:not(.added)').forEach(rowBtn => {
+      rowBtn.textContent = '✓ Đã thêm';
+      rowBtn.classList.add('added');
+      rowBtn.style.borderColor = 'var(--green)';
+      rowBtn.style.background  = 'var(--green-light)';
+      rowBtn.style.color       = 'var(--green)';
+      rowBtn.disabled = true;
+    });
+    btn.textContent = `✓ Đã thêm ${count} từ`;
+    btn.style.background = 'var(--green-light)';
+    btn.style.color = 'var(--green)';
+    btn.style.borderColor = 'var(--green)';
+    showToast(`Đã thêm ${count} từ vào SRS!`);
   });
 
   if (isAdmin) {
