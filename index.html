@@ -587,6 +587,32 @@
     </div>
     <div id="tb-words-container"></div>
   </div>
+
+  <!-- VIEW: Article reader for a book -->
+  <div id="tb-view-article" style="display:none">
+    <div class="page-header">
+      <div style="display:flex;align-items:center;gap:14px">
+        <button id="tb-art-back-btn" style="background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-sm);padding:8px 16px;font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif;transition:all 0.15s">← Quay lại</button>
+        <div>
+          <h1 id="tb-art-title" style="font-size:22px"></h1>
+          <p id="tb-art-source" style="font-size:13px;color:var(--text2);margin-top:3px"></p>
+        </div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 300px;gap:18px;max-width:1060px">
+      <div class="card" style="margin:0">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px">
+          <div class="card-title" style="margin:0">NỘI DUNG — <span style="color:var(--red);font-weight:700">bôi đen từ để thêm vào danh sách học</span></div>
+          <button id="tb-art-pinyin-btn" class="pinyin-toggle-btn" title="Bật/tắt hiển thị phiên âm">ā 拼音</button>
+        </div>
+        <div id="tb-art-reader-body" style="font-family:'Noto Serif SC','Noto Sans SC',sans-serif;font-size:17px;font-weight:400;line-height:1.95;color:var(--text);user-select:text;cursor:text"></div>
+      </div>
+      <div class="card" style="margin:0">
+        <div class="card-title">TỪ VỰNG BÀI NÀY</div>
+        <div id="tb-art-vocab" style="font-size:13px;color:var(--text3)">Chưa có từ vựng.</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 </div><!-- /#main -->
@@ -617,6 +643,51 @@
     <div style="display:flex;gap:10px;margin-top:8px">
       <button id="tb-add-book-cancel2" style="flex:1;padding:12px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">Huỷ</button>
       <button id="tb-add-book-save" style="flex:2;padding:12px;background:var(--red);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">✓ Lưu sách</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN: Add article to textbook -->
+<div id="tb-add-article-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:3000;align-items:center;justify-content:center">
+  <div style="background:var(--surface);border-radius:16px;padding:28px;width:min(720px,96vw);max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.25)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <h3 style="font-size:17px;font-weight:700;margin:0">+ Thêm bài đọc — <span id="tb-add-art-book-name" style="font-weight:500;color:var(--text2)"></span></h3>
+      <button id="tb-add-article-cancel" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text3)">✕</button>
+    </div>
+    <div class="form-group">
+      <label>Tiêu đề bài đọc <span style="color:var(--red)">*</span></label>
+      <input type="text" id="tb-art-title-inp" placeholder="e.g. 第一课：你好">
+    </div>
+    <div class="form-group">
+      <label>Nguồn <span class="optional-tag">(tuỳ chọn)</span></label>
+      <input type="text" id="tb-art-source-inp" placeholder="e.g. Hanyu Jiaocheng 1A, Bài 1">
+    </div>
+    <div class="form-group">
+      <label>Nội dung bài đọc <span style="color:var(--red)">*</span></label>
+      <div class="rich-toolbar" id="tb-art-rich-toolbar">
+        <button type="button" class="rtb-btn" data-cmd="bold"><b>B</b></button>
+        <button type="button" class="rtb-btn" data-cmd="italic"><i>I</i></button>
+        <button type="button" class="rtb-btn" data-cmd="underline"><u>U</u></button>
+        <div class="rtb-sep"></div>
+        <button type="button" class="rtb-btn" data-cmd="formatBlock" data-val="H2">H2</button>
+        <button type="button" class="rtb-btn" data-cmd="formatBlock" data-val="H3">H3</button>
+        <button type="button" class="rtb-btn" data-cmd="formatBlock" data-val="P">¶</button>
+        <div class="rtb-sep"></div>
+        <button type="button" class="rtb-btn" data-cmd="insertUnorderedList">• list</button>
+        <button type="button" class="rtb-btn" data-cmd="insertOrderedList">1. list</button>
+      </div>
+      <div id="tb-art-body-inp" contenteditable="true" class="rich-editor" data-placeholder="Dán nội dung tiếng Trung vào đây..."></div>
+    </div>
+    <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div style="font-size:13px;font-weight:600;color:var(--text2)">Từ vựng bài này <span class="optional-tag">(tuỳ chọn)</span></div>
+        <button id="tb-art-add-vocab-row-btn" style="padding:6px 14px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text);font-family:'DM Sans',sans-serif">+ Thêm từ</button>
+      </div>
+      <div id="tb-art-vocab-rows"></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px">
+      <button id="tb-add-article-cancel2" style="flex:1;padding:12px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">Huỷ</button>
+      <button id="tb-add-article-save" style="flex:2;padding:12px;background:var(--red);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">✓ Lưu bài đọc</button>
     </div>
   </div>
 </div>

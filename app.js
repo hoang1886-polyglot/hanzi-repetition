@@ -193,7 +193,7 @@ function nav(page, pushState=true){
   const navEl=document.getElementById(`nav-${page}`); if(navEl)navEl.classList.add('active');
   if(['upload-article','read-article','article-review'].includes(page))document.getElementById('nav-articles').classList.add('active');
   if(page!=='hsk-books') hskState={view:'books',bookId:null,unitIndex:null,wordIndex:null};
-  if(page!=='textbooks') tbState={view:'levels',level:null,bookId:null,bookData:null,booksCache:{}};
+  if(page!=='textbooks') tbState={view:'levels',level:null,bookId:null,bookData:null,booksCache:{},bookTab:'words',articleId:null,articleData:null,tbPinyinMode:false};
   if(page==='dashboard')renderDashboard();
   if(page==='review')startReview();
   if(page==='wordlist')renderWordList('');
@@ -953,12 +953,15 @@ function setupTextSelection(){
   const hlPopup=$('highlight-popup');
   if(!body)return;
 
+  $('choice-highlight-btn').style.display='';
+
   const newBody=body.cloneNode(true);body.parentNode.replaceChild(newBody,body);
   const bd=$('article-reader-body');
 
   let savedText='', savedRect=null;
 
   document.addEventListener('mouseup',e=>{
+    if(!$('read-article').classList.contains('active'))return;
     if(choicePopup.contains(e.target)||popup.contains(e.target)||hlPopup.contains(e.target))return;
     const sel=window.getSelection();
     const text=sel?.toString().trim();
@@ -977,15 +980,15 @@ function setupTextSelection(){
     hlPopup.style.display='none';
   });
 
-  $('choice-cancel-btn').addEventListener('click',()=>{
+  $('choice-cancel-btn').onclick=()=>{
     choicePopup.style.display='none';
     window.getSelection()?.removeAllRanges();
-  });
+  };
 
-  $('choice-add-word-btn').addEventListener('click',()=>{
+  $('choice-add-word-btn').onclick=()=>{
     if(!savedText)return;
     resetWordTypeSelector('popup-word-type-selector','_popupSelectedType');
-    buildWordTypeSelector('popup-word-type-selector','_popupSelectedType');       
+    buildWordTypeSelector('popup-word-type-selector','_popupSelectedType');
     choicePopup.style.display='none';
     $('popup-word').textContent=savedText;
     $('popup-pinyin').textContent=getPinyin(savedText);
@@ -999,9 +1002,9 @@ function setupTextSelection(){
     positionPopup(popup,savedRect);
     popup.style.display='block';
     setTimeout(()=>$('popup-vi-inp').focus(),50);
-  });
+  };
 
-  $('choice-highlight-btn').addEventListener('click',()=>{
+  $('choice-highlight-btn').onclick=()=>{
     if(!savedText)return;
     choicePopup.style.display='none';
     $('hlpopup-text').textContent=`"${savedText.slice(0,28)}${savedText.length>28?'…':''}"`;
@@ -1009,25 +1012,25 @@ function setupTextSelection(){
     positionPopup(hlPopup,savedRect);
     hlPopup.style.display='block';
     window.getSelection()?.removeAllRanges();
-  });
+  };
 
   $('highlight-popup').querySelectorAll('.hl-color-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>{
+    btn.onclick=()=>{
       const text=hlPopup.dataset.text;if(!text)return;
       applyAndSaveFreeHighlight(text,btn.dataset.color);
       hlPopup.style.display='none';window.getSelection()?.removeAllRanges();
-    });
+    };
   });
-  $('hlpopup-cancel').addEventListener('click',()=>{hlPopup.style.display='none';window.getSelection()?.removeAllRanges();});
-  $('hlpopup-remove').addEventListener('click',()=>{
+  $('hlpopup-cancel').onclick=()=>{hlPopup.style.display='none';window.getSelection()?.removeAllRanges();};
+  $('hlpopup-remove').onclick=()=>{
     const text=hlPopup.dataset.text;if(!text)return;
     removeFreeHighlight(text);hlPopup.style.display='none';window.getSelection()?.removeAllRanges();
-  });
+  };
 
-  $('popup-cancel-btn').addEventListener('click',()=>{popup.style.display='none';window.getSelection()?.removeAllRanges();});
-  $('popup-add-btn').addEventListener('click',()=>{
+  $('popup-cancel-btn').onclick=()=>{popup.style.display='none';window.getSelection()?.removeAllRanges();};
+  $('popup-add-btn').onclick=()=>{
     const zh=$('popup-word').textContent.trim(),vi=$('popup-vi-inp').value.trim();
-    const zhDef=$('popup-zh-def-inp'); 
+    const zhDef=$('popup-zh-def-inp');
     const exZh=$('popup-ex-zh-inp').value.trim(),exVi=$('popup-ex-vi-inp').value.trim();
     const note=$('popup-note-inp')?.value.trim()||'';
     const w=addWordFromArticle(zh,vi,exZh,exVi,zhDef?zhDef.value.trim():'',window._popupSelectedType,note);
@@ -1035,7 +1038,7 @@ function setupTextSelection(){
       toast(`✓ Đã thêm: ${zh}`);popup.style.display='none';window.getSelection()?.removeAllRanges();
       const article=db.articles.find(a=>a.id===currentArticleId);if(article)renderArticleAddedWords(article);
     }else toast('Vui lòng nhập nghĩa!');
-  });
+  };
   $('popup-vi-inp').addEventListener('keydown',e=>{if(e.key==='Enter'){const d=$('popup-zh-def-inp');d?d.focus():$('popup-ex-zh-inp').focus();}});
   if($('popup-zh-def-inp'))$('popup-zh-def-inp').addEventListener('keydown',e=>{if(e.key==='Enter')$('popup-ex-zh-inp').focus();});
   $('popup-ex-zh-inp').addEventListener('keydown',e=>{if(e.key==='Enter')$('popup-ex-vi-inp').focus();});
@@ -2410,11 +2413,15 @@ function initHskNav() {
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let tbState = {
-  view: 'levels',   // 'levels' | 'books' | 'words'
-  level: null,      // 1–6
+  view: 'levels',      // 'levels' | 'books' | 'words' | 'article'
+  level: null,         // 1–6
   bookId: null,
   bookData: null,
-  booksCache: {},   // { [level]: bookArray }
+  booksCache: {},      // { [level]: bookArray }
+  bookTab: 'words',    // 'words' | 'articles'
+  articleId: null,
+  articleData: null,
+  tbPinyinMode: false,
 };
 
 // ── Level metadata ─────────────────────────────────────────────────────────────
@@ -2428,29 +2435,32 @@ const TB_LEVELS = [
 ];
 
 // ── Navigate ───────────────────────────────────────────────────────────────────
-async function tbNav(view, level = null, bookId = null) {
-  tbState.view   = view;
-  tbState.level  = level;
-  tbState.bookId = bookId;
-  if (view !== 'words') tbState.bookData = null;
+async function tbNav(view, level = null, bookId = null, articleId = null) {
+  tbState.view      = view;
+  tbState.level     = level;
+  tbState.bookId    = bookId;
+  tbState.articleId = articleId;
+  if (view !== 'words' && view !== 'article') tbState.bookData = null;
+  if (view !== 'article') tbState.articleData = null;
 
-  ['tb-view-levels','tb-view-books','tb-view-words'].forEach(id => {
+  ['tb-view-levels','tb-view-books','tb-view-words','tb-view-article'].forEach(id => {
     const el = $(id); if (el) el.style.display = 'none';
   });
   const viewEl = $(`tb-view-${view}`);
   if (viewEl) viewEl.style.display = '';
   tbRenderBreadcrumb();
 
-  if (view === 'levels') tbRenderLevels();
-  if (view === 'books')  await tbRenderBooks();
-  if (view === 'words')  await tbRenderWords();
+  if (view === 'levels')  tbRenderLevels();
+  if (view === 'books')   await tbRenderBooks();
+  if (view === 'words')   await tbRenderWords();
+  if (view === 'article') await tbRenderArticle();
 }
 
 // ── Breadcrumb ─────────────────────────────────────────────────────────────────
 function tbRenderBreadcrumb() {
   const el = $('tb-breadcrumb');
   if (!el) return;
-  const { view, level, bookData } = tbState;
+  const { view, level, bookData, articleData } = tbState;
   if (view === 'levels') { el.style.display = 'none'; return; }
   el.style.display = 'flex';
   const lvl = TB_LEVELS.find(l => l.level === level);
@@ -2459,8 +2469,15 @@ function tbRenderBreadcrumb() {
     const isLvlCurrent = view === 'books';
     parts.push({ label:lvl.label, onclick:()=>tbNav('books', level), isCurrent:isLvlCurrent });
   }
-  if (view === 'words' && bookData) {
-    parts.push({ label:bookData.title, onclick:null, isCurrent:true });
+  if ((view === 'words' || view === 'article') && bookData) {
+    const isBookCurrent = view === 'words';
+    const bookOnClick = view === 'article'
+      ? () => { tbState.bookTab = 'articles'; tbNav('words', level, tbState.bookId); }
+      : null;
+    parts.push({ label:bookData.title, onclick:bookOnClick, isCurrent:isBookCurrent });
+  }
+  if (view === 'article' && articleData) {
+    parts.push({ label:articleData.title, onclick:null, isCurrent:true });
   }
   el.innerHTML = parts.map((p, i) => {
     const sep = i > 0 ? `<span class="hsk-breadcrumb-sep">›</span>` : '';
@@ -2540,11 +2557,11 @@ async function tbRenderBooks() {
   }
 }
 
-// ── Word list ──────────────────────────────────────────────────────────────────
+// ── Book view (words + articles tabs) ─────────────────────────────────────────
 async function tbRenderWords() {
   const container = $('tb-words-container');
   if (!container) return;
-  container.innerHTML = `<div class="hsk-loading"><div class="spinner"></div><p>Đang tải từ vựng...</p></div>`;
+  container.innerHTML = `<div class="hsk-loading"><div class="spinner"></div><p>Đang tải...</p></div>`;
   try {
     const snap = await getDoc(doc(firestore, 'textbooks', tbState.bookId));
     if (!snap.exists()) { container.innerHTML = '<p>Không tìm thấy sách.</p>'; return; }
@@ -2552,67 +2569,370 @@ async function tbRenderWords() {
     tbState.bookData = book;
     tbRenderBreadcrumb();
 
-    $('tb-book-title-header').textContent  = book.title;
+    $('tb-book-title-header').textContent   = book.title;
     $('tb-book-subtitle-header').textContent = book.subtitle || '';
 
-    const isAdmin = (auth.currentUser?.email === 'hoang1886@gmail.com');
-    const words   = book.words || [];
+    container.innerHTML = `
+      <div style="display:flex;gap:0;margin-bottom:18px;border-bottom:2px solid var(--border)">
+        <button class="tb-tab-btn" data-tab="words"    style="padding:10px 22px;font-size:14px;font-weight:600;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;margin-bottom:-2px;font-family:'DM Sans',sans-serif;transition:color 0.15s">Từ vựng</button>
+        <button class="tb-tab-btn" data-tab="articles" style="padding:10px 22px;font-size:14px;font-weight:600;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;margin-bottom:-2px;font-family:'DM Sans',sans-serif;transition:color 0.15s">Bài đọc</button>
+      </div>
+      <div id="tb-tab-content"></div>`;
 
-    let html = `<div class="card" style="max-width:820px">`;
-    if (isAdmin) {
-      html += `<div style="display:flex;justify-content:flex-end;margin-bottom:14px">
-        <button class="submit-btn" id="tb-add-word-btn" style="padding:8px 18px;font-size:13px">+ Thêm từ mới</button>
-      </div>`;
-    }
-    if (words.length === 0) {
-      html += `<p style="color:var(--text3);font-size:14px">Chưa có từ vựng nào.</p>`;
-    } else {
-      html += `<table><thead><tr><th>Chữ Hán</th><th>Pinyin</th><th>Nghĩa tiếng Việt</th><th>Ví dụ</th><th></th></tr></thead><tbody>`;
-      words.forEach((w, i) => {
-        const py = getPinyin(w.zh);
-        const inDict = db.words.some(dw => dw.zh === w.zh);
-        html += `<tr>
-          <td style="font-family:'Noto Serif SC',serif;font-size:18px;font-weight:600">${w.zh}</td>
-          <td style="font-size:13px;color:var(--red);font-weight:500">${py}</td>
-          <td style="font-size:13px;color:var(--text2)">${w.vi||''}</td>
-          <td style="font-size:12px;color:var(--text3);max-width:200px">${w.exZh ? `<span style="font-family:'Noto Sans SC',sans-serif">${w.exZh}</span>` : ''}</td>
-          <td>
-            <button class="tb-add-dict-btn${inDict?' added':''}" data-i="${i}"
-              style="padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;
-                border:1.5px solid ${inDict?'var(--green)':'var(--red)'};
-                background:${inDict?'var(--green-light)':'transparent'};
-                color:${inDict?'var(--green)':'var(--red)'};font-family:'DM Sans',sans-serif"
-              ${inDict?'disabled':''}>
-              ${inDict ? '✓ Đã thêm' : '+ Thêm'}
-            </button>
-          </td>
-        </tr>`;
+    function updateTabStyle() {
+      container.querySelectorAll('.tb-tab-btn').forEach(b => {
+        const active = b.dataset.tab === tbState.bookTab;
+        b.style.borderBottomColor = active ? 'var(--red)' : 'transparent';
+        b.style.color = active ? 'var(--red)' : 'var(--text2)';
       });
-      html += `</tbody></table>`;
     }
-    html += `</div>`;
-    container.innerHTML = html;
+    updateTabStyle();
 
-    container.querySelectorAll('.tb-add-dict-btn:not(.added)').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const w = words[parseInt(btn.dataset.i)];
-        addWordFromTextbook(w.zh, w.vi||'', w.exZh||'', w.exVi||'', w.note||'');
-        btn.textContent = '✓ Đã thêm';
-        btn.classList.add('added');
-        btn.style.borderColor = 'var(--green)';
-        btn.style.background  = 'var(--green-light)';
-        btn.style.color       = 'var(--green)';
-        btn.disabled = true;
+    container.querySelectorAll('.tb-tab-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        tbState.bookTab = btn.dataset.tab;
+        updateTabStyle();
+        await tbRenderBookTabContent(book);
       });
     });
 
+    await tbRenderBookTabContent(book);
+  } catch(e) {
+    console.error(e);
+    container.innerHTML = `<p style="color:var(--red);font-size:14px">Lỗi: ${e.message}</p>`;
+  }
+}
+
+async function tbRenderBookTabContent(book) {
+  const content = $('tb-tab-content');
+  if (!content) return;
+  if (tbState.bookTab === 'words') tbRenderWordsList(book, content);
+  else await tbRenderArticlesList(book, content);
+}
+
+function tbRenderWordsList(book, container) {
+  const isAdmin = (auth.currentUser?.email === 'hoang1886@gmail.com');
+  const words   = book.words || [];
+  let html = `<div class="card" style="max-width:820px">`;
+  if (isAdmin) {
+    html += `<div style="display:flex;justify-content:flex-end;margin-bottom:14px">
+      <button class="submit-btn" id="tb-add-word-btn" style="padding:8px 18px;font-size:13px">+ Thêm từ mới</button>
+    </div>`;
+  }
+  if (words.length === 0) {
+    html += `<p style="color:var(--text3);font-size:14px">Chưa có từ vựng nào.</p>`;
+  } else {
+    html += `<table><thead><tr><th>Chữ Hán</th><th>Pinyin</th><th>Nghĩa tiếng Việt</th><th>Ví dụ</th><th></th></tr></thead><tbody>`;
+    words.forEach((w, i) => {
+      const py = getPinyin(w.zh);
+      const inDict = db.words.some(dw => dw.zh === w.zh);
+      html += `<tr>
+        <td style="font-family:'Noto Serif SC',serif;font-size:18px;font-weight:600">${w.zh}</td>
+        <td style="font-size:13px;color:var(--red);font-weight:500">${py}</td>
+        <td style="font-size:13px;color:var(--text2)">${w.vi||''}</td>
+        <td style="font-size:12px;color:var(--text3);max-width:200px">${w.exZh ? `<span style="font-family:'Noto Sans SC',sans-serif">${w.exZh}</span>` : ''}</td>
+        <td>
+          <button class="tb-add-dict-btn${inDict?' added':''}" data-i="${i}"
+            style="padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;
+              border:1.5px solid ${inDict?'var(--green)':'var(--red)'};
+              background:${inDict?'var(--green-light)':'transparent'};
+              color:${inDict?'var(--green)':'var(--red)'};font-family:'DM Sans',sans-serif"
+            ${inDict?'disabled':''}>
+            ${inDict ? '✓ Đã thêm' : '+ Thêm'}
+          </button>
+        </td>
+      </tr>`;
+    });
+    html += `</tbody></table>`;
+  }
+  html += `</div>`;
+  container.innerHTML = html;
+
+  container.querySelectorAll('.tb-add-dict-btn:not(.added)').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const w = words[parseInt(btn.dataset.i)];
+      addWordFromTextbook(w.zh, w.vi||'', w.exZh||'', w.exVi||'', w.note||'');
+      btn.textContent = '✓ Đã thêm';
+      btn.classList.add('added');
+      btn.style.borderColor = 'var(--green)';
+      btn.style.background  = 'var(--green-light)';
+      btn.style.color       = 'var(--green)';
+      btn.disabled = true;
+    });
+  });
+
+  if (isAdmin) {
+    $('tb-add-word-btn')?.addEventListener('click', () => tbShowAddWordModal(book));
+  }
+}
+
+async function tbRenderArticlesList(book, container) {
+  const isAdmin = (auth.currentUser?.email === 'hoang1886@gmail.com');
+  container.innerHTML = `<div class="hsk-loading"><div class="spinner"></div><p>Đang tải bài đọc...</p></div>`;
+  try {
+    const q = query(collection(firestore, 'textbooks', book.id, 'articles'), orderBy('order'));
+    const snap = await getDocs(q);
+    const articles = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+    const lvl = TB_LEVELS.find(l => l.level === tbState.level);
+
+    if (articles.length === 0) {
+      container.innerHTML = `<p style="color:var(--text3);font-size:14px;padding:16px 0">${isAdmin ? 'Chưa có bài đọc nào. Nhấn "+ Thêm bài đọc" để bắt đầu.' : 'Chưa có bài đọc nào.'}</p>`;
+    } else {
+      container.innerHTML = `<div style="max-width:640px">` + articles.map(a => `
+        <div class="tb-book-card" data-artid="${a.id}" style="cursor:pointer">
+          <div class="tb-book-color-bar" style="background:${lvl?.grad||'var(--red)'}"></div>
+          <div class="tb-book-content">
+            <div class="tb-book-title">${a.title}</div>
+            ${a.source ? `<div class="tb-book-subtitle">${a.source}</div>` : ''}
+            <div class="tb-book-meta">${(a.words||[]).length} từ vựng</div>
+          </div>
+          <div class="tb-book-arrow">›</div>
+        </div>`).join('') + `</div>`;
+      container.querySelectorAll('[data-artid]').forEach(card => {
+        card.addEventListener('click', () => tbNav('article', tbState.level, tbState.bookId, card.dataset.artid));
+      });
+    }
+
     if (isAdmin) {
-      $('tb-add-word-btn')?.addEventListener('click', () => tbShowAddWordModal(book));
+      const btn = document.createElement('button');
+      btn.className = 'submit-btn';
+      btn.style.cssText = 'margin-top:14px;padding:10px 22px;font-size:13px';
+      btn.textContent = '+ Thêm bài đọc mới';
+      btn.addEventListener('click', () => tbShowAddArticleModal(book));
+      container.appendChild(btn);
     }
   } catch(e) {
     console.error(e);
     container.innerHTML = `<p style="color:var(--red);font-size:14px">Lỗi: ${e.message}</p>`;
   }
+}
+
+// ── Article reader ─────────────────────────────────────────────────────────────
+async function tbRenderArticle() {
+  const bodyEl   = $('tb-art-reader-body');
+  const vocabEl  = $('tb-art-vocab');
+  const titleEl  = $('tb-art-title');
+  const sourceEl = $('tb-art-source');
+  if (!bodyEl) return;
+
+  if (titleEl)  titleEl.textContent  = '';
+  if (sourceEl) sourceEl.textContent = '';
+  bodyEl.innerHTML = '';
+  if (vocabEl) vocabEl.innerHTML = '<div class="hsk-loading"><div class="spinner"></div></div>';
+
+  tbState.tbPinyinMode = false;
+  const ptb = $('tb-art-pinyin-btn');
+  if (ptb) { ptb.classList.remove('active'); ptb.onclick = null; }
+
+  const backBtn = $('tb-art-back-btn');
+  if (backBtn) backBtn.onclick = () => { tbState.bookTab = 'articles'; tbNav('words', tbState.level, tbState.bookId); };
+
+  try {
+    const snap = await getDoc(doc(firestore, 'textbooks', tbState.bookId, 'articles', tbState.articleId));
+    if (!snap.exists()) { bodyEl.innerHTML = '<p>Không tìm thấy bài đọc.</p>'; return; }
+    const article = { id:snap.id, ...snap.data() };
+    tbState.articleData = article;
+    tbRenderBreadcrumb();
+
+    if (titleEl)  titleEl.textContent  = article.title  || '';
+    if (sourceEl) sourceEl.textContent = article.source || '';
+
+    tbRenderTbArticleBody(article);
+
+    if (ptb) {
+      ptb.onclick = () => {
+        tbState.tbPinyinMode = !tbState.tbPinyinMode;
+        ptb.classList.toggle('active', tbState.tbPinyinMode);
+        tbRenderTbArticleBody(article);
+      };
+    }
+
+    if (vocabEl) {
+      const words = article.words || [];
+      if (words.length === 0) {
+        vocabEl.innerHTML = '<p style="font-size:13px;color:var(--text3)">Không có từ vựng.</p>';
+      } else {
+        vocabEl.innerHTML = words.map((w, i) => {
+          const py     = getPinyin(w.zh);
+          const inDict = db.words.some(dw => dw.zh === w.zh);
+          return `<div style="display:flex;align-items:flex-start;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:8px">
+            <div style="flex:1;min-width:0">
+              <div style="font-family:'Noto Serif SC',serif;font-size:17px;font-weight:600;color:var(--text)">${w.zh}</div>
+              <div style="font-size:11px;color:var(--red);font-weight:500">${py}</div>
+              <div style="font-size:12px;color:var(--text2);margin-top:2px">${w.vi||''}</div>
+              ${w.exZh ? `<div style="font-size:11px;color:var(--text3);font-family:'Noto Sans SC',sans-serif;margin-top:3px">${w.exZh}</div>` : ''}
+            </div>
+            <button class="tb-vocab-add-btn${inDict?' added':''}" data-vi="${i}"
+              style="flex-shrink:0;margin-top:2px;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;
+                border:1.5px solid ${inDict?'var(--green)':'var(--red)'};
+                background:${inDict?'var(--green-light)':'transparent'};
+                color:${inDict?'var(--green)':'var(--red)'};font-family:'DM Sans',sans-serif"
+              ${inDict?'disabled':''}>
+              ${inDict ? '✓' : '+'}
+            </button>
+          </div>`;
+        }).join('');
+        vocabEl.querySelectorAll('.tb-vocab-add-btn:not(.added)').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const w = words[parseInt(btn.dataset.vi)];
+            const added = addWordFromTextbook(w.zh, w.vi||'', w.exZh||'', w.exVi||'', w.note||'');
+            if (added) {
+              btn.textContent = '✓';
+              btn.classList.add('added');
+              btn.style.borderColor = 'var(--green)';
+              btn.style.background  = 'var(--green-light)';
+              btn.style.color       = 'var(--green)';
+              btn.disabled = true;
+            }
+          });
+        });
+      }
+    }
+    setupTbArtTextSelection();
+  } catch(e) {
+    console.error(e);
+    bodyEl.innerHTML = `<p style="color:var(--red);font-size:14px">Lỗi: ${e.message}</p>`;
+  }
+}
+
+function tbRenderTbArticleBody(article) {
+  let html = article.body || '';
+  if (isTraditional && _openccConverter) html = _openccConverter(html);
+  const bd = $('tb-art-reader-body');
+  if (!bd) return;
+  bd.innerHTML = html;
+  bd.classList.toggle('pinyin-on', tbState.tbPinyinMode);
+  if (tbState.tbPinyinMode) applyRubyAnnotations(bd);
+}
+
+function setupTbArtTextSelection() {
+  const bodyEl = $('tb-art-reader-body');
+  if (!bodyEl) return;
+  const newBody = bodyEl.cloneNode(true);
+  bodyEl.parentNode.replaceChild(newBody, bodyEl);
+  const bd = $('tb-art-reader-body');
+
+  const choicePopup = $('selection-choice-popup');
+  const popup       = $('selection-popup');
+  const hlPopup     = $('highlight-popup');
+  let savedText = '', savedRect = null;
+
+  $('choice-highlight-btn').style.display = 'none';
+
+  document.addEventListener('mouseup', e => {
+    if (!$('textbooks')?.classList.contains('active') || tbState.view !== 'article') return;
+    if (choicePopup.contains(e.target) || popup.contains(e.target)) return;
+    const sel  = window.getSelection();
+    const text = sel?.toString().trim();
+    if (!text || !bd.contains(sel?.anchorNode)) {
+      choicePopup.style.display = 'none';
+      popup.style.display = 'none';
+      if (hlPopup) hlPopup.style.display = 'none';
+      return;
+    }
+    savedText = text;
+    savedRect = sel.getRangeAt(0).getBoundingClientRect();
+    $('choice-selected-text').textContent = `"${text.slice(0,30)}${text.length>30?'…':''}"`;
+    positionPopup(choicePopup, savedRect);
+    choicePopup.style.display = 'block';
+    popup.style.display = 'none';
+    if (hlPopup) hlPopup.style.display = 'none';
+  });
+
+  $('choice-cancel-btn').onclick = () => { choicePopup.style.display='none'; window.getSelection()?.removeAllRanges(); };
+  $('choice-add-word-btn').onclick = () => {
+    if (!savedText) return;
+    choicePopup.style.display = 'none';
+    $('popup-word').textContent = savedText;
+    $('popup-pinyin').textContent = getPinyin(savedText);
+    $('popup-vi-inp').value = '';
+    const zhDef = $('popup-zh-def-inp'); if (zhDef) zhDef.value = '';
+    $('popup-ex-zh-inp').value = ''; $('popup-ex-vi-inp').value = '';
+    resetWordTypeSelector('popup-word-type-selector', '_popupSelectedType');
+    buildWordTypeSelector('popup-word-type-selector', '_popupSelectedType');
+    if (dictData && dictData[savedText]) $('popup-vi-inp').value = dictData[savedText].split(';')[0].trim();
+    else if (!dictData) loadDict().then(() => { if (dictData && dictData[savedText]) $('popup-vi-inp').value = dictData[savedText].split(';')[0].trim(); });
+    positionPopup(popup, savedRect);
+    popup.style.display = 'block';
+    setTimeout(() => $('popup-vi-inp').focus(), 50);
+  };
+  $('popup-cancel-btn').onclick = () => { popup.style.display='none'; window.getSelection()?.removeAllRanges(); };
+  $('popup-add-btn').onclick = () => {
+    const zh   = $('popup-word').textContent.trim();
+    const vi   = $('popup-vi-inp').value.trim();
+    const exZh = $('popup-ex-zh-inp').value.trim();
+    const exVi = $('popup-ex-vi-inp').value.trim();
+    const note = $('popup-note-inp')?.value.trim() || '';
+    const w = addWordFromTextbook(zh, vi, exZh, exVi, note);
+    if (w) { toast(`✓ Đã thêm: ${zh}`); popup.style.display='none'; window.getSelection()?.removeAllRanges(); }
+    else toast('Vui lòng nhập nghĩa!');
+  };
+}
+
+// ── Admin: show add-article modal ──────────────────────────────────────────────
+function tbShowAddArticleModal(book) {
+  const overlay = $('tb-add-article-overlay');
+  if (!overlay) return;
+  $('tb-add-art-book-name').textContent = book.title;
+  $('tb-art-title-inp').value  = '';
+  $('tb-art-source-inp').value = '';
+  const bodyInp = $('tb-art-body-inp');
+  if (bodyInp) bodyInp.innerHTML = '';
+  $('tb-art-vocab-rows').innerHTML = '';
+  overlay.style.display = 'flex';
+
+  const toolbar = $('tb-art-rich-toolbar');
+  if (toolbar && bodyInp) {
+    toolbar.querySelectorAll('.rtb-btn').forEach(btn => {
+      btn.onclick = e => {
+        e.preventDefault();
+        document.execCommand(btn.dataset.cmd, false, btn.dataset.val || null);
+        bodyInp.focus();
+      };
+    });
+  }
+}
+
+function tbAddVocabRow(data = {}) {
+  const rows = $('tb-art-vocab-rows');
+  if (!rows) return;
+  const row = document.createElement('div');
+  row.style.cssText = 'display:flex;gap:8px;align-items:center;margin-bottom:8px';
+  row.innerHTML = `
+    <input type="text" class="tb-vr-zh" placeholder="汉字 *" value="${data.zh||''}"
+      style="flex:0 0 110px;padding:8px 10px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);font-size:14px;font-family:'Noto Sans SC',sans-serif">
+    <input type="text" class="tb-vr-vi" placeholder="Nghĩa *" value="${data.vi||''}"
+      style="flex:1;padding:8px 10px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif">
+    <input type="text" class="tb-vr-exzh" placeholder="Ví dụ (tuỳ chọn)" value="${data.exZh||''}"
+      style="flex:1;padding:8px 10px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);font-size:13px;font-family:'Noto Sans SC',sans-serif">
+    <button class="tb-vr-rm" style="flex-shrink:0;padding:6px 10px;background:none;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;cursor:pointer;color:var(--text3)">✕</button>`;
+  row.querySelector('.tb-vr-rm').addEventListener('click', () => row.remove());
+  rows.appendChild(row);
+}
+
+async function tbSaveArticle() {
+  if (auth.currentUser?.email !== 'hoang1886@gmail.com') return;
+  const title  = $('tb-art-title-inp').value.trim();
+  const source = $('tb-art-source-inp').value.trim();
+  const body   = $('tb-art-body-inp')?.innerHTML || '';
+  if (!title) { toast('Vui lòng nhập tiêu đề bài đọc'); return; }
+  if (!body.replace(/<[^>]*>/g,'').trim()) { toast('Vui lòng nhập nội dung bài đọc'); return; }
+
+  const words = [...($('tb-art-vocab-rows')?.querySelectorAll('div') || [])].map(row => ({
+    zh:   row.querySelector('.tb-vr-zh')?.value.trim()   || '',
+    vi:   row.querySelector('.tb-vr-vi')?.value.trim()   || '',
+    exZh: row.querySelector('.tb-vr-exzh')?.value.trim() || '',
+    exVi: '', note: '',
+  })).filter(w => w.zh && w.vi);
+
+  try {
+    const colRef  = collection(firestore, 'textbooks', tbState.bookId, 'articles');
+    const existing = await getDocs(query(colRef, orderBy('order')));
+    await addDoc(colRef, { title, source, body, words, order:existing.size + 1, createdAt:new Date().toISOString() });
+    $('tb-add-article-overlay').style.display = 'none';
+    toast('✓ Đã thêm bài đọc!');
+    if (tbState.bookData) await tbRenderBookTabContent(tbState.bookData);
+  } catch(e) { toast('Lỗi: ' + e.message); }
 }
 
 // ── Add word to SRS dictionary from textbook ───────────────────────────────────
@@ -2698,4 +3018,8 @@ function initTbNav() {
   $('tb-add-word-cancel')?.addEventListener('click',  () => { $('tb-add-word-overlay').style.display='none'; });
   $('tb-add-word-cancel2')?.addEventListener('click', () => { $('tb-add-word-overlay').style.display='none'; });
   $('tb-add-word-save')?.addEventListener('click', tbSaveWord);
+  $('tb-add-article-cancel')?.addEventListener('click',  () => { $('tb-add-article-overlay').style.display='none'; });
+  $('tb-add-article-cancel2')?.addEventListener('click', () => { $('tb-add-article-overlay').style.display='none'; });
+  $('tb-add-article-save')?.addEventListener('click', tbSaveArticle);
+  $('tb-art-add-vocab-row-btn')?.addEventListener('click', () => tbAddVocabRow());
 }
