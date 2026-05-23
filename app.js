@@ -834,19 +834,28 @@ function applyRubyAnnotations(el){
   nodes.forEach(node=>{
     const text=node.textContent;
     if(!/[一-鿿㐀-䶿]/.test(text))return;
+    // Pass the WHOLE text to pinyin-pro so word-segmentation can resolve
+    // polyphonic characters correctly (e.g. 了 → "le" vs "liǎo", 地 → "de" vs "dì").
+    // nonZh:'removed' means pyArr has exactly one entry per Chinese character;
+    // non-Chinese chars simply don't advance the index.
+    let pyArr=[];
+    if(window.pinyinPro){
+      try{ pyArr=pinyinPro.pinyin(text,{toneType:'symbol',type:'array',nonZh:'removed'}); }catch(e){}
+    }
     const frag=document.createDocumentFragment();
-    [...text].forEach(char=>{
+    let pi=0;
+    for(const char of text){
       if(/[一-鿿㐀-䶿]/.test(char)){
         const ruby=document.createElement('ruby');
         ruby.appendChild(document.createTextNode(char));
         const rt=document.createElement('rt');
-        rt.textContent=getPinyin(char);
+        rt.textContent=pyArr[pi++]||getPinyin(char);
         ruby.appendChild(rt);
         frag.appendChild(ruby);
       } else {
         frag.appendChild(document.createTextNode(char));
       }
-    });
+    }
     node.parentNode.replaceChild(frag,node);
   });
 }
