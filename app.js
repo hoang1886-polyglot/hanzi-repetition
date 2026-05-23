@@ -2807,30 +2807,43 @@ function tbRenderTbArticleBody(article) {
 function tbRenderArticleVocabPanel(words) {
   const vocabEl = $('tb-art-vocab');
   if (!vocabEl) return;
-  if (words.length === 0) {
-    vocabEl.innerHTML = '<p style="font-size:13px;color:var(--text3)">Không có từ vựng.</p>';
-    return;
-  }
-  vocabEl.innerHTML = words.map((w, i) => {
-    const py     = getPinyin(w.zh);
-    const inDict = db.words.some(dw => dw.zh === w.zh);
-    return `<div style="display:flex;align-items:flex-start;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:8px">
-      <div style="flex:1;min-width:0">
-        <div style="font-family:'Noto Serif SC',serif;font-size:17px;font-weight:600;color:var(--text)">${w.zh}</div>
-        <div style="font-size:11px;color:var(--red);font-weight:500">${py}</div>
-        <div style="font-size:12px;color:var(--text2);margin-top:2px">${w.vi||''}</div>
-        ${w.exZh ? `<div style="font-size:11px;color:var(--text3);font-family:'Noto Sans SC',sans-serif;margin-top:3px">${w.exZh}</div>` : ''}
-      </div>
-      <button class="tb-vocab-add-btn${inDict?' added':''}" data-vi="${i}"
-        style="flex-shrink:0;margin-top:2px;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;
-          border:1.5px solid ${inDict?'var(--green)':'var(--red)'};
-          background:${inDict?'var(--green-light)':'transparent'};
-          color:${inDict?'var(--green)':'var(--red)'};font-family:'DM Sans',sans-serif"
-        ${inDict?'disabled':''}>
-        ${inDict ? '✓' : '+'}
+  const isAdmin = (auth.currentUser?.email === 'hoang1886@gmail.com');
+
+  const adminBar = isAdmin ? `
+    <div style="margin-bottom:14px">
+      <button id="tb-import-vocab-btn"
+        style="width:100%;padding:8px 0;background:var(--surface2);border:1.5px dashed var(--border2);border-radius:8px;
+               font-size:12px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">
+        📥 Import từ file (.csv / .json)
       </button>
-    </div>`;
-  }).join('');
+      <input type="file" id="tb-import-vocab-file" accept=".csv,.json" style="display:none">
+    </div>` : '';
+
+  const wordsHtml = words.length === 0
+    ? `<p style="font-size:13px;color:var(--text3)">Không có từ vựng.</p>`
+    : words.map((w, i) => {
+        const py     = getPinyin(w.zh);
+        const inDict = db.words.some(dw => dw.zh === w.zh);
+        return `<div style="display:flex;align-items:flex-start;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:8px">
+          <div style="flex:1;min-width:0">
+            <div style="font-family:'Noto Serif SC',serif;font-size:17px;font-weight:600;color:var(--text)">${w.zh}</div>
+            <div style="font-size:11px;color:var(--red);font-weight:500">${py}</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:2px">${w.vi||''}</div>
+            ${w.exZh ? `<div style="font-size:11px;color:var(--text3);font-family:'Noto Sans SC',sans-serif;margin-top:3px">${w.exZh}</div>` : ''}
+          </div>
+          <button class="tb-vocab-add-btn${inDict?' added':''}" data-vi="${i}"
+            style="flex-shrink:0;margin-top:2px;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;
+              border:1.5px solid ${inDict?'var(--green)':'var(--red)'};
+              background:${inDict?'var(--green-light)':'transparent'};
+              color:${inDict?'var(--green)':'var(--red)'};font-family:'DM Sans',sans-serif"
+            ${inDict?'disabled':''}>
+            ${inDict ? '✓' : '+'}
+          </button>
+        </div>`;
+      }).join('');
+
+  vocabEl.innerHTML = adminBar + wordsHtml;
+
   vocabEl.querySelectorAll('.tb-vocab-add-btn:not(.added)').forEach(btn => {
     btn.addEventListener('click', () => {
       const w = words[parseInt(btn.dataset.vi)];
@@ -2845,6 +2858,116 @@ function tbRenderArticleVocabPanel(words) {
       }
     });
   });
+
+  if (isAdmin) {
+    $('tb-import-vocab-btn')?.addEventListener('click', () => $('tb-import-vocab-file')?.click());
+    $('tb-import-vocab-file')?.addEventListener('change', tbHandleVocabImport);
+  }
+}
+
+// ── Vocab bulk import ──────────────────────────────────────────────────────────
+function tbHandleVocabImport(e) {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  e.target.value = '';
+  const reader = new FileReader();
+  reader.onload = evt => {
+    let words = [];
+    try {
+      const text = evt.target.result;
+      if (file.name.toLowerCase().endsWith('.json')) {
+        const parsed = JSON.parse(text);
+        words = Array.isArray(parsed) ? parsed : [];
+      } else {
+        words = tbParseCSV(text);
+      }
+    } catch(err) { toast('Lỗi đọc file: ' + err.message); return; }
+    words = words.filter(w => w.zh && w.vi);
+    if (!words.length) { toast('Không tìm thấy từ vựng hợp lệ trong file.'); return; }
+    tbShowImportPreview(words);
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function tbParseCSV(text) {
+  const lines = text.replace(/\r/g,'').split('\n').map(l=>l.trim()).filter(l=>l);
+  if (lines.length < 2) return [];
+  const headers = tbSplitCSVLine(lines[0]).map(h => h.toLowerCase().replace(/[^a-z]/g,''));
+  return lines.slice(1).map(line => {
+    const vals = tbSplitCSVLine(line);
+    const get  = (...keys) => { for (const k of keys) { const i=headers.indexOf(k); if (i>=0) return (vals[i]||'').trim(); } return ''; };
+    return { zh:get('zh'), vi:get('vi'), exZh:get('exzh','exzh'), exVi:get('exvi','exvi'), note:get('note') };
+  });
+}
+
+function tbSplitCSVLine(line) {
+  const res = []; let cur = '', inQ = false;
+  for (const ch of line) {
+    if (ch === '"') { inQ = !inQ; }
+    else if (ch === ',' && !inQ) { res.push(cur); cur = ''; }
+    else { cur += ch; }
+  }
+  res.push(cur);
+  return res.map(v => v.replace(/^"|"$/g,'').trim());
+}
+
+function tbShowImportPreview(newWords) {
+  const existing = tbState.articleData?.words || [];
+  const toAdd    = newWords.filter(w => !existing.some(e => e.zh === w.zh));
+  const dupes    = newWords.length - toAdd.length;
+
+  const overlay  = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:3000;display:flex;align-items:center;justify-content:center';
+  overlay.innerHTML = `
+    <div style="background:var(--surface);border-radius:16px;padding:28px;width:min(500px,92vw);max-height:82vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+      <h3 style="font-size:17px;font-weight:700;margin:0 0 8px">📥 Xác nhận import từ vựng</h3>
+      <p style="font-size:13px;color:var(--text2);margin:0 0 16px;line-height:1.6">
+        Tìm thấy <strong>${newWords.length} từ</strong> trong file.
+        ${dupes ? `<span style="color:var(--text3)"> · ${dupes} từ trùng sẽ bỏ qua</span>` : ''}
+        <br>Sẽ thêm: <strong style="color:var(--red)">${toAdd.length} từ mới</strong>
+      </p>
+      <div style="flex:1;overflow-y:auto;border:1px solid var(--border);border-radius:8px;margin-bottom:18px;min-height:0">
+        <table style="width:100%;font-size:13px;border-collapse:collapse">
+          <thead>
+            <tr style="background:var(--surface2);position:sticky;top:0">
+              <th style="padding:8px 12px;text-align:left;color:var(--text3);font-weight:500;font-size:11px">CHỮ HÁN</th>
+              <th style="padding:8px;text-align:left;color:var(--text3);font-weight:500;font-size:11px">NGHĨA</th>
+              <th style="padding:8px;text-align:left;color:var(--text3);font-weight:500;font-size:11px">VÍ DỤ</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${toAdd.slice(0,100).map(w=>`
+              <tr style="border-top:1px solid var(--border)">
+                <td style="padding:7px 12px;font-family:'Noto Serif SC',serif;font-size:15px;font-weight:600">${w.zh}</td>
+                <td style="padding:7px 8px;color:var(--text2);font-size:12px">${w.vi}</td>
+                <td style="padding:7px 8px;color:var(--text3);font-size:11px;font-family:'Noto Sans SC',sans-serif">${w.exZh||''}</td>
+              </tr>`).join('')}
+            ${toAdd.length>100?`<tr><td colspan="3" style="padding:8px 12px;color:var(--text3);text-align:center;font-size:12px">... và ${toAdd.length-100} từ khác</td></tr>`:''}
+          </tbody>
+        </table>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button id="tb-imp-cancel" style="flex:1;padding:12px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">Huỷ</button>
+        <button id="tb-imp-confirm" style="flex:2;padding:12px;background:var(--red);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif"
+          ${toAdd.length===0?'disabled style="opacity:.5"':''}>
+          ✓ Import ${toAdd.length} từ
+        </button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(overlay);
+  overlay.querySelector('#tb-imp-cancel').onclick = () => overlay.remove();
+  overlay.querySelector('#tb-imp-confirm').onclick = async () => {
+    if (!toAdd.length) return;
+    const updated = [...existing, ...toAdd];
+    try {
+      await updateDoc(doc(firestore, 'textbooks', tbState.bookId, 'articles', tbState.articleId), { words: updated });
+      if (tbState.articleData) tbState.articleData.words = updated;
+      tbRenderArticleVocabPanel(updated);
+      overlay.remove();
+      toast(`✓ Đã import ${toAdd.length} từ vựng!`);
+    } catch(err) { toast('Lỗi: ' + err.message); }
+  };
 }
 
 async function tbSaveWordToArticle(zh, vi, exZh, exVi, note) {
