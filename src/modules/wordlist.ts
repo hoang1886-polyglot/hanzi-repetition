@@ -57,7 +57,7 @@ export function addWordFromArticle(
     }
   }
   const newWord = {
-    id: Date.now(), zh, vi, pinyin: getPinyin(zh), zhDef, exZh, exVi,
+    id: Date.now() + Math.random(), zh, vi, pinyin: getPinyin(zh), zhDef, exZh, exVi,
     note: note || '', wordType: wordType || '', status: 'new', ef: 2.5, interval: 0,
     repetitions: 0, nextReview: null, lastReview: null, added: Date.now(),
   } as any
@@ -185,7 +185,8 @@ function openWordTypeEditor(wordId: number, anchorEl: HTMLElement): void {
         return `<button class="wtype-tag${active ? ' active' : ''}" data-key="${t.key}" style="--wt-color:${t.color};--wt-bg:${t.bg};padding:3px 8px;font-size:11px">${t.key}<span class="wtype-vi"> ${t.vi}</span></button>`
       }).join('')
       tagsEl.querySelectorAll('.wtype-tag').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation()
           const k = (btn as HTMLElement).dataset.key!
           word.wordTypes = word.wordTypes!.includes(k) ? word.wordTypes!.filter(x => x !== k) : [...word.wordTypes!, k]
           save(); render()

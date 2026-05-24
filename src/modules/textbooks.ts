@@ -1454,7 +1454,7 @@ function addWordFromTextbook(zh: string, vi: string, exZh = '', exVi = '', note 
   if (!zh || !vi) { toast('Vui lòng nhập chữ Hán và nghĩa!'); return false }
   if (db.words.some(w => w.zh === zh)) { toast(`"${zh}" đã có trong từ điển`); return false }
   const newWord: any = {
-    id: Date.now(), zh, vi, pinyin: getPinyin(zh), zhDef: '',
+    id: Date.now() + Math.random(), zh, vi, pinyin: getPinyin(zh), zhDef: '',
     exZh, exVi, note, wordType: '',
     status: 'new', ef: 2.5, interval: 0, repetitions: 0,
     nextReview: null, lastReview: null, added: Date.now(),
