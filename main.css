@@ -907,7 +907,7 @@ body.dark .tb-block-editor{background:var(--surface);}
 }
 .hsk-book-card {
   background: var(--surface);
-  border: 1.5px solid var(--border);
+  border: 1.5px solid transparent;
   border-radius: var(--radius);
   padding: 24px 20px;
   cursor: pointer;
@@ -915,23 +915,24 @@ body.dark .tb-block-editor{background:var(--surface);}
   position: relative;
   overflow: hidden;
 }
-.hsk-book-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  border-radius: var(--radius) var(--radius) 0 0;
-}
-.hsk-book-card.level-1::before { background: #16A34A; }
-.hsk-book-card.level-2::before { background: #0284C7; }
-.hsk-book-card.level-3::before { background: #9333EA; }
-.hsk-book-card.level-4::before { background: var(--amber); }
-.hsk-book-card.level-5::before { background: var(--red); }
-.hsk-book-card.level-6::before { background: #141414; }
+/* Per-level gradient backgrounds — same palette as TB_LEVELS */
+.hsk-book-card.level-1 { background: linear-gradient(135deg,#F6A623,#E8910E); }
+.hsk-book-card.level-2 { background: linear-gradient(135deg,#F97316,#C2410C); }
+.hsk-book-card.level-3 { background: linear-gradient(135deg,#22C55E,#15803D); }
+.hsk-book-card.level-4 { background: linear-gradient(135deg,#3B82F6,#1D4ED8); }
+.hsk-book-card.level-5 { background: linear-gradient(135deg,#A855F7,#7C3AED); }
+.hsk-book-card.level-6 { background: linear-gradient(135deg,#EF4444,#991B1B); }
+/* White text on gradient backgrounds */
+.hsk-book-card[class*="level-"] .hsk-book-name { color: #fff; }
+.hsk-book-card[class*="level-"] .hsk-book-meta { color: rgba(255,255,255,0.75); }
+.hsk-book-card[class*="level-"] .hsk-book-icon { filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25)); }
+.hsk-book-card[class*="level-"] .hsk-book-progress-bar { background: rgba(255,255,255,0.25); }
+.hsk-book-card[class*="level-"] .hsk-book-progress-fill { background: rgba(255,255,255,0.9); }
+.hsk-book-card[class*="level-"] .hsk-book-progress-text { color: rgba(255,255,255,0.75); }
 .hsk-book-card:hover {
-  border-color: var(--border3);
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
+  filter: brightness(1.06);
 }
 .hsk-book-card:active { transform: none; box-shadow: var(--shadow-sm); }
 .hsk-book-icon {

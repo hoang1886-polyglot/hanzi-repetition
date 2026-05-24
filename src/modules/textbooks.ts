@@ -538,6 +538,20 @@ async function tbRenderArticle(): Promise<void> {
   }
 }
 
+/** Strip inline font-size, font-family and color from stored HTML so the
+ *  reader typography panel (applyTypography) and dark-mode CSS can take effect. */
+function tbSanitizeContent(html: string): string {
+  return html.replace(/(<[^>]+?)\s+style="([^"]*)"/gi, (_m, tag, style) => {
+    const kept = (style as string)
+      .split(';')
+      .map((s: string) => s.trim())
+      .filter((s: string) => !/^\s*(font-size|font-family|color|background-color)\s*:/i.test(s))
+      .filter(Boolean)
+      .join('; ')
+    return kept ? `${tag} style="${kept}"` : tag
+  })
+}
+
 function tbRenderTbArticleBody(article: any): void {
   const bd = $('tb-art-reader-body')
   if (!bd) return
@@ -553,8 +567,8 @@ function tbRenderTbArticleBody(article: any): void {
         <audio controls preload="metadata" src="${(b.url || '').replace(/"/g, '&quot;')}" style="width:100%"></audio>
       </div>`
     }
-    // text block
-    let html = b.content || ''
+    // Sanitize stored HTML first so reader typography & dark-mode color cascade freely
+    let html = tbSanitizeContent(b.content || '')
     if (isTraditional && _openccConverter) html = _openccConverter(html)
     ;(article.words || []).forEach((w: any) => { if (w.zh) html = applyWordHighlight(html, w.zh) })
     ;(article.freeHighlights || []).forEach((h: any) => { html = applyFreeHighlight(html, h) })
