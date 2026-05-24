@@ -1945,6 +1945,21 @@ body:not(.dark) .hsk-admin-form {
 .tb-book-meta { font-size: 11px; color: var(--text3); margin-top: auto; padding-top: 5px; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
 .tb-book-type-tag { display:inline-block; padding:1px 6px; border-radius:4px; background:var(--surface3); font-size:10px; font-weight:600; }
 
+/* Article list cards (horizontal, used inside book → "Bài đọc" tab) */
+.tb-art-list-card {
+  display: flex; align-items: stretch;
+  background: var(--surface); border: 1.5px solid var(--border2);
+  border-radius: 12px; overflow: hidden; cursor: pointer; margin-bottom: 10px;
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+}
+.tb-art-list-card:hover { transform: translateX(3px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); border-color: var(--border3); }
+.tb-art-list-bar { width: 5px; flex-shrink: 0; }
+.tb-art-list-content { flex: 1; padding: 13px 16px; min-width: 0; }
+.tb-art-list-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.tb-art-list-sub { font-size: 11px; color: var(--text3); margin-bottom: 2px; }
+.tb-art-list-meta { font-size: 11px; color: var(--text3); }
+.tb-art-list-arrow { display: flex; align-items: center; padding: 0 16px; font-size: 20px; color: var(--text4); flex-shrink: 0; }
+
 @media(max-width: 768px) {
   .tb-levels-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
   .tb-level-name { font-size: 26px; }

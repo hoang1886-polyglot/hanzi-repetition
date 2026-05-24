@@ -161,6 +161,13 @@ async function tbRenderBooks(): Promise<void> {
       list.querySelectorAll('[data-bookid]').forEach(card => {
         card.addEventListener('click', () => tbNav('words', tbState.level, (card as HTMLElement).dataset.bookid!))
       })
+
+      // Background-sync word counts for books that haven't been synced yet
+      books.filter(b => b.wordCount == null).forEach(async (b) => {
+        const count = await tbSyncWordCount(b.id)
+        const span = list.querySelector(`[data-bookid="${b.id}"] .tb-book-meta span`)
+        if (span) span.textContent = `${count} từ`
+      })
     }
     if (isAdmin) {
       const btn = document.createElement('button')
@@ -398,9 +405,10 @@ async function tbRenderWordsList(book: any, container: HTMLElement): Promise<voi
       ;(rowBtn as HTMLButtonElement).disabled = true
     })
     addAllBtn.textContent = `✓ Đã thêm ${count} từ`
-    addAllBtn.style.background  = 'var(--green-light)'
-    addAllBtn.style.color       = 'var(--green)'
-    addAllBtn.style.borderColor = 'var(--green)'
+    addAllBtn.style.background  = 'linear-gradient(135deg,#177A47,#0F5C33)'
+    addAllBtn.style.color       = '#fff'
+    addAllBtn.style.borderColor = 'transparent'
+    addAllBtn.style.boxShadow   = '0 2px 8px rgba(23,122,71,0.35)'
     toast(`Đã thêm ${count} từ vào SRS!`)
   })
 
@@ -422,14 +430,14 @@ async function tbRenderArticlesList(book: any, container: HTMLElement): Promise<
       container.innerHTML = `<p style="color:var(--text3);font-size:14px;padding:16px 0">${isAdmin ? 'Chưa có bài đọc nào. Nhấn "+ Thêm bài đọc" để bắt đầu.' : 'Chưa có bài đọc nào.'}</p>`
     } else {
       container.innerHTML = `<div style="max-width:640px">` + articles.map(a => `
-        <div class="tb-book-card" data-artid="${a.id}" style="cursor:pointer">
-          <div class="tb-book-color-bar" style="background:${lvl?.grad || 'var(--red)'}"></div>
-          <div class="tb-book-content">
-            <div class="tb-book-title">${a.title}</div>
-            ${a.source ? `<div class="tb-book-subtitle">${a.source}</div>` : ''}
-            <div class="tb-book-meta">${(a.words || []).length} từ vựng</div>
+        <div class="tb-art-list-card" data-artid="${a.id}">
+          <div class="tb-art-list-bar" style="background:${lvl?.grad || 'var(--red)'}"></div>
+          <div class="tb-art-list-content">
+            <div class="tb-art-list-title">${a.title}</div>
+            ${a.source ? `<div class="tb-art-list-sub">${a.source}</div>` : ''}
+            <div class="tb-art-list-meta">${(a.words || []).length} từ vựng</div>
           </div>
-          <div class="tb-book-arrow">›</div>
+          <div class="tb-art-list-arrow">›</div>
         </div>`).join('') + `</div>`
       container.querySelectorAll('[data-artid]').forEach(card => {
         card.addEventListener('click', () => tbNav('article', tbState.level, tbState.bookId, (card as HTMLElement).dataset.artid!))
@@ -914,10 +922,7 @@ async function tbSaveWordToArticle(zh: string, vi: string, exZh: string, exVi: s
 }
 
 // ── Word-count denormalisation ─────────────────────────────────────────────────
-// Aggregates unique words across book.words + all article words and writes a
-// `wordCount` field back to the book document so the listing can display the
-// correct total without fetching every article.
-async function tbSyncWordCount(bookId: string): Promise<void> {
+async function tbSyncWordCount(bookId: string): Promise<number> {
   try {
     const [bookSnap, artSnap] = await Promise.all([
       getDoc(doc(firestore, 'textbooks', bookId)),
@@ -929,7 +934,8 @@ async function tbSyncWordCount(bookId: string): Promise<void> {
       ;(d.data().words || []).forEach((w: any) => { if (w.zh) seen.add(w.zh) })
     })
     await updateDoc(doc(firestore, 'textbooks', bookId), { wordCount: seen.size })
-  } catch (e) { console.error('tbSyncWordCount:', e) }
+    return seen.size
+  } catch (e) { console.error('tbSyncWordCount:', e); return 0 }
 }
 
 async function tbApplyAndSaveFreeHighlight(text: string, color: string): Promise<void> {
