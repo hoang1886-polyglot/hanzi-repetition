@@ -1001,6 +1001,91 @@ body.dark .tb-block-editor{background:var(--surface);}
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 14px;
 }
+
+/* ─── HSK UNIT SEARCH ──────────────────────────────────────────────────────── */
+.hsk-search-wrap { margin-bottom: 14px; }
+
+.hsk-search-inp {
+  width: 100%; box-sizing: border-box;
+  padding: 11px 18px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border2);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.hsk-search-inp:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px var(--red-glow);
+}
+.hsk-search-inp::placeholder { color: var(--text4); }
+
+#hsk-search-results {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.hsk-search-result {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.hsk-search-result:hover {
+  border-color: var(--red);
+  background: var(--surface);
+}
+.hsk-sr-zh {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  font-family: 'Noto Serif SC', 'Noto Sans SC', sans-serif;
+  min-width: 46px;
+  text-align: center;
+}
+.hsk-sr-pin {
+  font-size: 11px;
+  color: var(--text3);
+  margin-bottom: 2px;
+}
+.hsk-sr-vi {
+  font-size: 13px;
+  color: var(--text2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hsk-sr-unit {
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--red-light);
+  color: var(--red);
+  border-radius: 99px;
+  padding: 3px 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.hsk-sr-added {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--green);
+  flex-shrink: 0;
+}
+.hsk-search-empty {
+  text-align: center;
+  padding: 24px 0;
+  color: var(--text3);
+  font-size: 14px;
+}
 .hsk-unit-card {
   background: var(--surface);
   border: 1.5px solid var(--border);
