@@ -1739,6 +1739,97 @@ body:not(.dark) .hsk-admin-form {
 .pinyin-toggle-btn:hover { opacity: 0.9; box-shadow: 0 4px 14px var(--red-glow); }
 .pinyin-toggle-btn.active { opacity: 1; box-shadow: 0 4px 16px var(--red-glow); }
 
+/* ─── READER FONT BUTTON ─────────────────────────────────────────────────── */
+.reader-font-btn {
+  flex-shrink: 0;
+  padding: 6px 11px;
+  border: 1.5px solid var(--border2);
+  border-radius: 99px;
+  background: var(--surface2);
+  color: var(--text2);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.18s;
+  letter-spacing: 0.02em;
+}
+.reader-font-btn:hover { border-color: var(--red); color: var(--red); }
+.reader-font-btn.open  { border-color: var(--red); color: var(--red); background: var(--red-light); }
+
+/* ─── TYPOGRAPHY PANEL ───────────────────────────────────────────────────── */
+#reader-typography-panel {
+  background: var(--surface);
+  border: 1.5px solid var(--border2);
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  width: 264px;
+}
+.typo-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text3);
+  letter-spacing: 0.07em;
+  margin-bottom: 10px;
+}
+.typo-size-row {
+  display: flex;
+  align-items: stretch;
+  margin-bottom: 14px;
+  background: var(--surface2);
+  border: 1.5px solid var(--border2);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.typo-size-btn {
+  flex: 1;
+  padding: 9px 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text2);
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.13s, color 0.13s;
+}
+.typo-size-btn:hover:not(:disabled) { background: var(--border); color: var(--red); }
+.typo-size-btn:disabled { opacity: 0.3; cursor: default; }
+.typo-size-val {
+  flex: 1;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  border-left: 1.5px solid var(--border2);
+  border-right: 1.5px solid var(--border2);
+  padding: 9px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.typo-divider { height: 1px; background: var(--border); margin: 4px 0 14px; }
+#typo-font-selector { display: flex; flex-direction: column; gap: 6px; }
+.typo-font-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 13px;
+  border-radius: 9px;
+  border: 1.5px solid var(--border2);
+  background: var(--surface2);
+  cursor: pointer;
+  transition: all 0.14s;
+  width: 100%;
+  box-sizing: border-box;
+}
+.typo-font-btn:hover  { border-color: var(--red); background: var(--red-light); }
+.typo-font-btn.active { border-color: var(--red); background: var(--red-light); }
+.typo-font-name { font-size: 13px; font-weight: 600; color: var(--text); font-family: 'DM Sans',sans-serif; }
+.typo-font-btn.active .typo-font-name { color: var(--red); }
+.typo-font-sample { font-size: 20px; line-height: 1; color: var(--text2); }
+
 /* ─── RUBY / PINYIN ANNOTATIONS ─────────────────────────────────────────── */
 #article-reader-body.pinyin-on { line-height: 3em; font-size: 18px; }
 #article-reader-body ruby { display: inline-ruby; text-align: center; }

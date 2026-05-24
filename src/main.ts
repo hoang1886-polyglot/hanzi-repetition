@@ -7,6 +7,7 @@ import { renderArticlesList } from './modules/articles'
 import { startReview } from './modules/review'
 import { hskNav } from './modules/hsk'
 import { tbNav } from './modules/textbooks'
+import { initTypographyBtns } from './modules/typography'
 
 registerPage('dashboard', renderDashboard)
 registerPage('review', startReview)
@@ -19,4 +20,5 @@ loadDict()
 initDarkMode()
 initTradToggle()
 initMobileMenu()
+initTypographyBtns()
 initAuth()
