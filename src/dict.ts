@@ -9,7 +9,7 @@ export async function loadDict(): Promise<void> {
   if (dictData || dictLoading) return
   dictLoading = true
   try {
-    const res = await fetch('./cvdict.json')
+    const res = await fetch('/cvdict.json')
     if (!res.ok) throw new Error()
     dictData = await res.json()
   } catch {
