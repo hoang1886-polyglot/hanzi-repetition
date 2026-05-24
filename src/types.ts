@@ -111,6 +111,8 @@ export interface TbState {
   articleId: string | null
   articleData: any
   tbPinyinMode: boolean
+  articlesCache: any[]
+  articlesCacheBookId: string | null
 }
 
 export interface TbLevel {
