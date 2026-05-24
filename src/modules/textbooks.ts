@@ -7,6 +7,7 @@ import {
   doc, getDoc, setDoc, collection, getDocs, addDoc, updateDoc,
   query, where, orderBy, deleteDoc,
 } from 'firebase/firestore'
+import HanziWriter from 'hanzi-writer'
 import { db, tbState } from '../state'
 import { $, toast, getPinyin, applyRubyAnnotations } from '../utils'
 import { isTraditional, _openccConverter } from '../state'
@@ -24,6 +25,15 @@ let _tbPractice: any = {
   queue: [], card: null, answered: false, correct: 0, total: 0, initial: 0,
   container: 'tb-art-practice', restartFn: null,
 }
+// Write-practice game state
+const _tbWrite = {
+  queue:    [] as Array<{ char: string; wordZh: string; pinyin: string; vi: string }>,
+  idx:      0,
+  mistakes: 0,
+  writer:   null as any,
+  started:  false,
+}
+const TB_WRITE_MAX_MISTAKES = 5
 let _tbBlocks: any[] = []
 let _tbLastFocusedEditor: HTMLElement | null = null
 
@@ -336,7 +346,7 @@ async function tbRenderWordsList(book: any, container: HTMLElement): Promise<voi
   if (notAdded.length > 0 || isAdmin) {
     html += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">`
     if (notAdded.length > 0) {
-      html += `<button class="submit-btn" id="tb-add-all-btn" style="padding:8px 18px;font-size:13px;background:var(--green);border-color:var(--green)">📚 Thêm tất cả ${notAdded.length} từ vào SRS</button>`
+      html += `<button class="green-pill-btn" id="tb-add-all-btn">📚 Thêm tất cả ${notAdded.length} từ vào SRS</button>`
     } else {
       html += `<span style="font-size:13px;color:var(--green);font-weight:600">✓ Tất cả từ đã được thêm vào SRS</span>`
     }
@@ -481,7 +491,7 @@ async function tbRenderArticle(): Promise<void> {
   // Reset highlight toggle to ON each time an article is opened
   bodyEl.classList.remove('highlights-off')
   const htb = $('tb-art-highlight-toggle-btn')
-  if (htb) { htb.classList.add('active'); htb.textContent = 'Ẩn highlight'; htb.onclick = null }
+  if (htb) { htb.classList.add('active'); htb.textContent = '👁 Ẩn highlight'; htb.onclick = null }
 
   const backBtn = $('tb-art-back-btn')
   if (backBtn) backBtn.onclick = () => { tbState.bookTab = 'articles'; tbNav('words', tbState.level, tbState.bookId) }
@@ -520,7 +530,7 @@ async function tbRenderArticle(): Promise<void> {
     if (htb) {
       htb.onclick = () => {
         const nowOn = htb.classList.toggle('active')
-        htb.textContent = nowOn ? 'Ẩn highlight' : 'Hiện highlight'
+        htb.textContent = nowOn ? '👁 Ẩn highlight' : '👁 Hiện highlight'
         const bd = $('tb-art-reader-body')
         if (bd) bd.classList.toggle('highlights-off', !nowOn)
       }
@@ -528,22 +538,25 @@ async function tbRenderArticle(): Promise<void> {
 
     if (vocabEl) tbRenderArticleVocabPanel(article.words || [])
 
+    // Reset write-game state for new article
+    _tbWrite.started = false; _tbWrite.idx = 0; _tbWrite.mistakes = 0
+    if (_tbWrite.writer) { try { _tbWrite.writer.cancelQuiz() } catch {} ; _tbWrite.writer = null }
+
     // Right panel tab switching
     document.querySelectorAll('.tb-rt-tab').forEach(btn => {
       ;(btn as HTMLElement).onclick = () => {
+        const tab = (btn as HTMLElement).dataset.tab
         document.querySelectorAll('.tb-rt-tab').forEach(b => {
-          const active = (b as HTMLElement).dataset.tab === (btn as HTMLElement).dataset.tab
+          const active = (b as HTMLElement).dataset.tab === tab
           ;(b as HTMLElement).style.borderBottomColor = active ? 'var(--red)' : 'transparent'
           ;(b as HTMLElement).style.color = active ? 'var(--red)' : 'var(--text2)'
           b.classList.toggle('active', active)
         })
-        const isVocab = (btn as HTMLElement).dataset.tab === 'vocab'
-        if (vocabEl) vocabEl.style.display = isVocab ? '' : 'none'
+        if (vocabEl)    vocabEl.style.display    = tab === 'vocab'    ? '' : 'none'
         const practiceEl = $('tb-art-practice')
-        if (practiceEl) {
-          practiceEl.style.display = isVocab ? 'none' : ''
-          if (!isVocab) tbStartPractice(article.words || [])
-        }
+        if (practiceEl) { practiceEl.style.display = tab === 'practice' ? '' : 'none'; if (tab === 'practice') tbStartPractice(article.words || []) }
+        const writeEl = $('tb-art-write')
+        if (writeEl)    { writeEl.style.display    = tab === 'write'    ? '' : 'none'; if (tab === 'write' && !_tbWrite.started) tbInitWriteTab(article.words || []) }
       }
     })
 
@@ -1600,6 +1613,111 @@ async function tbSaveWord(): Promise<void> {
     toast('✓ Đã thêm từ!')
     await tbRenderWords()
   } catch (e: any) { toast('Lỗi: ' + e.message) }
+}
+
+// ── Write-practice game ────────────────────────────────────────────────────────
+const ZH_CHAR_RE = /[一-鿿㐀-䶿]/
+
+function tbInitWriteTab(words: any[]): void {
+  const el = $('tb-art-write')
+  if (!el) return
+  const charCount = words.reduce((n, w) => n + (w.zh ? [...w.zh].filter((c: string) => ZH_CHAR_RE.test(c)).length : 0), 0)
+  if (!charCount) {
+    el.innerHTML = '<p style="font-size:13px;color:var(--text3);padding:12px 0">Chưa có từ vựng để luyện viết.</p>'
+    return
+  }
+  el.innerHTML = `
+    <div style="text-align:center;padding:24px 8px">
+      <div style="font-size:36px;margin-bottom:12px">✏️</div>
+      <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px">Luyện viết hán tự</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:6px">${words.length} từ vựng · <strong>${charCount}</strong> chữ cần luyện</div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:20px;line-height:1.6">Ẩn chữ Hán — chỉ hiện pinyin & nghĩa.<br>Sai quá ${TB_WRITE_MAX_MISTAKES} lần sẽ xem lại rồi viết lại.</div>
+      <button id="tb-write-start" class="green-pill-btn" style="font-size:14px;padding:10px 28px">▶ Bắt đầu luyện</button>
+    </div>`
+  $('tb-write-start')?.addEventListener('click', () => tbStartWritePractice(words))
+}
+
+function tbStartWritePractice(words: any[]): void {
+  _tbWrite.queue = []
+  words.forEach(w => {
+    if (!w.zh) return
+    const py = getPinyin(w.zh)
+    ;[...w.zh].forEach((c: string) => {
+      if (ZH_CHAR_RE.test(c)) _tbWrite.queue.push({ char: c, wordZh: w.zh, pinyin: py, vi: w.vi || '' })
+    })
+  })
+  if (!_tbWrite.queue.length) { toast('Không có chữ Hán để luyện!'); return }
+  _tbWrite.idx = 0; _tbWrite.mistakes = 0; _tbWrite.started = true
+  tbRenderWriteCard()
+}
+
+function tbRenderWriteCard(): void {
+  const el = $('tb-art-write')
+  if (!el) return
+
+  if (_tbWrite.idx >= _tbWrite.queue.length) {
+    if (_tbWrite.writer) { try { _tbWrite.writer.cancelQuiz() } catch {} }
+    el.innerHTML = `
+      <div style="text-align:center;padding:28px 8px">
+        <div style="font-size:40px;margin-bottom:10px">🎉</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px">Hoàn thành!</div>
+        <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Đã luyện viết ${_tbWrite.queue.length} chữ</div>
+        <button id="tb-write-restart" class="green-pill-btn" style="font-size:13px;padding:8px 22px">↺ Luyện lại</button>
+      </div>`
+    $('tb-write-restart')?.addEventListener('click', () => { _tbWrite.idx = 0; _tbWrite.mistakes = 0; tbRenderWriteCard() })
+    return
+  }
+
+  if (_tbWrite.writer) { try { _tbWrite.writer.cancelQuiz() } catch {} ; _tbWrite.writer = null }
+  const item = _tbWrite.queue[_tbWrite.idx]
+  const total = _tbWrite.queue.length
+  const done  = _tbWrite.idx
+
+  el.innerHTML = `
+    <div style="text-align:center;padding:10px 4px">
+      <div style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.06em;margin-bottom:10px">${done + 1} / ${total}</div>
+      <div style="height:4px;background:var(--border);border-radius:99px;margin-bottom:14px;overflow:hidden">
+        <div style="height:100%;width:${Math.round((done / total) * 100)}%;background:linear-gradient(90deg,#34d399,#059669);border-radius:99px;transition:width .3s"></div>
+      </div>
+      <div style="font-size:13px;color:var(--red);font-weight:600;margin-bottom:2px">${item.pinyin}</div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:14px">${item.vi}</div>
+      <div id="tb-write-canvas" style="width:220px;height:220px;margin:0 auto;background:var(--surface2);border:2px solid var(--border2);border-radius:14px;transition:border-color .2s"></div>
+      <div id="tb-write-mistakes" style="min-height:20px;margin-top:8px;font-size:12px;font-weight:600;color:var(--red)">${_tbWrite.mistakes > 0 ? `❌ ${_tbWrite.mistakes}/${TB_WRITE_MAX_MISTAKES} lần sai` : ''}</div>
+      <button id="tb-write-skip" style="margin-top:8px;padding:5px 14px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:8px;font-size:12px;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">Bỏ qua ›</button>
+    </div>`
+
+  try {
+    _tbWrite.writer = HanziWriter.create('tb-write-canvas', item.char, {
+      width: 220, height: 220, padding: 12,
+      showCharacter: false, showOutline: false,
+      strokeColor: '#177A47', drawingColor: '#177A47',
+      highlightColor: '#059669', drawingWidth: 5,
+      strokeAnimationSpeed: 0.9, delayBetweenStrokes: 200,
+    })
+    _tbWrite.writer.quiz({
+      onMistake: () => {
+        _tbWrite.mistakes++
+        const mc = $('tb-write-mistakes')
+        if (mc) mc.textContent = `❌ ${_tbWrite.mistakes}/${TB_WRITE_MAX_MISTAKES} lần sai`
+        if (_tbWrite.mistakes >= TB_WRITE_MAX_MISTAKES) {
+          const canvas = $('tb-write-canvas')
+          if (canvas) canvas.style.borderColor = 'var(--red)'
+          try { _tbWrite.writer.cancelQuiz(); _tbWrite.writer.showCharacter() } catch {}
+          setTimeout(() => { _tbWrite.mistakes = 0; tbRenderWriteCard() }, 1800)
+        }
+      },
+      onComplete: () => {
+        const canvas = $('tb-write-canvas')
+        if (canvas) canvas.style.borderColor = '#059669'
+        setTimeout(() => { _tbWrite.idx++; _tbWrite.mistakes = 0; tbRenderWriteCard() }, 500)
+      },
+    })
+  } catch (e) { toast('Không tải được chữ ' + item.char) }
+
+  $('tb-write-skip')?.addEventListener('click', () => {
+    if (_tbWrite.writer) { try { _tbWrite.writer.cancelQuiz() } catch {} }
+    _tbWrite.idx++; _tbWrite.mistakes = 0; tbRenderWriteCard()
+  })
 }
 
 // ── Init textbooks nav ─────────────────────────────────────────────────────────

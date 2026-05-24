@@ -304,7 +304,7 @@
         <div class="card-title" style="margin:0">NỘI DUNG — <span style="color:var(--red);font-weight:700">bôi đen từ để thêm vào danh sách học</span></div>
         <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
           <button id="reader-font-btn" class="reader-font-btn" title="Tuỳ chỉnh kiểu chữ">Aa</button>
-          <button id="art-highlight-toggle-btn" class="pinyin-toggle-btn active" title="Ẩn/hiện highlight">Ẩn highlight</button>
+          <button id="art-highlight-toggle-btn" class="highlight-toggle-btn active" title="Ẩn/hiện highlight">👁 Ẩn highlight</button>
           <button id="pinyin-toggle-btn" class="pinyin-toggle-btn" title="Bật/tắt hiển thị phiên âm">Bật Pinyin 拼音 tại đây</button>
         </div>
       </div>
@@ -615,7 +615,7 @@
           <div class="card-title" style="margin:0">NỘI DUNG — <span style="color:var(--red);font-weight:700">bôi đen từ để thêm vào danh sách học</span></div>
           <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
             <button id="tb-reader-font-btn" class="reader-font-btn" title="Tuỳ chỉnh kiểu chữ">Aa</button>
-            <button id="tb-art-highlight-toggle-btn" class="pinyin-toggle-btn active" title="Ẩn/hiện highlight">Ẩn highlight</button>
+            <button id="tb-art-highlight-toggle-btn" class="highlight-toggle-btn active" title="Ẩn/hiện highlight">👁 Ẩn highlight</button>
             <button id="tb-art-pinyin-btn" class="pinyin-toggle-btn" title="Bật/tắt hiển thị phiên âm">Bật Pinyin 拼音 tại đây</button>
           </div>
         </div>
@@ -628,10 +628,13 @@
               style="padding:8px 16px;font-size:13px;font-weight:600;background:none;border:none;border-bottom:2px solid var(--red);cursor:pointer;margin-bottom:-2px;color:var(--red);font-family:'DM Sans',sans-serif">Từ vựng</button>
             <button class="tb-rt-tab" data-tab="practice"
               style="padding:8px 16px;font-size:13px;font-weight:600;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;margin-bottom:-2px;color:var(--text2);font-family:'DM Sans',sans-serif">⚡ Luyện tập</button>
+            <button class="tb-rt-tab" data-tab="write"
+              style="padding:8px 16px;font-size:13px;font-weight:600;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;margin-bottom:-2px;color:var(--text2);font-family:'DM Sans',sans-serif">✏️ Luyện viết</button>
           </div>
         </div>
         <div id="tb-art-vocab" style="font-size:13px;color:var(--text3)">Chưa có từ vựng.</div>
         <div id="tb-art-practice" style="display:none"></div>
+        <div id="tb-art-write" style="display:none"></div>
       </div>
     </div>
   </div>

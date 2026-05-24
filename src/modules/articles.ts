@@ -182,10 +182,10 @@ export function openArticle(id: number): void {
   const htb = $('art-highlight-toggle-btn')
   if (htb) {
     htb.classList.add('active')
-    htb.textContent = 'Ẩn highlight'
+    htb.textContent = '👁 Ẩn highlight'
     htb.onclick = () => {
       const nowOn = htb.classList.toggle('active')
-      htb.textContent = nowOn ? 'Ẩn highlight' : 'Hiện highlight'
+      htb.textContent = nowOn ? '👁 Ẩn highlight' : '👁 Hiện highlight'
       const bd = $('article-reader-body')
       if (bd) bd.classList.toggle('highlights-off', !nowOn)
     }
