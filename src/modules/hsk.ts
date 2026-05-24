@@ -297,6 +297,27 @@ function hskRenderUnits(): void {
   }
 }
 
+// ── Component-tip lookup ──────────────────────────────────────────────────────
+// For a multi-char word like 请进, returns tips for 请 and 进 individually
+// (searches all currently-loaded HSK books).
+function hskGetComponentTips(zh: string): Array<{ zh: string; vi: string; tip: string }> {
+  const chars = [...zh]
+  if (chars.length <= 1) return []
+  const results: Array<{ zh: string; vi: string; tip: string }> = []
+  const seen = new Set<string>()
+  for (const ch of chars) {
+    if (seen.has(ch)) continue
+    seen.add(ch)
+    outer: for (const book of HSK_BOOKS) {
+      for (const unit of book.units) {
+        const found = unit.words.find(w => w.zh === ch && w.memoryTip)
+        if (found) { results.push({ zh: ch, vi: found.vi, tip: found.memoryTip! }); break outer }
+      }
+    }
+  }
+  return results
+}
+
 // ── Word list ─────────────────────────────────────────────────────────────────
 function hskRenderWords(): void {
   const book = hskGetBook(hskState.bookId)
@@ -365,6 +386,20 @@ function hskRenderWordReader(): void {
   const adminBtn = isAdmin
     ? `<button class="hsk-admin-btn" id="hsk-admin-add-btn">⚙️ Thêm từ mới vào unit</button>
        <button class="hsk-admin-btn" id="hsk-admin-tip-btn" style="background:linear-gradient(135deg,#7C3AED22,#7C3AED11);border-color:#7C3AED55;color:#7C3AED">✏️ ${word.memoryTip ? 'Sửa mẹo nhớ' : 'Thêm mẹo nhớ'}</button>`
+    : ''
+
+  // Component tips (for multi-char words, e.g. 请进 → show tip for 请 and 进)
+  const compTips = hskGetComponentTips(word.zh)
+  const compTipsHtml = compTips.length
+    ? `<div class="hsk-card-section-label" style="margin-top:20px">🧩 MẸO NHỚ THÀNH PHẦN</div>
+       ${compTips.map(t => `
+       <div class="hsk-comp-tip">
+         <div class="hsk-comp-tip-header">
+           <span class="hsk-comp-tip-zh">${tr(t.zh)}</span>
+           <span class="hsk-comp-tip-vi">${t.vi}</span>
+         </div>
+         <div class="hsk-comp-tip-text">${t.tip.replace(/\n/g, '<br>')}</div>
+       </div>`).join('')}`
     : ''
 
   const reader = $('hsk-word-reader')
@@ -442,6 +477,8 @@ function hskRenderWordReader(): void {
             <div class="hsk-card-tip">${word.memoryTip.replace(/\n/g, '<br>')}</div>`
                 : ''
             }
+
+            ${compTipsHtml}
 
             ${
               word.exZh
