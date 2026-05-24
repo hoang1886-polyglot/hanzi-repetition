@@ -176,6 +176,20 @@ export function openArticle(id: number): void {
       if (a) renderArticleBody(a)
     }
   }
+  // Highlight toggle: reset to ON each time an article is opened
+  const artBody = $('article-reader-body')
+  if (artBody) artBody.classList.remove('highlights-off')
+  const htb = $('art-highlight-toggle-btn')
+  if (htb) {
+    htb.classList.add('active')
+    htb.textContent = 'Ẩn highlight'
+    htb.onclick = () => {
+      const nowOn = htb.classList.toggle('active')
+      htb.textContent = nowOn ? 'Ẩn highlight' : 'Hiện highlight'
+      const bd = $('article-reader-body')
+      if (bd) bd.classList.toggle('highlights-off', !nowOn)
+    }
+  }
   ;['art-inp-zh','art-inp-vi','art-inp-zh-def','art-inp-ex-zh','art-inp-ex-vi'].forEach(id => {
     const el = $(id) as HTMLInputElement | null; if (el) el.value = ''
   })
