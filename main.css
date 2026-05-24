@@ -690,6 +690,13 @@ tbody tr:hover td{background:var(--surface2)}
 }
 .word-highlight:hover{background:rgba(200,40,30,0.2)}
 
+/* Dark mode: strip hardcoded inline colors from article/textbook content.
+   Pasted HTML often carries color:black which becomes invisible on dark backgrounds. */
+body.dark .tb-text-block *:not(.word-highlight):not(.free-highlight),
+body.dark #article-reader-body *:not(.word-highlight):not(.free-highlight) {
+  color: var(--text) !important;
+}
+
 #selection-popup input::placeholder{color:#666}
 
 .toast{
