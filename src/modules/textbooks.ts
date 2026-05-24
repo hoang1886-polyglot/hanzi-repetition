@@ -1015,6 +1015,39 @@ function setupTbArtTextSelection(): void {
     }
   }
 
+  // Override choice-add-word-btn to pre-fill meaning from article vocabulary
+  // (falls back to cvdict.json lookup set by setupTextSelection, but article
+  //  words take priority since they already carry the curated Vietnamese meaning)
+  const choiceAddBtn = $('choice-add-word-btn') as HTMLElement | null
+  const origChoiceOnclick = choiceAddBtn?.onclick as ((e: MouseEvent) => void) | null
+  if (choiceAddBtn) {
+    choiceAddBtn.onclick = (e: MouseEvent) => {
+      origChoiceOnclick?.call(choiceAddBtn, e)          // runs original: fills word/pinyin, calls lookupForPopup
+      requestAnimationFrame(() => {                      // runs after sync lookupForPopup, before next paint
+        const word = ($('popup-word') as HTMLElement | null)?.textContent?.trim()
+        if (!word) return
+        const match = (tbState.articleData?.words || []).find((w: any) => w.zh === word)
+        if (!match) return
+        const viInp = $('popup-vi-inp') as HTMLInputElement | null
+        if (viInp && match.vi) viInp.value = match.vi   // override dict lookup with article's curated meaning
+        const exInp = $('popup-ex-zh-inp') as HTMLInputElement | null
+        if (exInp && match.exZh && !exInp.value) exInp.value = match.exZh
+        const posMatch = match.pos
+        if (posMatch) {
+          import('../state').then(({ setPopupSelectedType }) => {
+            setPopupSelectedType(posMatch)
+            import('../utils').then(({ resetWordTypeSelector, buildWordTypeSelector }) => {
+              import('../state').then(({ popupSelectedType, setPopupSelectedType: spt }) => {
+                resetWordTypeSelector('popup-word-type-selector', spt)
+                buildWordTypeSelector('popup-word-type-selector', () => popupSelectedType, spt)
+              })
+            })
+          })
+        }
+      })
+    }
+  }
+
   // Override the popup-add-btn to also save to article vocab
   const popup = $('selection-popup')
   if (popup) {
