@@ -1722,20 +1722,22 @@ body:not(.dark) .hsk-admin-form {
 /* ─── PINYIN TOGGLE BUTTON ───────────────────────────────────────────────── */
 .pinyin-toggle-btn {
   flex-shrink: 0;
-  padding: 5px 13px;
-  border: 1.5px solid var(--border2);
+  padding: 6px 15px;
+  border: none;
   border-radius: 99px;
-  background: var(--surface2);
-  color: var(--text2);
+  background: linear-gradient(135deg, var(--red), var(--red-dark));
+  color: #fff;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   font-family: 'DM Sans', sans-serif;
-  transition: all 0.15s;
+  transition: all 0.18s;
   white-space: nowrap;
+  box-shadow: 0 2px 8px var(--red-glow);
+  opacity: 0.72;
 }
-.pinyin-toggle-btn:hover { border-color: var(--red); color: var(--red); background: var(--red-light); }
-.pinyin-toggle-btn.active { background: var(--red); border-color: var(--red); color: #fff; }
+.pinyin-toggle-btn:hover { opacity: 0.9; box-shadow: 0 4px 14px var(--red-glow); }
+.pinyin-toggle-btn.active { opacity: 1; box-shadow: 0 4px 16px var(--red-glow); }
 
 /* ─── RUBY / PINYIN ANNOTATIONS ─────────────────────────────────────────── */
 #article-reader-body.pinyin-on { line-height: 3em; font-size: 18px; }
