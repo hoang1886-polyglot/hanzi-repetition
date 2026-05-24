@@ -14,7 +14,8 @@ import { save } from '../sync'
 import { nav } from '../router'
 import { addWordFromArticle } from './wordlist'
 import { analyzeGrammar } from './grammar'
-import { setupTextSelection, applyWordHighlight, applyFreeHighlight } from './highlight'
+import { setupTextSelection, applyWordHighlight, applyFreeHighlight, positionPopup, getLastSelectionText, getLastSelectionRect } from './highlight'
+import { lookupForPopup } from '../dict'
 
 // ── Module-level state ─────────────────────────────────────────────────────────
 let _tbArticleEditId: string | null = null
@@ -1024,42 +1025,74 @@ function setupTbArtTextSelection(): void {
     }
   }
 
-  // Override choice-add-word-btn to pre-fill meaning from article vocabulary
-  // (falls back to cvdict.json lookup set by setupTextSelection, but article
-  //  words take priority since they already carry the curated Vietnamese meaning)
-  const choiceAddBtn = $('choice-add-word-btn') as HTMLElement | null
-  const origChoiceOnclick = choiceAddBtn?.onclick as ((e: MouseEvent) => void) | null
+  // Replace choice-add-word-btn handler entirely in TB mode.
+  // Article-curated vocabulary always wins over cvdict.json:
+  //   match found  → fill all fields from admin data, skip dict lookup
+  //   no match     → fall back to cvdict.json as normal
+  const choiceAddBtn  = $('choice-add-word-btn') as HTMLElement | null
+  const choicePopupEl = $('selection-choice-popup') as HTMLElement | null
+  const addWordPopup  = $('selection-popup') as HTMLElement | null
   if (choiceAddBtn) {
-    choiceAddBtn.onclick = (e: MouseEvent) => {
-      origChoiceOnclick?.call(choiceAddBtn, e)          // runs original: fills word/pinyin, calls lookupForPopup
-      requestAnimationFrame(() => {                      // runs after sync lookupForPopup, before next paint
-        const word = ($('popup-word') as HTMLElement | null)?.textContent?.trim()
-        if (!word) return
-        const match = (tbState.articleData?.words || []).find((w: any) => w.zh === word)
-        if (!match) return
-        const viInp = $('popup-vi-inp') as HTMLInputElement | null
-        if (viInp && match.vi) viInp.value = match.vi   // override dict lookup with article's curated meaning
-        const exInp = $('popup-ex-zh-inp') as HTMLInputElement | null
-        if (exInp && match.exZh && !exInp.value) exInp.value = match.exZh
-        const posMatch = match.pos
-        if (posMatch) {
-          import('../state').then(({ setPopupSelectedType }) => {
-            setPopupSelectedType(posMatch)
-            import('../utils').then(({ resetWordTypeSelector, buildWordTypeSelector }) => {
-              import('../state').then(({ popupSelectedType, setPopupSelectedType: spt }) => {
-                resetWordTypeSelector('popup-word-type-selector', spt)
-                buildWordTypeSelector('popup-word-type-selector', () => popupSelectedType, spt)
-              })
+    choiceAddBtn.onclick = () => {
+      const text = getLastSelectionText()
+      if (!text) return
+      if (choicePopupEl) choicePopupEl.style.display = 'none'
+
+      // Populate popup header fields
+      const wordEl   = $('popup-word')      as HTMLElement | null
+      const pinyinEl = $('popup-pinyin')    as HTMLElement | null
+      const viInp    = $('popup-vi-inp')    as HTMLInputElement | null
+      const zhDefInp = $('popup-zh-def-inp') as HTMLInputElement | null
+      const exZhInp  = $('popup-ex-zh-inp') as HTMLInputElement | null
+      const exViInp  = $('popup-ex-vi-inp') as HTMLInputElement | null
+      const noteInp  = $('popup-note-inp')  as HTMLTextAreaElement | null
+
+      if (wordEl)   wordEl.textContent   = text
+      if (pinyinEl) pinyinEl.textContent = getPinyin(text)
+      if (viInp)    viInp.value    = ''
+      if (zhDefInp) zhDefInp.value = ''
+      if (exZhInp)  exZhInp.value  = ''
+      if (exViInp)  exViInp.value  = ''
+      if (noteInp)  noteInp.value  = ''
+
+      // Article vocab (admin-curated) has priority over generic dict
+      const match = (tbState.articleData?.words || []).find((w: any) => w.zh === text)
+      if (match) {
+        if (viInp && match.vi)   viInp.value   = match.vi
+        if (exZhInp && match.exZh) exZhInp.value = match.exZh
+        const pos = match.pos || ''
+        import('../state').then(({ setPopupSelectedType }) => {
+          setPopupSelectedType(pos)
+          import('../utils').then(({ resetWordTypeSelector, buildWordTypeSelector }) => {
+            import('../state').then(({ popupSelectedType, setPopupSelectedType: spt }) => {
+              resetWordTypeSelector('popup-word-type-selector', spt)
+              buildWordTypeSelector('popup-word-type-selector', () => popupSelectedType, spt)
             })
           })
-        }
-      })
+        })
+      } else {
+        // No curated match — fall back to cvdict.json
+        import('../state').then(({ setPopupSelectedType }) => setPopupSelectedType(''))
+        import('../utils').then(({ resetWordTypeSelector, buildWordTypeSelector }) => {
+          import('../state').then(({ popupSelectedType, setPopupSelectedType }) => {
+            resetWordTypeSelector('popup-word-type-selector', setPopupSelectedType)
+            buildWordTypeSelector('popup-word-type-selector', () => popupSelectedType, setPopupSelectedType)
+          })
+        })
+        lookupForPopup(text, val => { if (viInp) viInp.value = val })
+      }
+
+      const rect = getLastSelectionRect()
+      if (rect && addWordPopup) {
+        positionPopup(addWordPopup, rect)
+        addWordPopup.style.display = 'block'
+      }
+      setTimeout(() => viInp?.focus(), 50)
     }
   }
 
-  // Override the popup-add-btn to also save to article vocab
-  const popup = $('selection-popup')
-  if (popup) {
+  // Override the popup-add-btn to save to article vocab AND sync the "+" button
+  if (addWordPopup) {
     const origAddBtn = $('popup-add-btn')
     if (origAddBtn) {
       origAddBtn.onclick = async () => {
@@ -1070,10 +1103,26 @@ function setupTbArtTextSelection(): void {
         const note = ($('popup-note-inp') as HTMLTextAreaElement | null)?.value.trim() || ''
         const w = addWordFromTextbook(zh, vi, exZh, exVi, note)
         if (w) {
-          toast(`✓ Đã thêm: ${zh}`)
-          popup.style.display = 'none'
+          addWordPopup.style.display = 'none'
           window.getSelection()?.removeAllRanges()
+          // Save to article vocab list (fire-and-forget)
           tbSaveWordToArticle(zh, vi, exZh, exVi, note)
+          // Sync the "+" button in the right-panel vocab list to "✓ Đã thêm"
+          const vocabEl = $('tb-art-vocab')
+          if (vocabEl) {
+            vocabEl.querySelectorAll('.tb-vocab-add-btn').forEach(btn => {
+              const idx  = parseInt((btn as HTMLElement).dataset.vi!)
+              const word = (tbState.articleData?.words || [])[idx]
+              if (word?.zh === zh) {
+                ;(btn as HTMLElement).textContent        = '✓'
+                btn.classList.add('added')
+                ;(btn as HTMLElement).style.borderColor  = 'var(--green)'
+                ;(btn as HTMLElement).style.background   = 'var(--green-light)'
+                ;(btn as HTMLElement).style.color        = 'var(--green)'
+                ;(btn as HTMLButtonElement).disabled     = true
+              }
+            })
+          }
         } else {
           toast('Vui lòng nhập nghĩa!')
         }
