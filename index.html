@@ -591,13 +591,17 @@
 
   <!-- VIEW: Article reader for a book -->
   <div id="tb-view-article" style="display:none">
-    <div class="page-header">
-      <div style="display:flex;align-items:center;gap:14px">
-        <button id="tb-art-back-btn" style="background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-sm);padding:8px 16px;font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif;transition:all 0.15s">← Quay lại</button>
-        <div>
-          <h1 id="tb-art-title" style="font-size:22px"></h1>
+    <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+      <div style="display:flex;align-items:center;gap:14px;min-width:0">
+        <button id="tb-art-back-btn" style="background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-sm);padding:8px 16px;font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif;transition:all 0.15s;flex-shrink:0">← Quay lại</button>
+        <div style="min-width:0">
+          <h1 id="tb-art-title" style="font-size:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></h1>
           <p id="tb-art-source" style="font-size:13px;color:var(--text2);margin-top:3px"></p>
         </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+        <button id="tb-art-prev-btn" class="tb-art-nav-btn" title="Bài trước">&#8249;</button>
+        <button id="tb-art-next-btn" class="tb-art-nav-btn" title="Bài tiếp theo">&#8250;</button>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 300px;gap:18px;max-width:1060px">

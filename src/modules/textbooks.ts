@@ -425,6 +425,9 @@ async function tbRenderArticlesList(book: any, container: HTMLElement): Promise<
     const q = query(collection(firestore, 'textbooks', book.id, 'articles'), orderBy('order'))
     const snap = await getDocs(q)
     const articles: any[] = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+    // Cache for prev/next navigation in the article reader
+    tbState.articlesCache = articles
+    tbState.articlesCacheBookId = book.id
     const lvl = TB_LEVELS.find(l => l.level === tbState.level)
 
     if (articles.length === 0) {
@@ -533,10 +536,46 @@ async function tbRenderArticle(): Promise<void> {
     })
 
     setupTbArtTextSelection()
+
+    // ── Prev / Next article navigation ────────────────────────────────────────
+    // Ensure we have the ordered list for this book (may already be cached)
+    if (tbState.articlesCacheBookId !== tbState.bookId || tbState.articlesCache.length === 0) {
+      try {
+        const listSnap = await getDocs(
+          query(collection(firestore, 'textbooks', tbState.bookId!, 'articles'), orderBy('order')),
+        )
+        tbState.articlesCache       = listSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+        tbState.articlesCacheBookId = tbState.bookId
+      } catch { /* leave cache empty — buttons will stay disabled */ }
+    }
+    tbWireArticleNavButtons()
   } catch (e: any) {
     console.error(e)
     bodyEl.innerHTML = `<p style="color:var(--red);font-size:14px">Lỗi: ${e.message}</p>`
   }
+}
+
+function tbWireArticleNavButtons(): void {
+  const prevBtn = $('tb-art-prev-btn') as HTMLButtonElement | null
+  const nextBtn = $('tb-art-next-btn') as HTMLButtonElement | null
+  if (!prevBtn || !nextBtn) return
+
+  const list  = tbState.articlesCache
+  const idx   = list.findIndex(a => a.id === tbState.articleId)
+
+  const hasPrev = idx > 0
+  const hasNext = idx !== -1 && idx < list.length - 1
+
+  prevBtn.disabled = !hasPrev
+  nextBtn.disabled = !hasNext
+
+  // Replace onclick each render to avoid stale closures
+  prevBtn.onclick = hasPrev
+    ? () => tbNav('article', tbState.level, tbState.bookId, list[idx - 1].id)
+    : null
+  nextBtn.onclick = hasNext
+    ? () => tbNav('article', tbState.level, tbState.bookId, list[idx + 1].id)
+    : null
 }
 
 /** Strip inline styles from stored HTML that break reader typography / dark mode.

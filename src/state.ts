@@ -69,6 +69,8 @@ export const tbState: TbState = {
   articleId: null,
   articleData: null,
   tbPinyinMode: false,
+  articlesCache: [],
+  articlesCacheBookId: null,
 }
 
 // Setters (for values that can't be directly mutated from other modules due to primitive export)

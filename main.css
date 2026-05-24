@@ -1953,6 +1953,18 @@ body:not(.dark) .hsk-admin-form {
 .tb-book-meta { font-size: 11px; color: var(--text3); margin-top: auto; padding-top: 5px; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
 .tb-book-type-tag { display:inline-block; padding:1px 6px; border-radius:4px; background:var(--surface3); font-size:10px; font-weight:600; }
 
+/* Article prev/next navigation buttons */
+.tb-art-nav-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--red); color: #fff; border: none;
+  font-size: 22px; line-height: 1; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.15s, transform 0.12s;
+  font-family: inherit; padding: 0;
+}
+.tb-art-nav-btn:hover:not(:disabled) { opacity: 0.85; transform: scale(1.08); }
+.tb-art-nav-btn:disabled { opacity: 0.25; cursor: default; }
+
 /* Article list cards (horizontal, used inside book → "Bài đọc" tab) */
 .tb-art-list-card {
   display: flex; align-items: stretch;
