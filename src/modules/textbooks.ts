@@ -478,6 +478,10 @@ async function tbRenderArticle(): Promise<void> {
   tbState.tbPinyinMode = false
   const ptb = $('tb-art-pinyin-btn')
   if (ptb) { ptb.classList.remove('active'); ptb.onclick = null }
+  // Reset highlight toggle to ON each time an article is opened
+  bodyEl.classList.remove('highlights-off')
+  const htb = $('tb-art-highlight-toggle-btn')
+  if (htb) { htb.classList.add('active'); htb.textContent = 'Ẩn highlight'; htb.onclick = null }
 
   const backBtn = $('tb-art-back-btn')
   if (backBtn) backBtn.onclick = () => { tbState.bookTab = 'articles'; tbNav('words', tbState.level, tbState.bookId) }
@@ -511,6 +515,14 @@ async function tbRenderArticle(): Promise<void> {
         tbState.tbPinyinMode = !tbState.tbPinyinMode
         ptb.classList.toggle('active', tbState.tbPinyinMode)
         tbRenderTbArticleBody(article)
+      }
+    }
+    if (htb) {
+      htb.onclick = () => {
+        const nowOn = htb.classList.toggle('active')
+        htb.textContent = nowOn ? 'Ẩn highlight' : 'Hiện highlight'
+        const bd = $('tb-art-reader-body')
+        if (bd) bd.classList.toggle('highlights-off', !nowOn)
       }
     }
 

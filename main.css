@@ -690,6 +690,18 @@ tbody tr:hover td{background:var(--surface2)}
 }
 .word-highlight:hover{background:rgba(200,40,30,0.2)}
 
+/* Dark mode: highlighted words use the default text color for readability */
+body.dark .word-highlight { color: var(--text); }
+
+/* Hide-highlights toggle: strip all decoration when the reader has .highlights-off */
+.highlights-off .word-highlight,
+.highlights-off .free-highlight {
+  background: none !important;
+  border-bottom: none !important;
+  color: inherit !important;
+  cursor: text;
+}
+
 /* Dark mode: strip hardcoded inline colors from article/textbook content.
    Pasted HTML often carries color:black which becomes invisible on dark backgrounds. */
 body.dark .tb-text-block *:not(.word-highlight):not(.free-highlight),
