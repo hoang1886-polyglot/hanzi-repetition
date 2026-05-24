@@ -302,7 +302,10 @@
     <div class="card" style="margin:0">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px">
         <div class="card-title" style="margin:0">NỘI DUNG — <span style="color:var(--red);font-weight:700">bôi đen từ để thêm vào danh sách học</span></div>
-        <button id="pinyin-toggle-btn" class="pinyin-toggle-btn" title="Bật/tắt hiển thị phiên âm">ā 拼音</button>
+        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+          <button id="reader-font-btn" class="reader-font-btn" title="Tuỳ chỉnh kiểu chữ">Aa</button>
+          <button id="pinyin-toggle-btn" class="pinyin-toggle-btn" title="Bật/tắt hiển thị phiên âm">Bật Pinyin 拼音 tại đây</button>
+        </div>
       </div>
       <div id="article-reader-body" style="font-family:'Noto Serif SC','Noto Sans SC',sans-serif;font-size:17px;font-weight:400;line-height:1.95;color:var(--text);user-select:text;cursor:text"></div>
     </div>
@@ -601,7 +604,10 @@
       <div class="card" style="margin:0">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px">
           <div class="card-title" style="margin:0">NỘI DUNG — <span style="color:var(--red);font-weight:700">bôi đen từ để thêm vào danh sách học</span></div>
-          <button id="tb-art-pinyin-btn" class="pinyin-toggle-btn" title="Bật/tắt hiển thị phiên âm">ā 拼音</button>
+          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+            <button id="tb-reader-font-btn" class="reader-font-btn" title="Tuỳ chỉnh kiểu chữ">Aa</button>
+            <button id="tb-art-pinyin-btn" class="pinyin-toggle-btn" title="Bật/tắt hiển thị phiên âm">Bật Pinyin 拼音 tại đây</button>
+          </div>
         </div>
         <div id="tb-art-reader-body" style="font-family:'Noto Serif SC','Noto Sans SC',sans-serif;font-size:17px;font-weight:400;line-height:1.95;color:var(--text);user-select:text;cursor:text"></div>
       </div>
@@ -743,6 +749,19 @@
       <button id="tb-add-word-save" style="flex:2;padding:12px;background:var(--red);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">✓ Thêm từ</button>
     </div>
   </div>
+</div>
+
+<!-- TYPOGRAPHY PANEL -->
+<div id="reader-typography-panel" style="display:none;position:absolute;z-index:2500">
+  <div class="typo-section-label">CỠ CHỮ</div>
+  <div class="typo-size-row">
+    <button id="typo-size-down" class="typo-size-btn">A−</button>
+    <span id="typo-size-label" class="typo-size-val">17px</span>
+    <button id="typo-size-up" class="typo-size-btn">A+</button>
+  </div>
+  <div class="typo-divider"></div>
+  <div class="typo-section-label">FONT CHỮ</div>
+  <div id="typo-font-selector"></div>
 </div>
 
 </body>
