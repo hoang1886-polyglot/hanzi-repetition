@@ -538,14 +538,23 @@ async function tbRenderArticle(): Promise<void> {
   }
 }
 
-/** Strip inline font-size, font-family and color from stored HTML so the
- *  reader typography panel (applyTypography) and dark-mode CSS can take effect. */
+/** Strip inline styles from stored HTML that break reader typography / dark mode.
+ *  Rules:
+ *  - font-size: strip absolute values (px, pt, cm…) from pasted content;
+ *               KEEP relative values (em, rem, %) set intentionally by the editor.
+ *  - font-family, color, background-color: always strip (handled by applyTypography / dark-mode CSS).
+ */
 function tbSanitizeContent(html: string): string {
   return html.replace(/(<[^>]+?)\s+style="([^"]*)"/gi, (_m, tag, style) => {
     const kept = (style as string)
       .split(';')
       .map((s: string) => s.trim())
-      .filter((s: string) => !/^\s*(font-size|font-family|color|background-color)\s*:/i.test(s))
+      .filter((s: string) => {
+        if (/^\s*font-size\s*:/i.test(s))
+          return /[\d.]+\s*(em|rem|%)/.test(s)   // keep em/rem/% (editor); strip px/pt (pasted)
+        if (/^\s*(font-family|color|background-color)\s*:/i.test(s)) return false
+        return true
+      })
       .filter(Boolean)
       .join('; ')
     return kept ? `${tag} style="${kept}"` : tag
@@ -1231,7 +1240,38 @@ function tbShowEditArticleModal(article: any): void {
 function setupTbRichToolbar(): void {
   const toolbar = $('tb-art-rich-toolbar')
   if (!toolbar) return
-  toolbar.querySelectorAll('.rtb-btn').forEach(btn => {
+
+  // Font-size buttons (sm / lg / xl / rst)
+  const SIZE_EM: Record<string, string> = { sm: '0.8em', lg: '1.2em', xl: '1.5em' }
+  toolbar.querySelectorAll('.rtb-size-btn').forEach(btn => {
+    ;(btn as HTMLElement).onmousedown = e => e.preventDefault()
+    ;(btn as HTMLElement).onclick = e => {
+      e.preventDefault()
+      if (_tbLastFocusedEditor) _tbLastFocusedEditor.focus()
+      const key  = (btn as HTMLElement).dataset.size!
+      const sel  = window.getSelection()
+      if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return
+      const range = sel.getRangeAt(0)
+      if (key === 'rst') {
+        // Reset: unwrap any font-size spans inside the selection
+        document.execCommand('removeFormat', false, undefined as any)
+        return
+      }
+      const span = document.createElement('span')
+      span.style.fontSize = SIZE_EM[key]
+      try {
+        range.surroundContents(span)
+      } catch {
+        // Selection crosses element boundaries — wrap extracted fragment
+        const frag = range.extractContents()
+        span.appendChild(frag)
+        range.insertNode(span)
+      }
+      sel.removeAllRanges()
+    }
+  })
+
+  toolbar.querySelectorAll('.rtb-btn:not(.rtb-size-btn)').forEach(btn => {
     if (btn.id === 'tb-art-img-btn') return
     // prevent mousedown from stealing focus away from the active editor
     ;(btn as HTMLElement).onmousedown = e => e.preventDefault()
