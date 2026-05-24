@@ -136,23 +136,28 @@ async function tbRenderBooks(): Promise<void> {
     list.innerHTML = ''
 
     if (books.length === 0) {
-      list.innerHTML = `<p style="color:var(--text3);font-size:14px;padding:16px 0">${isAdmin ? 'Chưa có sách nào. Nhấn "+ Thêm sách" để bắt đầu.' : 'Chưa có sách nào cho cấp độ này.'}</p>`
+      list.innerHTML = `<p style="color:var(--text3);font-size:14px;padding:16px 0;grid-column:1/-1">${isAdmin ? 'Chưa có sách nào. Nhấn "+ Thêm sách" để bắt đầu.' : 'Chưa có sách nào cho cấp độ này.'}</p>`
     } else {
-      const typeLabel: Record<string, string> = { jiaocheng: '📗 Giáo trình', exam: '📝 Đề thi', other: '📖 Khác' }
-      list.innerHTML = books.map(b => `
-        <div class="tb-book-card" data-bookid="${b.id}" style="align-items:stretch">
-          <div class="tb-book-color-bar" style="background:${lvl?.grad || 'var(--red)'}"></div>
-          ${b.imageUrl ? `<div style="width:90px;min-height:90px;flex-shrink:0;overflow:hidden;background:var(--surface2)">
-            <img src="${b.imageUrl}" alt="" style="width:100%;height:100%;object-fit:cover;display:block"
-              onerror="this.parentElement.style.display='none'">
-          </div>` : ''}
-          <div class="tb-book-content">
+      const typeLabel: Record<string, string> = { jiaocheng: 'Giáo trình', exam: 'Đề thi', other: 'Khác' }
+      list.innerHTML = books.map(b => {
+        const wordCount = b.wordCount ?? (b.words || []).length
+        const grad = lvl?.grad || 'var(--red)'
+        return `
+        <div class="tb-book-card" data-bookid="${b.id}">
+          <div class="tb-book-cover">
+            ${b.imageUrl ? `<img src="${b.imageUrl}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : ''}
+            <div class="tb-book-cover-ph" style="background:${grad};display:${b.imageUrl ? 'none' : 'flex'}">${b.title.slice(0, 4)}</div>
+          </div>
+          <div class="tb-book-info">
             <div class="tb-book-title">${b.title}</div>
             ${b.subtitle ? `<div class="tb-book-subtitle">${b.subtitle}</div>` : ''}
-            <div class="tb-book-meta">${(b.words || []).length} từ vựng${b.type ? ` · ${typeLabel[b.type] || b.type}` : ''}</div>
+            <div class="tb-book-meta">
+              <span>${wordCount} từ</span>
+              ${b.type ? `<span class="tb-book-type-tag">${typeLabel[b.type] || b.type}</span>` : ''}
+            </div>
           </div>
-          <div class="tb-book-arrow">›</div>
-        </div>`).join('')
+        </div>`
+      }).join('')
       list.querySelectorAll('[data-bookid]').forEach(card => {
         card.addEventListener('click', () => tbNav('words', tbState.level, (card as HTMLElement).dataset.bookid!))
       })
@@ -160,7 +165,7 @@ async function tbRenderBooks(): Promise<void> {
     if (isAdmin) {
       const btn = document.createElement('button')
       btn.className = 'submit-btn'
-      btn.style.cssText = 'margin-top:18px;padding:10px 22px;font-size:13px'
+      btn.style.cssText = 'margin-top:4px;padding:10px 22px;font-size:13px;grid-column:1/-1;justify-self:start'
       btn.textContent = '+ Thêm sách mới'
       btn.addEventListener('click', () => tbShowAddBookModal(tbState.level!))
       list.appendChild(btn)
@@ -904,7 +909,27 @@ async function tbSaveWordToArticle(zh: string, vi: string, exZh: string, exVi: s
     await updateDoc(artRef, { words: updated })
     if (tbState.articleData) tbState.articleData.words = updated
     tbRenderArticleVocabPanel(updated)
+    tbSyncWordCount(tbState.bookId)  // fire-and-forget: update cached word count
   } catch (e) { console.error(e) }
+}
+
+// ── Word-count denormalisation ─────────────────────────────────────────────────
+// Aggregates unique words across book.words + all article words and writes a
+// `wordCount` field back to the book document so the listing can display the
+// correct total without fetching every article.
+async function tbSyncWordCount(bookId: string): Promise<void> {
+  try {
+    const [bookSnap, artSnap] = await Promise.all([
+      getDoc(doc(firestore, 'textbooks', bookId)),
+      getDocs(collection(firestore, 'textbooks', bookId, 'articles')),
+    ])
+    const seen = new Set<string>()
+    ;(bookSnap.data()?.words || []).forEach((w: any) => { if (w.zh) seen.add(w.zh) })
+    artSnap.docs.forEach(d => {
+      ;(d.data().words || []).forEach((w: any) => { if (w.zh) seen.add(w.zh) })
+    })
+    await updateDoc(doc(firestore, 'textbooks', bookId), { wordCount: seen.size })
+  } catch (e) { console.error('tbSyncWordCount:', e) }
 }
 
 async function tbApplyAndSaveFreeHighlight(text: string, color: string): Promise<void> {
@@ -1238,6 +1263,8 @@ async function tbSaveArticle(): Promise<void> {
       toast('✓ Đã thêm bài đọc!')
       if (tbState.bookData) await tbRenderBookTabContent(tbState.bookData)
     }
+    // Sync word count on book doc regardless of create/update
+    if (tbState.bookId) tbSyncWordCount(tbState.bookId)
   } catch (e: any) { toast('Lỗi: ' + e.message) }
 }
 
