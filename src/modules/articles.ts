@@ -1,7 +1,7 @@
 import {
   db, currentArticleId, articleSortOrder, editingArticleId, pinyinMode,
-  isTraditional, _openccConverter,
-  setCurrentArticleId, setArticleSortOrder, setEditingArticleId, setPinyinMode,
+  isTraditional, _openccConverter, artSelectedType,
+  setCurrentArticleId, setArticleSortOrder, setEditingArticleId, setPinyinMode, setArtSelectedType,
 } from '../state'
 import { $, toast, tr, getPinyin, applyRubyAnnotations, buildWordTypeSelector, resetWordTypeSelector, getWtInfo } from '../utils'
 import { save } from '../sync'
@@ -169,9 +169,9 @@ export function openArticle(id: number): void {
   if (ptb) {
     ptb.classList.remove('active')
     ptb.onclick = () => {
-      const { pinyinMode: cur, setPinyinMode: set } = require('../state') as any
-      set(!cur)
-      ptb.classList.toggle('active', !cur)
+      const newMode = !pinyinMode
+      setPinyinMode(newMode)
+      ptb.classList.toggle('active', newMode)
       const a = db.articles.find(a => a.id === currentArticleId)
       if (a) renderArticleBody(a)
     }
@@ -180,10 +180,10 @@ export function openArticle(id: number): void {
     const el = $(id) as HTMLInputElement | null; if (el) el.value = ''
   })
   ;($('art-pinyin-preview') as HTMLElement).textContent = ''
-  import('../state').then(({ setArtSelectedType }) => setArtSelectedType(''))
+  setArtSelectedType('')
   buildWordTypeSelector('art-word-type-selector',
-    () => { const { artSelectedType: a } = require('../state') as any; return a },
-    v => { import('../state').then(({ setArtSelectedType }) => setArtSelectedType(v)) },
+    () => artSelectedType,
+    v => setArtSelectedType(v),
   )
   renderArticleAddedWords(article)
   nav('read-article')
