@@ -207,6 +207,14 @@ function hskRenderUnits(): void {
   if (descEl) descEl.textContent = book.desc
   const grid = $('hsk-units-grid')
   if (!grid) return
+
+  // Reset search state on every navigation to this view
+  const searchInp = $('hsk-unit-search') as HTMLInputElement | null
+  const resultsEl = $('hsk-search-results')
+  if (searchInp) { searchInp.value = ''; searchInp.oninput = null }
+  if (resultsEl) { resultsEl.style.display = 'none'; resultsEl.innerHTML = '' }
+  grid.style.display = ''
+
   if (book.units.length === 0) {
     hskLoadBookData(hskState.bookId!)
     return
@@ -239,6 +247,54 @@ function hskRenderUnits(): void {
       ),
     )
   })
+
+  // ── Search ──────────────────────────────────────────────────────────────────
+  if (!searchInp || !resultsEl) return
+  searchInp.oninput = () => {
+    const q = searchInp.value.trim().toLowerCase()
+    if (!q) {
+      resultsEl.style.display = 'none'
+      grid.style.display = ''
+      return
+    }
+    type Match = { ui: number; wi: number; unit: (typeof book.units)[0]; word: (typeof book.units)[0]['words'][0] }
+    const matches: Match[] = []
+    book.units.forEach((unit, ui) => {
+      unit.words.forEach((word, wi) => {
+        if ((word.zh || '').includes(q) || (word.vi || '').toLowerCase().includes(q)) {
+          matches.push({ ui, wi, unit, word })
+        }
+      })
+    })
+    grid.style.display = 'none'
+    resultsEl.style.display = ''
+    if (!matches.length) {
+      resultsEl.innerHTML = `<p class="hsk-search-empty">Không tìm thấy từ nào khớp với "<strong>${q}</strong>"</p>`
+      return
+    }
+    resultsEl.innerHTML = matches.map(m => {
+      const pin = getPinyin(m.word.zh) || ''
+      const addedBadge = hskIsInDict(m.word.zh) ? `<span class="hsk-sr-added">✓ Đã thêm</span>` : ''
+      const unitShort = (m.unit.title || '').split(':')[0]?.trim() || `Unit ${m.ui + 1}`
+      return `<div class="hsk-search-result" data-ui="${m.ui}" data-wi="${m.wi}">
+        <div class="hsk-sr-zh">${m.word.zh}</div>
+        <div style="flex:1;min-width:0">
+          <div class="hsk-sr-pin">${pin}</div>
+          <div class="hsk-sr-vi">${m.word.vi || ''}</div>
+        </div>
+        ${addedBadge}
+        <span class="hsk-sr-unit">${unitShort}</span>
+      </div>`
+    }).join('')
+    resultsEl.querySelectorAll('.hsk-search-result').forEach(r => {
+      r.addEventListener('click', () => {
+        hskNav('words', hskState.bookId,
+          parseInt((r as HTMLElement).dataset.ui!),
+          parseInt((r as HTMLElement).dataset.wi!),
+        )
+      })
+    })
+  }
 }
 
 // ── Word list ─────────────────────────────────────────────────────────────────
