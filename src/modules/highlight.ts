@@ -8,6 +8,12 @@ import { renderArticleAddedWords, renderArticleBody } from './articles'
 import { analyzeGrammar } from './grammar'
 import type { FreeHighlight } from '../types'
 
+// ── Last text-selection state (exported for TB-mode override) ─────────────────
+let _lastSelText = ''
+let _lastSelRect: DOMRect | null = null
+export function getLastSelectionText(): string { return _lastSelText }
+export function getLastSelectionRect(): DOMRect | null { return _lastSelRect }
+
 export function applyWordHighlight(html: string, zh: string): string {
   if (!zh) return html
   const escaped = zh.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -93,6 +99,8 @@ export function setupTextSelection(isTbMode = false): void {
     }
     savedText = text
     savedRect = sel!.getRangeAt(0).getBoundingClientRect()
+    _lastSelText = savedText   // keep module-level in sync for TB-mode
+    _lastSelRect = savedRect
     ;($('choice-selected-text') as HTMLElement).textContent = `"${text.slice(0, 30)}${text.length > 30 ? '…' : ''}"`
     positionPopup(choicePopup as HTMLElement, savedRect)
     choicePopup.style.display = 'block'; popup.style.display = 'none'; hlPopup.style.display = 'none'
