@@ -1831,6 +1831,22 @@ const HSK_BOOKS = [
     icon: '🌳',
     desc: 'Đang cập nhật...',
     units: []
+  },
+  {
+    id: 'hsk4',
+    title: 'HSK 4',
+    level: 4,
+    icon: '🌲',
+    desc: 'Đang cập nhật...',
+    units: []
+  },
+  {
+    id: 'hsk5',
+    title: 'HSK 5',
+    level: 5,
+    icon: '🏔️',
+    desc: 'Đang cập nhật...',
+    units: []
   }
 ];
 
@@ -1861,6 +1877,8 @@ function hskGetSRSInfo(zh) {
 const HSK_BOOK_URLS = {
   hsk2: 'https://raw.githubusercontent.com/hoang1886-polyglot/hanzi-repetition/main/data/hsk2.json',
   hsk3: 'https://raw.githubusercontent.com/hoang1886-polyglot/hanzi-repetition/main/data/hsk3.json',
+  hsk4: 'https://raw.githubusercontent.com/hoang1886-polyglot/hanzi-repetition/main/data/hsk4.json',
+  hsk5: 'https://raw.githubusercontent.com/hoang1886-polyglot/hanzi-repetition/main/data/hsk5.json',
 };
 const _hskLoadingBooks = new Set();
 
