@@ -472,6 +472,19 @@ async function tbRenderArticlesList(book: any, container: HTMLElement): Promise<
   }
 }
 
+// ── Print helper ──────────────────────────────────────────────────────────────
+function tbPrintContent(keepHighlights: boolean): void {
+  const title  = tbState.articleData?.title  || ''
+  const source = tbState.articleData?.source || ''
+  const body   = $('tb-art-reader-body')?.innerHTML || ''
+  const pt     = document.getElementById('print-target')
+  if (!pt) return
+  pt.innerHTML = `${title  ? `<h1>${title}</h1>` : ''}${source ? `<p class="print-source">${source}</p>` : ''}<div class="print-body">${body}</div>`
+  if (keepHighlights) pt.classList.add('keep-highlight')
+  else pt.classList.remove('keep-highlight')
+  window.print()
+}
+
 // ── Article reader ─────────────────────────────────────────────────────────────
 async function tbRenderArticle(): Promise<void> {
   const bodyEl   = $('tb-art-reader-body')
@@ -553,9 +566,14 @@ async function tbRenderArticle(): Promise<void> {
     }
     document.addEventListener('click', () => { if (dlMenu) dlMenu.style.display = 'none' })
 
-    $('tb-dl-pdf')?.addEventListener('click', () => {
+    $('tb-dl-pdf-hl')?.addEventListener('click', () => {
       if (dlMenu) dlMenu.style.display = 'none'
-      window.print()
+      tbPrintContent(true)
+    })
+
+    $('tb-dl-pdf-clean')?.addEventListener('click', () => {
+      if (dlMenu) dlMenu.style.display = 'none'
+      tbPrintContent(false)
     })
 
     $('tb-dl-word')?.addEventListener('click', () => {
