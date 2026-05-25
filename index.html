@@ -395,9 +395,12 @@
 
   <!-- VIEW: Unit list -->
   <div id="hsk-view-units" style="display:none">
-    <div class="page-header">
-      <h1 id="hsk-book-title">HSK 1</h1>
-      <p id="hsk-book-desc"></p>
+    <div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+      <div>
+        <h1 id="hsk-book-title">HSK 1</h1>
+        <p id="hsk-book-desc"></p>
+      </div>
+      <button id="hsk-quicklearn-btn" style="flex-shrink:0;padding:10px 20px;background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 3px 12px var(--red-glow);display:flex;align-items:center;gap:8px;white-space:nowrap;margin-top:4px">🎲 Học ngẫu nhiên</button>
     </div>
     <div class="hsk-search-wrap">
       <input id="hsk-unit-search" class="hsk-search-inp" type="text" placeholder="🔍 Tìm từ vựng — nhập chữ Hán hoặc nghĩa tiếng Việt..." autocomplete="off" spellcheck="false">
@@ -605,6 +608,13 @@
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+        <div style="position:relative">
+          <button id="tb-art-download-btn" style="padding:8px 14px;background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px">⬇ Tải xuống</button>
+          <div id="tb-art-download-menu" style="display:none;position:absolute;right:0;top:calc(100% + 6px);background:var(--surface);border:1.5px solid var(--border2);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);overflow:hidden;min-width:170px;z-index:200">
+            <button id="tb-dl-pdf" style="width:100%;padding:10px 16px;background:none;border:none;border-bottom:1px solid var(--border);text-align:left;font-size:13px;cursor:pointer;color:var(--text);font-family:'DM Sans',sans-serif">📄 Tải PDF</button>
+            <button id="tb-dl-word" style="width:100%;padding:10px 16px;background:none;border:none;text-align:left;font-size:13px;cursor:pointer;color:var(--text);font-family:'DM Sans',sans-serif">📝 Tải Word (.doc)</button>
+          </div>
+        </div>
         <button id="tb-art-prev-btn" class="tb-art-nav-btn" title="Bài trước">&#8249;</button>
         <button id="tb-art-next-btn" class="tb-art-nav-btn" title="Bài tiếp theo">&#8250;</button>
       </div>
@@ -619,14 +629,14 @@
             <button id="tb-art-pinyin-btn" class="pinyin-toggle-btn" title="Bật/tắt hiển thị phiên âm">Bật Pinyin 拼音 tại đây</button>
           </div>
         </div>
-        <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
-          <button id="tb-art-practice-btn" style="padding:7px 16px;background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 2px 6px var(--red-glow)">📚 Học lại các từ mới trong bài</button>
-          <button id="tb-art-write-btn" style="padding:7px 16px;background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">✏️ Luyện viết</button>
-        </div>
         <div id="tb-art-reader-body" style="font-family:'Noto Serif SC','Noto Sans SC',sans-serif;font-size:17px;font-weight:400;line-height:1.95;color:var(--text);user-select:text;cursor:text"></div>
       </div>
       <div class="card" id="tb-art-right-card" style="margin:0">
         <div id="tb-art-right-header">
+          <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+            <button id="tb-art-practice-btn" style="flex:1;padding:8px 12px;background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;border:none;border-radius:var(--radius-sm);font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 2px 6px var(--red-glow);white-space:nowrap">📚 Học lại từ mới</button>
+            <button id="tb-art-write-btn" style="flex:1;padding:8px 12px;background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;font-weight:700;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif;white-space:nowrap">✏️ Luyện viết</button>
+          </div>
           <div style="font-size:12px;font-weight:700;letter-spacing:0.07em;color:var(--text3);text-transform:uppercase;margin-bottom:12px">Từ vựng</div>
         </div>
         <div id="tb-art-vocab" style="font-size:13px;color:var(--text3)">Chưa có từ vựng.</div>
@@ -638,6 +648,33 @@
 </div>
 
 </div><!-- /#main -->
+
+<!-- HSK QUICK-LEARN OVERLAY -->
+<div id="hsk-ql-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:4000;align-items:center;justify-content:center">
+  <div style="background:var(--surface);border-radius:20px;width:min(520px,94vw);box-shadow:0 20px 60px rgba(0,0,0,0.28);overflow:hidden;display:flex;flex-direction:column">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1.5px solid var(--border)">
+      <div>
+        <div id="hsk-ql-title" style="font-size:16px;font-weight:700;color:var(--text)"></div>
+        <div id="hsk-ql-stats" style="font-size:12px;margin-top:3px;color:var(--text3)"></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span id="hsk-ql-counter" style="font-size:13px;color:var(--text3);font-weight:600"></span>
+        <button id="hsk-ql-close" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text3);line-height:1;padding:4px">✕</button>
+      </div>
+    </div>
+    <div style="height:4px;background:var(--border);width:100%">
+      <div id="hsk-ql-progress-fill" style="height:100%;background:var(--red);transition:width 0.3s ease;width:0%"></div>
+    </div>
+    <div id="hsk-ql-card-area" style="padding:40px 32px;min-height:220px;display:flex;align-items:center;justify-content:center;flex-direction:column"></div>
+    <div id="hsk-ql-controls" style="padding:18px 24px;border-top:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;gap:12px">
+      <button id="hsk-ql-flip" style="padding:12px 36px;background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 3px 10px var(--red-glow)">👁 Xem nghĩa</button>
+      <div id="hsk-ql-answer" style="display:none;gap:12px">
+        <button id="hsk-ql-know" style="padding:12px 28px;background:linear-gradient(145deg,#86efac 0%,#22c55e 55%,#15803d 100%);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 4px 0 #166534">✓ Biết rồi</button>
+        <button id="hsk-ql-unknown" style="padding:12px 28px;background:var(--surface);border:1.5px solid var(--border2);color:var(--text2);border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">✗ Chưa biết</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ADMIN: Add book modal -->
 <div id="tb-add-book-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:3000;align-items:center;justify-content:center">

@@ -1540,28 +1540,28 @@ body.dark .tb-block-editor{background:var(--surface);}
 /* ── The main card ── */
 .hsk-reader-card {
   flex: 1;
-  background: #F7FBF8; /* light green-white like PREP */
-  border: 1.5px solid #C6E6D0;
+  background: #FFF8F8;
+  border: 1.5px solid #FED7D7;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: var(--shadow-md);
 }
 body.dark .hsk-reader-card {
-  background: #0F1A12;
-  border-color: #1E3A25;
+  background: #1A0A0A;
+  border-color: #3D1515;
 }
 
 /* Card header (index number + big character) */
 .hsk-card-header {
-  background: linear-gradient(135deg, #E8F5EE 0%, #D4EFE0 100%);
-  border-bottom: 1.5px solid #C6E6D0;
+  background: linear-gradient(135deg, #FFF0F0 0%, #FFE4E4 100%);
+  border-bottom: 1.5px solid #FED7D7;
   padding: 28px 32px;
   text-align: center;
   position: relative;
 }
 body.dark .hsk-card-header {
-  background: linear-gradient(135deg, #0A1F10 0%, #0F2818 100%);
-  border-bottom-color: #1E3A25;
+  background: linear-gradient(135deg, #1F0A0A 0%, #2A0F0F 100%);
+  border-bottom-color: #3D1515;
 }
 .hsk-card-index {
   position: absolute;
@@ -1570,7 +1570,7 @@ body.dark .hsk-card-header {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #177A47;
+  background: var(--red);
   color: #fff;
   font-size: 14px;
   font-weight: 700;
@@ -1582,25 +1582,25 @@ body.dark .hsk-card-header {
   font-family: 'Noto Serif SC', serif;
   font-size: 80px;
   font-weight: 700;
-  color: #1A3A28;
+  color: #7F1D1D;
   line-height: 1;
   margin-bottom: 8px;
 }
-body.dark .hsk-card-zh { color: #A8DFC0; }
+body.dark .hsk-card-zh { color: #FCA5A5; }
 .hsk-card-py {
   font-size: 20px;
-  color: #177A47;
+  color: var(--red);
   font-weight: 600;
   margin-bottom: 6px;
   letter-spacing: 0.05em;
 }
 .hsk-card-vi {
   font-size: 17px;
-  color: #2D5A3D;
+  color: #991B1B;
   font-weight: 500;
   margin-bottom: 14px;
 }
-body.dark .hsk-card-vi { color: #7DBFA0; }
+body.dark .hsk-card-vi { color: #FCA5A5; }
 .hsk-card-actions {
   display: flex;
   gap: 10px;
@@ -1625,9 +1625,9 @@ body.dark .hsk-card-vi { color: #7DBFA0; }
 }
 .hsk-card-left {
   padding: 24px 28px;
-  border-right: 1px solid #C6E6D0;
+  border-right: 1px solid #FED7D7;
 }
-body.dark .hsk-card-left { border-right-color: #1E3A25; }
+body.dark .hsk-card-left { border-right-color: #3D1515; }
 .hsk-card-right {
   padding: 24px 28px;
 }
@@ -1635,14 +1635,14 @@ body.dark .hsk-card-left { border-right-color: #1E3A25; }
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.1em;
-  color: #177A47;
+  color: var(--red);
   text-transform: uppercase;
   margin-bottom: 10px;
   display: flex;
   align-items: center;
   gap: 6px;
 }
-body.dark .hsk-card-section-label { color: #4A9E6A; }
+body.dark .hsk-card-section-label { color: #F87171; }
 .hsk-card-hanviet {
   font-size: 16px;
   font-weight: 600;
@@ -1654,17 +1654,17 @@ body.dark .hsk-card-section-label { color: #4A9E6A; }
   font-family: 'Noto Sans SC', sans-serif;
   color: var(--text2);
   line-height: 1.7;
-  background: rgba(23,122,71,0.07);
+  background: rgba(200,40,30,0.06);
   padding: 12px 14px;
   border-radius: 10px;
-  border: 1px solid rgba(23,122,71,0.15);
+  border: 1px solid rgba(200,40,30,0.15);
 }
 .hsk-card-tip {
   font-size: 13.5px;
   color: var(--text);
   line-height: 1.75;
-  background: #FFFBEB;
-  border: 1px solid #F0C070;
+  background: #FFF0F3;
+  border: 1px solid #FECACA;
   border-radius: 10px;
   padding: 14px 16px;
 }
@@ -1833,30 +1833,79 @@ body:not(.dark) .hsk-admin-form {
   align-items: center;
   gap: 7px;
   padding: 11px 22px;
-  background: var(--green);
+  background: linear-gradient(145deg, #86efac 0%, #22c55e 55%, #15803d 100%);
   color: #fff;
   border: none;
   border-radius: var(--radius-sm);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   font-family: 'Be Vietnam Pro', sans-serif;
   transition: all 0.15s;
-  box-shadow: 0 3px 10px rgba(23,122,71,0.3);
+  box-shadow: 0 4px 0 #166534, 0 6px 16px rgba(22,163,74,0.35);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.15);
 }
 .hsk-memorized-btn:hover {
-  filter: brightness(1.1);
-  transform: translateY(-1px);
-  box-shadow: 0 5px 16px rgba(23,122,71,0.4);
+  filter: brightness(1.05);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #166534, 0 8px 20px rgba(22,163,74,0.4);
 }
-.hsk-memorized-btn:active { transform: none; }
+.hsk-memorized-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #166534, 0 2px 6px rgba(22,163,74,0.25);
+}
 .hsk-memorized-btn.done {
-  background: var(--green);
-  opacity: 0.75;
+  background: linear-gradient(145deg, #86efac 0%, #22c55e 55%, #15803d 100%);
+  opacity: 0.65;
   cursor: default;
   box-shadow: none;
 }
 .hsk-memorized-btn.done:hover { transform: none; filter: none; }
+
+/* ─── HSK QUICK-LEARN CARD ───────────────────────────────────────────────── */
+.hsk-ql-zh {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 80px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 8px;
+  text-align: center;
+}
+.hsk-ql-py {
+  font-size: 20px;
+  color: var(--red);
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+.hsk-ql-vi {
+  font-size: 17px;
+  font-weight: 500;
+  text-align: center;
+  margin-top: 16px;
+  padding: 12px 20px;
+  background: #FFF0F3;
+  border-radius: 12px;
+  border: 1px solid #FECACA;
+  color: #991B1B;
+}
+body.dark .hsk-ql-vi { background: #2A0A0F; border-color: #5A1A20; color: #FCA5A5; }
+#hsk-ql-answer { display: flex; gap: 12px; }
+
+/* ─── PRINT STYLES ───────────────────────────────────────────────────────── */
+@media print {
+  .sidebar, #nav-sidebar, .page-header { display: none !important; }
+  #main { margin-left: 0 !important; padding: 0 !important; }
+  .page:not(.active) { display: none !important; }
+  #tb-art-right-card, #tb-art-right-header,
+  #tb-art-practice-btn, #tb-art-write-btn,
+  #tb-art-download-btn, #tb-art-highlight-toggle-btn,
+  #tb-art-pinyin-btn, #tb-reader-font-btn,
+  #tb-art-back-btn, #tb-art-prev-btn, #tb-art-next-btn { display: none !important; }
+  #tb-view-article { display: block !important; }
+  #tb-art-reader-body { font-size: 12pt; line-height: 1.9; }
+}
 
 /* ─── PINYIN TOGGLE BUTTON ───────────────────────────────────────────────── */
 /* shared pill-button base */

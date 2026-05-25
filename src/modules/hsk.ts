@@ -208,6 +208,8 @@ function hskRenderUnits(): void {
   const descEl = $('hsk-book-desc')
   if (titleEl) titleEl.textContent = `${book.icon} ${book.title}`
   if (descEl) descEl.textContent = book.desc
+  const qlBtn = $('hsk-quicklearn-btn')
+  if (qlBtn) (qlBtn as HTMLButtonElement).onclick = () => hskOpenQuickLearn()
   const grid = $('hsk-units-grid')
   if (!grid) return
 
@@ -930,4 +932,113 @@ function hskMarkMemorized(hskWord: any): void {
 export function initHskNav(): void {
   const navEl = $('nav-hsk-books')
   if (navEl) navEl.addEventListener('click', () => nav('hsk-books'))
+}
+
+// ── Quick-Learn (randomized, no Firebase) ─────────────────────────────────────
+function shuffle<T>(arr: T[]): T[] {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+  return arr
+}
+
+const _ql = {
+  words: [] as Array<{ zh: string; vi: string; pinyin: string }>,
+  idx: 0,
+  known: 0,
+  unknown: 0,
+  flipped: false,
+}
+
+function hskOpenQuickLearn(): void {
+  const book = hskGetBook(hskState.bookId)
+  if (!book || book.units.length === 0) {
+    toast('⚠️ Chưa có dữ liệu để học!')
+    return
+  }
+  const all = book.units.flatMap(u => u.words)
+  _ql.words = shuffle(all.map(w => ({ zh: w.zh, vi: w.vi, pinyin: getPinyin(w.zh) })))
+  _ql.idx = 0; _ql.known = 0; _ql.unknown = 0; _ql.flipped = false
+
+  const titleEl = $('hsk-ql-title')
+  if (titleEl) titleEl.textContent = `🎲 ${book.title} — học ngẫu nhiên (${all.length} từ)`
+
+  const overlay = $('hsk-ql-overlay')
+  if (overlay) overlay.style.display = 'flex'
+
+  hskRenderQlCard()
+
+  const closeBtn = $('hsk-ql-close')
+  if (closeBtn) (closeBtn as HTMLButtonElement).onclick = () => {
+    const o = $('hsk-ql-overlay'); if (o) o.style.display = 'none'
+  }
+  const overlayEl = $('hsk-ql-overlay')
+  if (overlayEl) overlayEl.addEventListener('click', (e) => {
+    if (e.target === overlayEl) overlayEl.style.display = 'none'
+  }, { once: true })
+}
+
+function hskRenderQlCard(): void {
+  const { words, idx, known, unknown, flipped } = _ql
+  const total = words.length
+
+  const counter = $('hsk-ql-counter')
+  if (counter) counter.textContent = `${Math.min(idx + 1, total)} / ${total}`
+  const fill = $('hsk-ql-progress-fill') as HTMLElement | null
+  if (fill) fill.style.width = `${(idx / total) * 100}%`
+  const stats = $('hsk-ql-stats')
+  if (stats) stats.innerHTML = `<span style="color:#22c55e;font-weight:700">✓ ${known}</span>&nbsp;·&nbsp;<span style="color:var(--red);font-weight:700">✗ ${unknown}</span>`
+
+  const ctrl = $('hsk-ql-controls')
+
+  if (idx >= total) {
+    const area = $('hsk-ql-card-area')
+    if (area) area.innerHTML = `
+      <div style="text-align:center;padding:20px">
+        <div style="font-size:52px;margin-bottom:14px">🎉</div>
+        <div style="font-size:22px;font-weight:700;color:var(--text);margin-bottom:6px">Hoàn thành!</div>
+        <div style="font-size:14px;color:var(--text2)">Biết: <b style="color:#22c55e">${known}</b> · Chưa biết: <b style="color:var(--red)">${unknown}</b> / ${total} từ</div>
+        <button id="hsk-ql-restart" style="margin-top:22px;padding:12px 28px;background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 3px 10px var(--red-glow)">🔄 Học lại</button>
+      </div>`
+    if (ctrl) ctrl.style.display = 'none'
+    $('hsk-ql-restart')?.addEventListener('click', () => {
+      _ql.words = shuffle([..._ql.words])
+      _ql.idx = 0; _ql.known = 0; _ql.unknown = 0; _ql.flipped = false
+      if (ctrl) ctrl.style.display = ''
+      hskRenderQlCard()
+    })
+    return
+  }
+
+  const word = words[idx]
+  const area = $('hsk-ql-card-area')
+  if (area) area.innerHTML = flipped
+    ? `<div style="text-align:center;width:100%">
+        <div class="hsk-ql-zh">${word.zh}</div>
+        <div class="hsk-ql-py">${word.pinyin}</div>
+        <div class="hsk-ql-vi">${word.vi}</div>
+       </div>`
+    : `<div style="text-align:center;width:100%">
+        <div class="hsk-ql-zh">${word.zh}</div>
+        <div class="hsk-ql-py">${word.pinyin}</div>
+       </div>`
+
+  const flipBtn = $('hsk-ql-flip')
+  const answerDiv = $('hsk-ql-answer') as HTMLElement | null
+  const knowBtn = $('hsk-ql-know')
+  const unknownBtn = $('hsk-ql-unknown')
+
+  if (ctrl) ctrl.style.display = ''
+  if (flipBtn) {
+    (flipBtn as HTMLElement).style.display = flipped ? 'none' : ''
+    ;(flipBtn as HTMLButtonElement).onclick = () => { _ql.flipped = true; hskRenderQlCard() }
+  }
+  if (answerDiv) answerDiv.style.display = flipped ? 'flex' : 'none'
+  if (knowBtn) (knowBtn as HTMLButtonElement).onclick = () => {
+    _ql.known++; _ql.idx++; _ql.flipped = false; hskRenderQlCard()
+  }
+  if (unknownBtn) (unknownBtn as HTMLButtonElement).onclick = () => {
+    _ql.unknown++; _ql.idx++; _ql.flipped = false; hskRenderQlCard()
+  }
 }
