@@ -2069,88 +2069,90 @@ function hskRenderWordReader() {
     ? `<span class="hsk-srs-badge" style="background:${srs.color}22;color:${srs.color};border-color:${srs.color}44">${srs.status} · ôn ${srs.next}</span>`
     : '';
 
-  // Admin add-word button + edit memory tip button
-  const adminBtn = isAdmin
-    ? `<button class="hsk-admin-btn" id="hsk-admin-add-btn">⚙️ Thêm từ mới vào unit</button>
-       <button class="hsk-admin-btn" id="hsk-admin-tip-btn" style="background:linear-gradient(135deg,#7C3AED22,#7C3AED11);border-color:#7C3AED55;color:#7C3AED">✏️ ${word.memoryTip ? 'Sửa mẹo nhớ' : 'Thêm mẹo nhớ'}</button>`
-    : '';
 
   const reader = $('hsk-word-reader');
   reader.innerHTML = `
-    <!-- Top bar: unit name + progress -->
+    <!-- Top bar: unit name + counter + arrows -->
     <div class="hsk-reader-topbar">
       <div class="hsk-reader-unit-name">${unit.title}</div>
-      <div class="hsk-reader-counter">${idx + 1} / ${words.length}</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="hsk-reader-counter">${idx + 1} / ${words.length}</div>
+        <button class="hsk-arrow-btn hsk-arrow-prev" id="hsk-arr-prev" ${hasPrev ? '' : 'disabled'} title="Từ trước" style="margin-top:0;width:36px;height:36px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="hsk-arrow-btn hsk-arrow-next" id="hsk-arr-next" ${hasNext ? '' : 'disabled'} title="Từ tiếp theo" style="margin-top:0;width:36px;height:36px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
     </div>
     <div class="hsk-reader-dots">${dots}</div>
 
-    <!-- Main layout: prev arrow | card | next arrow -->
-    <div class="hsk-reader-layout">
-      <button class="hsk-arrow-btn hsk-arrow-prev" id="hsk-arr-prev" ${hasPrev ? '' : 'disabled'} title="Từ trước">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-      </button>
+    <!-- Main card: char panel (left) + action buttons (right) -->
+    <div class="hsk-reader-card">
+      <div class="hsk-card-header">
+        <div class="hsk-card-index">${idx + 1}</div>
+        <div class="hsk-card-zh">${tr(word.zh)}</div>
+        <div class="hsk-card-py">${pinyin}</div>
+        <div class="hsk-card-vi">${word.vi}</div>
+        ${srsBadge}
+      </div>
+      <div class="hsk-card-actions">
+        ${isMastered
+          ? `<button class="hsk-btn-primary added" disabled>🎓 Đã thuộc lòng</button>`
+          : inDict
+            ? `<button class="hsk-btn-primary added" disabled>✓ Đã có trong từ điển</button>`
+            : `<button class="hsk-btn-primary" id="hsk-add-btn">＋ Thêm vào từ điển</button>`}
+        ${isMastered
+          ? `<button class="hsk-btn-secondary done" disabled>✓ Đã thuộc</button>`
+          : `<button class="hsk-btn-secondary" id="hsk-memorized-btn">🎓 Thuộc lòng rồi</button>`}
+        ${isAdmin
+          ? `<button class="hsk-btn-secondary" id="hsk-admin-add-btn">＋ Thêm từ mới vào unit</button>
+             <button class="hsk-btn-secondary" id="hsk-admin-tip-btn">✏️ ${word.memoryTip ? 'Sửa mẹo nhớ' : 'Thêm mẹo nhớ'}</button>`
+          : ''}
+      </div>
+    </div>
 
-      <div class="hsk-reader-card">
-        <!-- Header: số thứ tự + chữ lớn -->
-        <div class="hsk-card-header">
-          <div class="hsk-card-index">${idx + 1}</div>
-          <div class="hsk-card-zh">${tr(word.zh)}</div>
-          <div class="hsk-card-py">${pinyin}</div>
-          <div class="hsk-card-vi">${word.vi}</div>
-          ${srsBadge}
-          <div class="hsk-card-actions">
-            ${isMastered
-              ? `<button class="hsk-detail-add-btn added" disabled title="Từ này đã thuộc lòng, không cần học SRS">🎓 Đã thuộc lòng</button>`
-              : inDict
-                ? `<button class="hsk-detail-add-btn added" disabled>✓ Đã có trong từ điển</button>`
-                : `<button class="hsk-detail-add-btn" id="hsk-add-btn">＋ Thêm vào từ điển</button>`}
-            ${isMastered
-              ? `<button class="hsk-memorized-btn done" disabled>✓ Đã thuộc</button>`
-              : `<button class="hsk-memorized-btn" id="hsk-memorized-btn">🎓 Thuộc lòng rồi</button>`}
-            ${adminBtn}
-          </div>
+    <!-- Bottom panels: stroke order (left) + tips & example (right) -->
+    <div class="hsk-reader-panels">
+      <div class="hsk-panel-card">
+        <div class="hsk-panel-title">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Bút thuận <span style="font-weight:400;color:var(--text3)">(Stroke order)</span>
         </div>
-
-        <!-- Body: two-column PREP style -->
-        <div class="hsk-card-body">
-          <!-- Left col -->
-          <div class="hsk-card-left">
-            <div class="hsk-card-section-label">ÂM HÁN VIỆT</div>
-            <div class="hsk-card-hanviet">${word.hanViet || '—'}</div>
-
-            <div class="hsk-card-section-label" style="margin-top:20px">BÚT THUẬN (STROKE ORDER)</div>
-            <div id="hsk-stroke-container">${strokeBoxes}</div>
-            <div class="hsk-stroke-controls">
-              <button class="hsk-stroke-btn primary" id="hsk-stroke-animate">▶ Animation</button>
-              <button class="hsk-stroke-btn" id="hsk-stroke-quiz">✏️ Luyện viết</button>
-              <button class="hsk-stroke-btn" id="hsk-stroke-reset">↺ Reset</button>
-            </div>
-          </div>
-
-          <!-- Right col -->
-          <div class="hsk-card-right">
-            ${word.zhDef ? `
-            <div class="hsk-card-section-label">ĐỊNH NGHĨA TIẾNG TRUNG</div>
-            <div class="hsk-card-zhdef">${tr(word.zhDef)}</div>` : ''}
-
-            ${word.memoryTip ? `
-            <div class="hsk-card-section-label" style="margin-top:20px">💡 MẸO NHỚ</div>
-            <div class="hsk-card-tip">${word.memoryTip.replace(/\n/g,'<br>')}</div>` : ''}
-
-            ${word.exZh ? `
-            <div class="hsk-card-section-label" style="margin-top:20px">💬 VÍ DỤ</div>
-            <div class="hsk-card-ex">
-              <div class="hsk-card-ex-zh">${tr(word.exZh)}</div>
-              <div class="hsk-card-ex-py">${getPinyin(word.exZh)}</div>
-              <div class="hsk-card-ex-vi">${word.exVi || ''}</div>
-            </div>` : ''}
-          </div>
+        <div id="hsk-stroke-container">${strokeBoxes}</div>
+        <div class="hsk-stroke-controls">
+          <button class="hsk-stroke-btn primary" id="hsk-stroke-animate">▶ Animation</button>
+          <button class="hsk-stroke-btn" id="hsk-stroke-quiz">✏️ Luyện viết</button>
+          <button class="hsk-stroke-btn" id="hsk-stroke-reset">↺ Reset</button>
         </div>
       </div>
+      <div class="hsk-panel-card">
+        ${word.memoryTip ? `
+        <div class="hsk-panel-title">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Mẹo nhớ
+        </div>
+        <div class="hsk-card-tip">${word.memoryTip.replace(/\n/g,'<br>')}</div>
+        ` : ''}
 
-      <button class="hsk-arrow-btn hsk-arrow-next" id="hsk-arr-next" ${hasNext ? '' : 'disabled'} title="Từ tiếp theo">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-      </button>
+        ${word.exZh ? `
+        <div class="hsk-panel-title" ${word.memoryTip ? 'style="margin-top:20px"' : ''}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Ví dụ
+        </div>
+        <div class="hsk-card-ex">
+          <div class="hsk-card-ex-zh">${tr(word.exZh)}</div>
+          <div class="hsk-card-ex-py">${getPinyin(word.exZh)}</div>
+          <div class="hsk-card-ex-vi">${word.exVi || ''}</div>
+        </div>` : ''}
+
+        ${word.zhDef ? `
+        <div class="hsk-panel-title" style="margin-top:20px">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Định nghĩa tiếng Trung
+        </div>
+        <div class="hsk-card-zhdef">${tr(word.zhDef)}</div>` : ''}
+      </div>
     </div>
 
     <!-- Admin: memory tip editor (hidden by default) -->
