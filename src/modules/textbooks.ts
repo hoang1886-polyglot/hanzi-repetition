@@ -590,23 +590,39 @@ async function tbRenderArticle(): Promise<void> {
       setTimeout(() => URL.revokeObjectURL(url), 1000)
     })
 
-    // Practice / write buttons in right panel
-    $('tb-art-practice-btn')?.addEventListener('click', () => {
+    // Practice / write buttons — toggle panel; clicking the active button returns to vocab
+    let _artPanel = 'vocab'
+    const _RED = 'linear-gradient(135deg,var(--red),var(--red-dark))'
+    const _switchArtPanel = (panel: string): void => {
+      _artPanel = (_artPanel === panel) ? 'vocab' : panel
       const practiceEl = $('tb-art-practice')
-      const writeEl = $('tb-art-write')
-      if (vocabEl) vocabEl.style.display = 'none'
-      if (writeEl) writeEl.style.display = 'none'
-      if (practiceEl) { practiceEl.style.display = ''; tbStartPractice(article.words || []) }
-    })
-
-    // Write button above article body
-    $('tb-art-write-btn')?.addEventListener('click', () => {
-      const practiceEl = $('tb-art-practice')
-      const writeEl = $('tb-art-write')
-      if (vocabEl) vocabEl.style.display = 'none'
-      if (practiceEl) practiceEl.style.display = 'none'
-      if (writeEl) { writeEl.style.display = ''; if (!_tbWrite.started) tbInitWriteTab(article.words || []) }
-    })
+      const writeEl    = $('tb-art-write')
+      const pbtn = $('tb-art-practice-btn') as HTMLButtonElement | null
+      const wbtn = $('tb-art-write-btn')    as HTMLButtonElement | null
+      if (vocabEl)    vocabEl.style.display    = _artPanel === 'vocab'    ? '' : 'none'
+      if (practiceEl) practiceEl.style.display = _artPanel === 'practice' ? '' : 'none'
+      if (writeEl)    writeEl.style.display    = _artPanel === 'write'    ? '' : 'none'
+      if (pbtn) {
+        const a = _artPanel === 'practice'
+        pbtn.style.background = a ? _RED : 'var(--surface)'
+        pbtn.style.color      = a ? '#fff' : 'var(--text2)'
+        pbtn.style.border     = a ? 'none' : '1.5px solid var(--border2)'
+        pbtn.style.boxShadow  = a ? '0 2px 6px var(--red-glow)' : 'none'
+      }
+      if (wbtn) {
+        const a = _artPanel === 'write'
+        wbtn.style.background = a ? _RED : 'var(--surface)'
+        wbtn.style.color      = a ? '#fff' : 'var(--text2)'
+        wbtn.style.border     = a ? 'none' : '1.5px solid var(--border2)'
+        wbtn.style.boxShadow  = a ? '0 2px 6px var(--red-glow)' : 'none'
+      }
+      if (_artPanel === 'practice') tbStartPractice(article.words || [])
+      if (_artPanel === 'write' && !_tbWrite.started) tbInitWriteTab(article.words || [])
+    }
+    const _pbtn = $('tb-art-practice-btn') as HTMLButtonElement | null
+    const _wbtn = $('tb-art-write-btn')    as HTMLButtonElement | null
+    if (_pbtn) _pbtn.onclick = () => _switchArtPanel('practice')
+    if (_wbtn) _wbtn.onclick = () => _switchArtPanel('write')
 
     setupTbArtTextSelection()
 
@@ -863,6 +879,17 @@ function tbRenderArticleVocabPanel(words: any[]): void {
   if (!vocabEl) return
   const isAdmin = (auth.currentUser?.email === 'hoang1886@gmail.com')
 
+  const notInDict = words.filter(w => !db.words.some((dw: any) => dw.zh === w.zh))
+  const addAllBar = notInDict.length > 0 ? `
+    <div style="margin-bottom:12px">
+      <button id="tb-add-all-vocab-btn"
+        style="width:100%;padding:9px 0;background:linear-gradient(135deg,var(--red),var(--red-dark));
+               border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;
+               color:#fff;font-family:'DM Sans',sans-serif;box-shadow:0 2px 6px var(--red-glow)">
+        + Thêm tất cả ${notInDict.length} từ vào SRS
+      </button>
+    </div>` : ''
+
   const adminBar = isAdmin ? `
     <div style="margin-bottom:14px">
       <button id="tb-import-vocab-btn"
@@ -898,7 +925,7 @@ function tbRenderArticleVocabPanel(words: any[]): void {
         </div>`
       }).join('')
 
-  vocabEl.innerHTML = adminBar + wordsHtml
+  vocabEl.innerHTML = addAllBar + adminBar + wordsHtml
 
   vocabEl.querySelectorAll('.tb-vocab-add-btn:not(.added)').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -913,6 +940,38 @@ function tbRenderArticleVocabPanel(words: any[]): void {
         ;(btn as HTMLButtonElement).disabled = true
       }
     })
+  })
+
+  // Bulk-add all words not yet in SRS
+  $('tb-add-all-vocab-btn')?.addEventListener('click', () => {
+    let addedCount = 0
+    words.forEach((w: any, i: number) => {
+      if (!db.words.some((dw: any) => dw.zh === w.zh)) {
+        const added = addWordFromTextbook(w.zh, w.vi || '', w.exZh || '', w.exVi || '', w.note || '')
+        if (added) {
+          addedCount++
+          const btn = vocabEl.querySelector(`.tb-vocab-add-btn[data-vi="${i}"]`) as HTMLButtonElement | null
+          if (btn) {
+            btn.textContent = '✓'
+            btn.classList.add('added')
+            btn.style.borderColor = 'var(--green)'
+            btn.style.background  = 'var(--green-light)'
+            btn.style.color       = 'var(--green)'
+            btn.disabled = true
+          }
+        }
+      }
+    })
+    if (addedCount > 0) {
+      toast(`Đã thêm ${addedCount} từ vào SRS ✓`)
+      const addAllBtn = $('tb-add-all-vocab-btn') as HTMLButtonElement | null
+      if (addAllBtn) {
+        addAllBtn.textContent = `✓ Đã thêm ${addedCount} từ`
+        addAllBtn.disabled = true
+        addAllBtn.style.background = 'var(--green)'
+        addAllBtn.style.boxShadow  = 'none'
+      }
+    }
   })
 
   if (isAdmin) {
