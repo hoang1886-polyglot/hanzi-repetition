@@ -74,6 +74,10 @@ export function addWordFromArticle(
   return newWord
 }
 
+// Tracks the original zh of the word currently open in the edit modal
+// so saveWordEdit() can find it even if the user changes the zh field.
+let _editingZh = ''
+
 export function renderWordList(q = ''): void {
   q = q.toLowerCase()
   const now = Date.now()
@@ -104,7 +108,7 @@ export function renderWordList(q = ''): void {
         }).join('')
         const wtHtml = `<div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center">
           ${wtBadges || '<span style="color:var(--text4);font-size:12px">—</span>'}
-          <button class="wt-add-btn" data-id="${w.id}" title="Chỉnh loại từ" style="width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#ff6b8a,#e8194b);color:#fff;border:none;cursor:pointer;font-size:14px;font-weight:700;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;margin-left:2px;line-height:1">+</button>
+          <button class="wt-add-btn" data-id="${w.id}" data-zh="${w.zh}" title="Chỉnh loại từ" style="width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#ff6b8a,#e8194b);color:#fff;border:none;cursor:pointer;font-size:14px;font-weight:700;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;margin-left:2px;line-height:1">+</button>
         </div>`
         return `<tr>
           <td style="font-family:'Noto Serif SC',serif;font-size:19px;font-weight:600">${tr(w.zh)}</td>
@@ -113,30 +117,41 @@ export function renderWordList(q = ''): void {
           <td>${wtHtml}</td>
           <td><span class="badge ${sb[w.status] || 'badge-new'}">${sl[w.status] || 'Mới'}</span></td>
           <td style="color:var(--text2);font-size:13px">${!w.nextReview ? 'Ngay bây giờ' : new Date(w.nextReview).toLocaleDateString('vi-VN')}</td>
-          <td><div style="display:flex;gap:6px;align-items:center"><button class="edit-btn" data-id="${w.id}" title="Sửa">✏️</button><button class="del-btn" data-id="${w.id}">✕</button></div></td>
+          <td><div style="display:flex;gap:6px;align-items:center"><button class="edit-btn" data-id="${w.id}" data-zh="${w.zh}" title="Sửa">✏️</button><button class="del-btn" data-id="${w.id}" data-zh="${w.zh}">✕</button></div></td>
         </tr>`
       }).join('')
     : '<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:28px">Không tìm thấy từ nào.</td></tr>'
   tbody.querySelectorAll('.del-btn').forEach(btn =>
-    btn.addEventListener('click', () => deleteWord(Number((btn as HTMLElement).dataset.id)))
+    btn.addEventListener('click', () => {
+      const el = btn as HTMLElement
+      deleteWord(el.dataset.zh || '', Number(el.dataset.id))
+    })
   )
   tbody.querySelectorAll('.edit-btn').forEach(btn =>
-    btn.addEventListener('click', () => openWordEditor(Number((btn as HTMLElement).dataset.id)))
+    btn.addEventListener('click', () => {
+      const el = btn as HTMLElement
+      openWordEditor(el.dataset.zh || '', Number(el.dataset.id))
+    })
   )
   tbody.querySelectorAll('.wt-add-btn').forEach(btn =>
-    btn.addEventListener('click', e => { e.stopPropagation(); openWordTypeEditor(Number((btn as HTMLElement).dataset.id), btn as HTMLElement) })
+    btn.addEventListener('click', e => {
+      e.stopPropagation()
+      const el = btn as HTMLElement
+      openWordTypeEditor(el.dataset.zh || '', Number(el.dataset.id), btn as HTMLElement)
+    })
   )
 }
 
-function deleteWord(id: number): void {
+function deleteWord(zh: string, id: number): void {
   if (!confirm('Xoá từ này?')) return
-  db.words = db.words.filter(w => w.id !== id)
+  db.words = db.words.filter(w => zh ? w.zh !== zh : w.id !== id)
   save(); renderWordList(($('search-input') as HTMLInputElement)?.value || ''); toast('Đã xoá từ.')
 }
 
-function openWordEditor(id: number): void {
-  const word = db.words.find(w => w.id === id)
+function openWordEditor(zh: string, id: number): void {
+  const word = (zh ? db.words.find(w => w.zh === zh) : null) ?? db.words.find(w => w.id === id)
   if (!word) return
+  _editingZh = word.zh
   ;($('edit-word-id') as HTMLInputElement).value = String(id)
   ;($('edit-inp-zh') as HTMLInputElement).value  = word.zh || ''
   ;($('edit-pinyin-preview') as HTMLElement).textContent = word.pinyin || ''
@@ -157,7 +172,9 @@ function saveWordEdit(): void {
   const zh = ($('edit-inp-zh') as HTMLInputElement).value.trim()
   const vi = ($('edit-inp-vi') as HTMLInputElement).value.trim()
   if (!zh || !vi) { toast('Vui lòng nhập chữ Hán và nghĩa!'); return }
-  const word = db.words.find(w => w.id === id)
+  // Use _editingZh (original zh before any edits) as primary key; fall back to id
+  const word = (_editingZh ? db.words.find(w => w.zh === _editingZh) : null) ?? db.words.find(w => w.id === id)
+  _editingZh = ''
   if (!word) return
   word.zh = zh; word.pinyin = getPinyin(zh); word.vi = vi
   word.zhDef = ($('edit-inp-zhdef') as HTMLInputElement).value.trim()
@@ -172,8 +189,8 @@ function saveWordEdit(): void {
   toast('✓ Đã lưu thay đổi!')
 }
 
-function openWordTypeEditor(wordId: number, anchorEl: HTMLElement): void {
-  const word = db.words.find(w => w.id === wordId)
+function openWordTypeEditor(zh: string, wordId: number, anchorEl: HTMLElement): void {
+  const word = (zh ? db.words.find(w => w.zh === zh) : null) ?? db.words.find(w => w.id === wordId)
   if (!word) return
   if (!word.wordTypes) word.wordTypes = word.wordType ? [word.wordType] : []
   const popover = $('wt-editor-popover')!, tagsEl = $('wt-editor-tags')!
