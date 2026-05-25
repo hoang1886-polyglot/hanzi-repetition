@@ -42,9 +42,9 @@ export const TB_LEVELS = [
   { level: 1, label: 'HSK 1', sub: 'Sơ cấp',       grad: 'linear-gradient(135deg,#F6A623,#E8910E)' },
   { level: 2, label: 'HSK 2', sub: 'Sơ–trung cấp', grad: 'linear-gradient(135deg,#F97316,#C2410C)' },
   { level: 3, label: 'HSK 3', sub: 'Trung cấp',     grad: 'linear-gradient(135deg,#22C55E,#15803D)' },
-  { level: 4, label: 'HSK 4', sub: 'Trung–cao cấp', grad: 'linear-gradient(135deg,#3B82F6,#1D4ED8)' },
-  { level: 5, label: 'HSK 5', sub: 'Cao cấp',       grad: 'linear-gradient(135deg,#A855F7,#7C3AED)' },
-  { level: 6, label: 'HSK 6', sub: 'Thành thạo',    grad: 'linear-gradient(135deg,#EF4444,#991B1B)' },
+  { level: 4, label: 'HSK 4', sub: 'Trung–cao cấp', grad: 'linear-gradient(135deg,#EF4444,#B91C1C)' },
+  { level: 5, label: 'HSK 5', sub: 'Cao cấp',       grad: 'linear-gradient(135deg,#3B82F6,#1D4ED8)' },
+  { level: 6, label: 'HSK 6', sub: 'Thành thạo',    grad: 'linear-gradient(135deg,#A855F7,#7C3AED)' },
 ]
 
 // ── Navigate ───────────────────────────────────────────────────────────────────
@@ -542,22 +542,22 @@ async function tbRenderArticle(): Promise<void> {
     _tbWrite.started = false; _tbWrite.idx = 0; _tbWrite.mistakes = 0
     if (_tbWrite.writer) { try { _tbWrite.writer.cancelQuiz() } catch {} ; _tbWrite.writer = null }
 
-    // Right panel tab switching
-    document.querySelectorAll('.tb-rt-tab').forEach(btn => {
-      ;(btn as HTMLElement).onclick = () => {
-        const tab = (btn as HTMLElement).dataset.tab
-        document.querySelectorAll('.tb-rt-tab').forEach(b => {
-          const active = (b as HTMLElement).dataset.tab === tab
-          ;(b as HTMLElement).style.borderBottomColor = active ? 'var(--red)' : 'transparent'
-          ;(b as HTMLElement).style.color = active ? 'var(--red)' : 'var(--text2)'
-          b.classList.toggle('active', active)
-        })
-        if (vocabEl)    vocabEl.style.display    = tab === 'vocab'    ? '' : 'none'
-        const practiceEl = $('tb-art-practice')
-        if (practiceEl) { practiceEl.style.display = tab === 'practice' ? '' : 'none'; if (tab === 'practice') tbStartPractice(article.words || []) }
-        const writeEl = $('tb-art-write')
-        if (writeEl)    { writeEl.style.display    = tab === 'write'    ? '' : 'none'; if (tab === 'write' && !_tbWrite.started) tbInitWriteTab(article.words || []) }
-      }
+    // Practice button above article body
+    $('tb-art-practice-btn')?.addEventListener('click', () => {
+      const practiceEl = $('tb-art-practice')
+      const writeEl = $('tb-art-write')
+      if (vocabEl) vocabEl.style.display = 'none'
+      if (writeEl) writeEl.style.display = 'none'
+      if (practiceEl) { practiceEl.style.display = ''; tbStartPractice(article.words || []) }
+    })
+
+    // Write button above article body
+    $('tb-art-write-btn')?.addEventListener('click', () => {
+      const practiceEl = $('tb-art-practice')
+      const writeEl = $('tb-art-write')
+      if (vocabEl) vocabEl.style.display = 'none'
+      if (practiceEl) practiceEl.style.display = 'none'
+      if (writeEl) { writeEl.style.display = ''; if (!_tbWrite.started) tbInitWriteTab(article.words || []) }
     })
 
     setupTbArtTextSelection()
