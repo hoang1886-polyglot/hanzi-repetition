@@ -931,9 +931,9 @@ body.dark .tb-block-editor{background:var(--surface);}
 .hsk-book-card.level-1 { background: linear-gradient(135deg,#F6A623,#E8910E); }
 .hsk-book-card.level-2 { background: linear-gradient(135deg,#F97316,#C2410C); }
 .hsk-book-card.level-3 { background: linear-gradient(135deg,#22C55E,#15803D); }
-.hsk-book-card.level-4 { background: linear-gradient(135deg,#3B82F6,#1D4ED8); }
-.hsk-book-card.level-5 { background: linear-gradient(135deg,#A855F7,#7C3AED); }
-.hsk-book-card.level-6 { background: linear-gradient(135deg,#EF4444,#991B1B); }
+.hsk-book-card.level-4 { background: linear-gradient(135deg,#EF4444,#B91C1C); }
+.hsk-book-card.level-5 { background: linear-gradient(135deg,#3B82F6,#1D4ED8); }
+.hsk-book-card.level-6 { background: linear-gradient(135deg,#A855F7,#7C3AED); }
 /* White text on gradient backgrounds */
 .hsk-book-card[class*="level-"] .hsk-book-name { color: #fff; }
 .hsk-book-card[class*="level-"] .hsk-book-meta { color: rgba(255,255,255,0.75); }

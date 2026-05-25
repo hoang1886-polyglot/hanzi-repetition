@@ -10,6 +10,8 @@ import { HSK_BOOKS } from '../data/hsk-books'
 import hsk2Data from '../../data/hsk2.json'
 // @ts-ignore
 import hsk3Data from '../../data/hsk3.json'
+// @ts-ignore
+import hsk4Data from '../../data/hsk4.json'
 
 // ── Module-level state (replaces window._hskModal*) ──────────────────────────
 let _hskModalWord: any = null
@@ -84,6 +86,7 @@ async function hskLoadBookData(bookId: string): Promise<void> {
     let data: any = null
     if (bookId === 'hsk2') data = hsk2Data
     else if (bookId === 'hsk3') data = hsk3Data
+    else if (bookId === 'hsk4') data = hsk4Data
     if (!data) throw new Error('No local data for ' + bookId)
 
     book.units = data.units || []

@@ -20,4 +20,28 @@ export const HSK_BOOKS: HskBook[] = [
     desc: 'Đang cập nhật...',
     units: [],
   },
+  {
+    id: 'hsk4',
+    title: 'HSK 4',
+    level: 4,
+    icon: '🔥',
+    desc: 'Từ vựng HSK 4 — phiên bản 3.0',
+    units: [],
+  },
+  {
+    id: 'hsk5',
+    title: 'HSK 5',
+    level: 5,
+    icon: '💎',
+    desc: 'Đang cập nhật...',
+    units: [],
+  },
+  {
+    id: 'hsk6',
+    title: 'HSK 6',
+    level: 6,
+    icon: '👑',
+    desc: 'Đang cập nhật...',
+    units: [],
+  },
 ]
