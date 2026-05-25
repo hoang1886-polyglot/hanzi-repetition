@@ -390,7 +390,7 @@ function hskRenderWordReader(): void {
   // Admin buttons
   const adminBtn = isAdmin
     ? `<button class="hsk-admin-btn" id="hsk-admin-add-btn">⚙️ Thêm từ mới vào unit</button>
-       <button class="hsk-admin-btn" id="hsk-admin-tip-btn" style="background:linear-gradient(135deg,#7C3AED22,#7C3AED11);border-color:#7C3AED55;color:#7C3AED">✏️ ${word.memoryTip ? 'Sửa mẹo nhớ' : 'Thêm mẹo nhớ'}</button>`
+       <button class="hsk-admin-btn" id="hsk-admin-tip-btn">✏️ ${word.memoryTip ? 'Sửa mẹo nhớ' : 'Thêm mẹo nhớ'}</button>`
     : ''
 
   // Component tips (for multi-char words, e.g. 请进 → show tip for 请 and 进)
