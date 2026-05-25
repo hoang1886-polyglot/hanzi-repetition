@@ -1906,11 +1906,13 @@ async function hskLoadBookData(bookId) {
   } catch(e) {
     console.warn('hskLoadBookData error:', e);
     if (descEl) descEl.textContent = '⚠️ Không tải được dữ liệu. Kiểm tra kết nối mạng.';
-    if (gridEl) gridEl.innerHTML = '<div style="padding:24px;text-align:center;color:var(--red)">Tải thất bại. Thử lại sau.</div>';
+    if (gridEl) gridEl.innerHTML = '<div style="padding:24px;text-align:center;color:var(--red)">Tải thất bại. <button onclick="hskRetry()" style="margin-top:12px;display:block;margin-inline:auto;padding:8px 20px;background:var(--red);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px">Thử lại</button></div>';
   } finally {
     _hskLoadingBooks.delete(bookId);
   }
 }
+
+function hskRetry() { if (hskState.bookId) hskLoadBookData(hskState.bookId); }
 
 // ── Nav ───────────────────────────────────────────────────────────────────────
 async function hskNav(view, bookId = null, unitIndex = null, wordIndex = null) {
