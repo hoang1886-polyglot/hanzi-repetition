@@ -542,7 +542,37 @@ async function tbRenderArticle(): Promise<void> {
     _tbWrite.started = false; _tbWrite.idx = 0; _tbWrite.mistakes = 0
     if (_tbWrite.writer) { try { _tbWrite.writer.cancelQuiz() } catch {} ; _tbWrite.writer = null }
 
-    // Practice button above article body
+    // Download buttons
+    const dlBtn = $('tb-art-download-btn')
+    const dlMenu = $('tb-art-download-menu') as HTMLElement | null
+    if (dlBtn && dlMenu) {
+      (dlBtn as HTMLButtonElement).onclick = (e) => {
+        e.stopPropagation()
+        dlMenu.style.display = dlMenu.style.display === 'none' ? 'block' : 'none'
+      }
+    }
+    document.addEventListener('click', () => { if (dlMenu) dlMenu.style.display = 'none' })
+
+    $('tb-dl-pdf')?.addEventListener('click', () => {
+      if (dlMenu) dlMenu.style.display = 'none'
+      window.print()
+    })
+
+    $('tb-dl-word')?.addEventListener('click', () => {
+      if (dlMenu) dlMenu.style.display = 'none'
+      const title = tbState.articleData?.title || 'bài đọc'
+      const body = $('tb-art-reader-body')?.innerHTML || ''
+      const html = `<!DOCTYPE html><html lang="zh"><head><meta charset="UTF-8"><title>${title}</title><style>body{font-family:serif;font-size:12pt;line-height:1.9;margin:2.5cm 3cm}h1{font-size:18pt;margin-bottom:1em}ruby rt{font-size:8pt;color:#666}</style></head><body><h1>${title}</h1>${body}</body></html>`
+      const blob = new Blob(['﻿' + html], { type: 'application/msword' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url; a.download = `${title}.doc`
+      document.body.appendChild(a); a.click()
+      document.body.removeChild(a)
+      setTimeout(() => URL.revokeObjectURL(url), 1000)
+    })
+
+    // Practice / write buttons in right panel
     $('tb-art-practice-btn')?.addEventListener('click', () => {
       const practiceEl = $('tb-art-practice')
       const writeEl = $('tb-art-write')
