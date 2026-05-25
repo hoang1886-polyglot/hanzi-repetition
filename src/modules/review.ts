@@ -107,9 +107,40 @@ export function renderReviewCard(): void {
       <div style="display:flex;gap:10px;justify-content:center">
         <button class="submit-btn" id="review-again-btn" style="padding:11px 24px">🔄 Luyện lại</button>
         <button id="review-home-btn" style="padding:11px 24px;background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">← Trang chủ</button>
-      </div></div>`
+      </div>
+      ${reviewWrong.length > 0 ? `
+      <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border)">
+        <div style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:0.07em;margin-bottom:10px;text-transform:uppercase">${reviewWrong.length} từ chưa thuộc</div>
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+          <button id="review-copy-wrong" style="padding:9px 18px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">📋 Sao chép danh sách</button>
+          <button id="review-export-csv" style="padding:9px 18px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif">📊 Xuất Excel (.csv)</button>
+        </div>
+      </div>` : ''}
+      </div>`
     $('review-again-btn')?.addEventListener('click', startReview)
     $('review-home-btn')?.addEventListener('click', () => nav('dashboard'))
+    if (reviewWrong.length > 0) {
+      $('review-copy-wrong')?.addEventListener('click', () => {
+        const text = reviewWrong.map((w: any) => `${w.zh}\t${w.pinyin}\t${w.vi}`).join('\n')
+        navigator.clipboard.writeText(text)
+          .then(() => toast('✓ Đã sao chép danh sách từ sai!'))
+          .catch(() => toast('Không thể sao chép, vui lòng thử lại.'))
+      })
+      $('review-export-csv')?.addEventListener('click', () => {
+        const rows = [['Chữ Hán', 'Pinyin', 'Nghĩa tiếng Việt', 'Trạng thái']]
+        reviewWrong.forEach((w: any) => {
+          rows.push([w.zh, w.pinyin || getPinyin(w.zh), w.vi || '', w.status || ''])
+        })
+        const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n')
+        const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url; a.download = 'tu-chua-thuoc.csv'
+        document.body.appendChild(a); a.click()
+        document.body.removeChild(a)
+        setTimeout(() => URL.revokeObjectURL(url), 1000)
+      })
+    }
     return
   }
   setCurrentCard(reviewQueue[0])

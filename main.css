@@ -1895,16 +1895,28 @@ body.dark .hsk-ql-vi { background: #2A0A0F; border-color: #5A1A20; color: #FCA5A
 
 /* ─── PRINT STYLES ───────────────────────────────────────────────────────── */
 @media print {
-  .sidebar, #nav-sidebar, .page-header { display: none !important; }
-  #main { margin-left: 0 !important; padding: 0 !important; }
-  .page:not(.active) { display: none !important; }
-  #tb-art-right-card, #tb-art-right-header,
-  #tb-art-practice-btn, #tb-art-write-btn,
-  #tb-art-download-btn, #tb-art-highlight-toggle-btn,
-  #tb-art-pinyin-btn, #tb-reader-font-btn,
-  #tb-art-back-btn, #tb-art-prev-btn, #tb-art-next-btn { display: none !important; }
-  #tb-view-article { display: block !important; }
-  #tb-art-reader-body { font-size: 12pt; line-height: 1.9; }
+  /* Hide everything, show only print-target */
+  body > *:not(#print-target) { display: none !important; }
+  #print-target {
+    display: block !important;
+    font-family: 'Noto Serif SC', 'Noto Sans SC', Georgia, serif;
+    font-size: 12pt;
+    line-height: 1.9;
+    color: #000;
+    padding: 0;
+    margin: 0;
+  }
+  #print-target h1 { font-size: 18pt; margin-bottom: 6pt; font-weight: 700; }
+  #print-target .print-source { font-size: 10pt; color: #555; margin-bottom: 24pt; }
+  #print-target .print-body { font-size: 12pt; }
+  /* Remove card/highlight decoration by default (overridden by .keep-highlight class) */
+  #print-target .word-highlight,
+  #print-target [class*="highlight"] { color: inherit !important; background: none !important; text-decoration: none !important; }
+  /* .keep-highlight restores colors */
+  #print-target.keep-highlight .word-highlight { color: var(--red) !important; }
+  #print-target.keep-highlight [style*="background"] { background: revert !important; }
+  /* Pinyin ruby */
+  #print-target ruby rt { font-size: 8pt; color: #555; }
 }
 
 /* ─── PINYIN TOGGLE BUTTON ───────────────────────────────────────────────── */

@@ -204,12 +204,65 @@ export function openArticle(id: number): void {
   setupTextSelection(false)
 }
 
+// ─── Print utility ────────────────────────────────────────────────────────────
+export function printContent(title: string, source: string, bodyHtml: string, keepHighlights: boolean): void {
+  const pt = document.getElementById('print-target')
+  if (!pt) return
+  pt.innerHTML = `
+    <h1>${title}</h1>
+    ${source ? `<p class="print-source">${source}</p>` : ''}
+    <div class="print-body">${bodyHtml}</div>`
+  if (keepHighlights) pt.classList.add('keep-highlight')
+  else pt.classList.remove('keep-highlight')
+  window.print()
+}
+
+function makeWordDoc(title: string, source: string, bodyHtml: string): void {
+  const html = `<!DOCTYPE html><html lang="zh"><head><meta charset="UTF-8"><title>${title}</title><style>body{font-family:serif;font-size:12pt;line-height:1.9;margin:2.5cm 3cm}h1{font-size:18pt;margin-bottom:6pt}p.src{font-size:10pt;color:#555;margin-bottom:24pt}ruby rt{font-size:8pt;color:#666}</style></head><body><h1>${title}</h1>${source ? `<p class="src">${source}</p>` : ''}${bodyHtml}</body></html>`
+  const blob = new Blob(['﻿' + html], { type: 'application/msword' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url; a.download = `${title}.doc`
+  document.body.appendChild(a); a.click()
+  document.body.removeChild(a)
+  setTimeout(() => URL.revokeObjectURL(url), 1000)
+}
+
 // ─── Article listeners ────────────────────────────────────────────────────────
 export function initArticleListeners(): void {
   $('go-upload-btn')?.addEventListener('click', () => nav('upload-article'))
   $('save-article-btn')?.addEventListener('click', saveArticle)
   $('cancel-upload-btn')?.addEventListener('click', () => { clearUploadForm(); nav('articles') })
   $('back-articles-btn')?.addEventListener('click', () => nav('articles'))
+
+  // Download dropdown for read-article
+  const artDlBtn = $('art-download-btn')
+  const artDlMenu = $('art-download-menu') as HTMLElement | null
+  if (artDlBtn && artDlMenu) {
+    artDlBtn.addEventListener('click', (e) => { e.stopPropagation(); artDlMenu.style.display = artDlMenu.style.display === 'none' ? 'block' : 'none' })
+    document.addEventListener('click', () => { artDlMenu.style.display = 'none' })
+  }
+  $('art-dl-pdf-hl')?.addEventListener('click', () => {
+    if (artDlMenu) artDlMenu.style.display = 'none'
+    const title = ($('read-article-title') as HTMLElement)?.textContent || 'Bài báo'
+    const source = ($('read-article-source') as HTMLElement)?.textContent || ''
+    const body = $('article-reader-body')?.innerHTML || ''
+    printContent(title, source, body, true)
+  })
+  $('art-dl-pdf-clean')?.addEventListener('click', () => {
+    if (artDlMenu) artDlMenu.style.display = 'none'
+    const title = ($('read-article-title') as HTMLElement)?.textContent || 'Bài báo'
+    const source = ($('read-article-source') as HTMLElement)?.textContent || ''
+    const body = $('article-reader-body')?.innerHTML || ''
+    printContent(title, source, body, false)
+  })
+  $('art-dl-word')?.addEventListener('click', () => {
+    if (artDlMenu) artDlMenu.style.display = 'none'
+    const title = ($('read-article-title') as HTMLElement)?.textContent || 'Bài báo'
+    const source = ($('read-article-source') as HTMLElement)?.textContent || ''
+    const body = $('article-reader-body')?.innerHTML || ''
+    makeWordDoc(title, source, body)
+  })
   $('sort-newest-btn')?.addEventListener('click', () => {
     setArticleSortOrder('newest')
     ;($('sort-newest-btn') as HTMLElement).classList.add('active')

@@ -287,12 +287,20 @@
 
 <!-- READ ARTICLE -->
 <div id="read-article" class="page">
-  <div class="page-header">
-    <div style="display:flex;align-items:center;gap:14px">
-      <button id="back-articles-btn" style="background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-sm);padding:8px 16px;font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif;transition:all 0.15s">← Quay lại</button>
-      <div>
-        <h1 id="read-article-title" style="font-size:22px"></h1>
+  <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+    <div style="display:flex;align-items:center;gap:14px;min-width:0">
+      <button id="back-articles-btn" style="background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-sm);padding:8px 16px;font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif;transition:all 0.15s;flex-shrink:0">← Quay lại</button>
+      <div style="min-width:0">
+        <h1 id="read-article-title" style="font-size:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></h1>
         <p id="read-article-source" style="font-size:13px;color:var(--text2);margin-top:3px"></p>
+      </div>
+    </div>
+    <div style="position:relative;flex-shrink:0">
+      <button id="art-download-btn" style="padding:8px 14px;background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px">⬇ Tải xuống</button>
+      <div id="art-download-menu" style="display:none;position:absolute;right:0;top:calc(100% + 6px);background:var(--surface);border:1.5px solid var(--border2);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);overflow:hidden;min-width:220px;z-index:200">
+        <button id="art-dl-pdf-hl" style="width:100%;padding:10px 16px;background:none;border:none;border-bottom:1px solid var(--border);text-align:left;font-size:13px;cursor:pointer;color:var(--text);font-family:'DM Sans',sans-serif">📄 PDF (giữ màu highlight)</button>
+        <button id="art-dl-pdf-clean" style="width:100%;padding:10px 16px;background:none;border:none;border-bottom:1px solid var(--border);text-align:left;font-size:13px;cursor:pointer;color:var(--text);font-family:'DM Sans',sans-serif">📄 PDF (không highlight)</button>
+        <button id="art-dl-word" style="width:100%;padding:10px 16px;background:none;border:none;text-align:left;font-size:13px;cursor:pointer;color:var(--text);font-family:'DM Sans',sans-serif">📝 Word (.doc)</button>
       </div>
     </div>
   </div>
@@ -610,9 +618,10 @@
       <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
         <div style="position:relative">
           <button id="tb-art-download-btn" style="padding:8px 14px;background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px">⬇ Tải xuống</button>
-          <div id="tb-art-download-menu" style="display:none;position:absolute;right:0;top:calc(100% + 6px);background:var(--surface);border:1.5px solid var(--border2);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);overflow:hidden;min-width:170px;z-index:200">
-            <button id="tb-dl-pdf" style="width:100%;padding:10px 16px;background:none;border:none;border-bottom:1px solid var(--border);text-align:left;font-size:13px;cursor:pointer;color:var(--text);font-family:'DM Sans',sans-serif">📄 Tải PDF</button>
-            <button id="tb-dl-word" style="width:100%;padding:10px 16px;background:none;border:none;text-align:left;font-size:13px;cursor:pointer;color:var(--text);font-family:'DM Sans',sans-serif">📝 Tải Word (.doc)</button>
+          <div id="tb-art-download-menu" style="display:none;position:absolute;right:0;top:calc(100% + 6px);background:var(--surface);border:1.5px solid var(--border2);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);overflow:hidden;min-width:220px;z-index:200">
+            <button id="tb-dl-pdf-hl" style="width:100%;padding:10px 16px;background:none;border:none;border-bottom:1px solid var(--border);text-align:left;font-size:13px;cursor:pointer;color:var(--text);font-family:'DM Sans',sans-serif">📄 PDF (giữ màu highlight)</button>
+            <button id="tb-dl-pdf-clean" style="width:100%;padding:10px 16px;background:none;border:none;border-bottom:1px solid var(--border);text-align:left;font-size:13px;cursor:pointer;color:var(--text);font-family:'DM Sans',sans-serif">📄 PDF (không highlight)</button>
+            <button id="tb-dl-word" style="width:100%;padding:10px 16px;background:none;border:none;text-align:left;font-size:13px;cursor:pointer;color:var(--text);font-family:'DM Sans',sans-serif">📝 Word (.doc)</button>
           </div>
         </div>
         <button id="tb-art-prev-btn" class="tb-art-nav-btn" title="Bài trước">&#8249;</button>
@@ -815,6 +824,9 @@
   <div class="typo-section-label">FONT CHỮ</div>
   <div id="typo-font-selector"></div>
 </div>
+
+<!-- Print target: populated by JS before window.print() -->
+<div id="print-target" style="display:none"></div>
 
 </body>
 </html>
