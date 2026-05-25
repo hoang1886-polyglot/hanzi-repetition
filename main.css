@@ -1547,8 +1547,8 @@ body.dark .tb-block-editor{background:var(--surface);}
   box-shadow: var(--shadow-md);
 }
 body.dark .hsk-reader-card {
-  background: #1A0A0A;
-  border-color: #3D1515;
+  background: #1E0D0D;
+  border-color: #4A1A1A;
 }
 
 /* Card header (index number + big character) */
@@ -1560,8 +1560,8 @@ body.dark .hsk-reader-card {
   position: relative;
 }
 body.dark .hsk-card-header {
-  background: linear-gradient(135deg, #1F0A0A 0%, #2A0F0F 100%);
-  border-bottom-color: #3D1515;
+  background: linear-gradient(135deg, #260E0E 0%, #311414 100%);
+  border-bottom-color: #4A1A1A;
 }
 .hsk-card-index {
   position: absolute;
@@ -1674,14 +1674,14 @@ body.dark .hsk-card-tip {
 }
 .hsk-comp-tip {
   margin-top: 8px;
-  background: rgba(99,102,241,0.06);
-  border: 1px solid rgba(99,102,241,0.22);
+  background: rgba(200, 40, 30, 0.05);
+  border: 1px solid rgba(200, 40, 30, 0.18);
   border-radius: 10px;
   padding: 10px 14px;
 }
 body.dark .hsk-comp-tip {
-  background: rgba(99,102,241,0.1);
-  border-color: rgba(99,102,241,0.3);
+  background: rgba(200, 40, 30, 0.08);
+  border-color: rgba(239, 68, 68, 0.25);
 }
 .hsk-comp-tip-header {
   display: flex;
@@ -1697,34 +1697,39 @@ body.dark .hsk-comp-tip {
 }
 .hsk-comp-tip-vi {
   font-size: 12px;
-  color: #6366F1;
+  color: var(--red);
   font-weight: 600;
 }
-body.dark .hsk-comp-tip-vi { color: #818CF8; }
+body.dark .hsk-comp-tip-vi { color: #F87171; }
 .hsk-comp-tip-text {
   font-size: 12.5px;
   color: var(--text2);
   line-height: 1.7;
 }
 .hsk-card-ex {
-  background: rgba(23,122,71,0.06);
-  border: 1px solid rgba(23,122,71,0.15);
+  background: rgba(200, 40, 30, 0.04);
+  border: 1px solid rgba(200, 40, 30, 0.14);
   border-radius: 10px;
   padding: 14px 16px;
+}
+body.dark .hsk-card-ex {
+  background: rgba(200, 40, 30, 0.07);
+  border-color: rgba(239, 68, 68, 0.2);
 }
 .hsk-card-ex-zh {
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 16px;
   font-weight: 500;
-  color: #1A3A28;
+  color: #7F1D1D;
   margin-bottom: 4px;
 }
-body.dark .hsk-card-ex-zh { color: #A8DFC0; }
+body.dark .hsk-card-ex-zh { color: #FCA5A5; }
 .hsk-card-ex-py {
   font-size: 12px;
-  color: #177A47;
+  color: var(--red);
   margin-bottom: 6px;
 }
+body.dark .hsk-card-ex-py { color: #F87171; }
 .hsk-card-ex-vi {
   font-size: 13px;
   color: var(--text2);
@@ -1745,10 +1750,10 @@ body.dark .hsk-stroke-canvas {
 
 /* Admin button */
 .hsk-admin-btn {
-  padding: 8px 16px;
-  background: #141414;
-  color: #F0C070;
-  border: 1.5px solid #F0C070;
+  padding: 8px 18px;
+  background: var(--surface);
+  color: var(--text2);
+  border: 1.5px solid var(--border2);
   border-radius: var(--radius-xs);
   font-size: 12px;
   font-weight: 600;
@@ -1756,7 +1761,13 @@ body.dark .hsk-stroke-canvas {
   font-family: 'Be Vietnam Pro', sans-serif;
   transition: all 0.15s;
 }
-.hsk-admin-btn:hover { background: #1E1A00; }
+.hsk-admin-btn:hover {
+  background: var(--surface2);
+  color: var(--text);
+  border-color: var(--red);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
 
 /* Admin form */
 .hsk-admin-form {
@@ -1817,7 +1828,7 @@ body:not(.dark) .hsk-admin-form {
   .hsk-arrow-btn { width: 36px; height: 36px; margin-top: 50px; }
   .hsk-card-zh { font-size: 56px; }
   .hsk-card-body { grid-template-columns: 1fr; }
-  .hsk-card-left { border-right: none; border-bottom: 1px solid #C6E6D0; padding: 20px; }
+  .hsk-card-left { border-right: none; border-bottom: 1px solid #FED7D7; padding: 20px; }
   .hsk-card-right { padding: 20px; }
   .hsk-card-header { padding: 22px 18px; }
   .hsk-admin-grid { grid-template-columns: 1fr; }
