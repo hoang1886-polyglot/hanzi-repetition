@@ -151,6 +151,10 @@ async function init(){
       toast('⚠️ Không kết nối Firebase. Dùng dữ liệu cục bộ.');
     }
   }
+  // ── Fix duplicate word IDs (from bulk-add bug) ──
+  { const seen=new Set(); let fixed=false;
+    db.words.forEach(w=>{ if(seen.has(w.id)){w.id=Date.now()+Math.random();fixed=true;} else seen.add(w.id); });
+    if(fixed) save(); }
   document.getElementById('loading').style.display='none';
   // ── Setup listeners trước, rồi mới nav ──
   if(!listenersReady){ setupListeners(); listenersReady=true; }
@@ -524,7 +528,9 @@ function checkAnswer(){
   for(let g=0;g<4;g++){const el=$(`i${g}`);if(el)el.textContent=intLabel(g,currentCard);}
 }
 function gradeCard(g){
-  const w=db.words.find(x=>x.id===currentCard.id);if(w){sm2(w,g);save();}
+  const w=db.words.find(x=>x.id===currentCard.id&&x.zh===currentCard.zh)
+        ||db.words.find(x=>x.zh===currentCard.zh);
+  if(w){sm2(w,g);save();}
   reviewQueue.shift();answered=false;renderReviewCard();
 }
 
@@ -3647,7 +3653,7 @@ function addWordFromTextbook(zh, vi, exZh='', exVi='', note='') {
   if (!zh || !vi) { toast('Vui lòng nhập chữ Hán và nghĩa!'); return false; }
   if (db.words.some(w => w.zh === zh)) { toast(`"${zh}" đã có trong từ điển`); return false; }
   const newWord = {
-    id:Date.now(), zh, vi, pinyin:getPinyin(zh), zhDef:'',
+    id:Date.now()+Math.random(), zh, vi, pinyin:getPinyin(zh), zhDef:'',
     exZh, exVi, note, wordType:'',
     status:'new', ef:2.5, interval:0, repetitions:0,
     nextReview:null, lastReview:null, added:Date.now()
