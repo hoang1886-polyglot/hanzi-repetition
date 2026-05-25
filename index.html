@@ -173,13 +173,13 @@
   <div class="page-header"><h1>Thêm từ mới</h1><p>Nhập từ tiếng Trung và nghĩa tiếng Việt</p></div>
   <div class="card" style="max-width:560px">
     <div class="form-group">
-      <label>Chữ Hán <span style="color:var(--red)">*</span></label>
+      <label for="inp-zh">Chữ Hán <span style="color:var(--red)">*</span></label>
       <input type="text" id="inp-zh" placeholder="e.g. 你好">
       <div class="pinyin-preview" id="pinyin-preview"></div>
       <div class="dict-result" id="dict-result"></div>
     </div>
     <div class="form-group">
-      <label>Nghĩa tiếng Việt <span style="color:var(--red)">*</span></label>
+      <label for="inp-vi">Nghĩa tiếng Việt <span style="color:var(--red)">*</span></label>
       <input type="text" id="inp-vi" placeholder="e.g. xin chào">
     </div>
     <div class="form-group">
@@ -189,17 +189,17 @@
     <div style="border-top:1px solid var(--border);padding-top:20px;margin-top:4px">
       <div style="font-size:13px;font-weight:500;color:var(--text2);margin-bottom:16px">Ví dụ <span class="optional-tag">(tuỳ chọn)</span></div>
       <div class="form-group">
-        <label>Câu ví dụ (tiếng Trung)</label>
+        <label for="inp-ex-zh">Câu ví dụ (tiếng Trung)</label>
         <textarea id="inp-ex-zh" placeholder="e.g. 你好，我叫小明。"></textarea>
       </div>
       <div class="form-group">
-        <label>Dịch nghĩa ví dụ (tiếng Việt)</label>
+        <label for="inp-ex-vi">Dịch nghĩa ví dụ (tiếng Việt)</label>
         <textarea id="inp-ex-vi" placeholder="e.g. Xin chào, tôi tên là Tiểu Minh."></textarea>
       </div>
     </div>
     <div style="border-top:1px solid var(--border);padding-top:20px;margin-top:4px">
       <div class="form-group">
-        <label>Gợi ý để dễ thuộc từ vựng hơn<span class="optional-tag">(tuỳ chọn)</span></label>
+        <label for="inp-note">Gợi ý để dễ thuộc từ vựng hơn<span class="optional-tag">(tuỳ chọn)</span></label>
         <textarea id="inp-note" placeholder="Ghi lại những điều cần nhớ về từ này: cách dùng, ngữ cảnh, mẹo nhớ từ, điểm dễ nhầm lẫn..." style="min-height:100px;resize:vertical"></textarea>
       </div>
     </div>
@@ -486,16 +486,16 @@
     </div>
     <input type="hidden" id="edit-word-id">
     <div class="form-group">
-      <label>Chữ Hán <span style="color:var(--red)">*</span></label>
+      <label for="edit-inp-zh">Chữ Hán <span style="color:var(--red)">*</span></label>
       <input type="text" id="edit-inp-zh" style="font-family:'Noto Sans SC',sans-serif">
       <div id="edit-pinyin-preview" style="font-size:13px;color:var(--red);margin-top:4px;font-weight:500;min-height:18px"></div>
     </div>
     <div class="form-group">
-      <label>Nghĩa tiếng Việt <span style="color:var(--red)">*</span></label>
+      <label for="edit-inp-vi">Nghĩa tiếng Việt <span style="color:var(--red)">*</span></label>
       <input type="text" id="edit-inp-vi">
     </div>
     <div class="form-group">
-      <label>Định nghĩa tiếng Trung <span class="optional-tag">(tuỳ chọn)</span></label>
+      <label for="edit-inp-zhdef">Định nghĩa tiếng Trung <span class="optional-tag">(tuỳ chọn)</span></label>
       <input type="text" id="edit-inp-zhdef" style="font-family:'Noto Sans SC',sans-serif">
     </div>
     <div class="form-group">
@@ -505,17 +505,17 @@
     <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px">
       <div style="font-size:13px;font-weight:500;color:var(--text2);margin-bottom:14px">Ví dụ <span class="optional-tag">(tuỳ chọn)</span></div>
       <div class="form-group">
-        <label>Câu ví dụ (tiếng Trung)</label>
+        <label for="edit-inp-exzh">Câu ví dụ (tiếng Trung)</label>
         <textarea id="edit-inp-exzh" style="font-family:'Noto Sans SC',sans-serif"></textarea>
       </div>
       <div class="form-group">
-        <label>Dịch nghĩa (tiếng Việt)</label>
+        <label for="edit-inp-exvi">Dịch nghĩa (tiếng Việt)</label>
         <textarea id="edit-inp-exvi"></textarea>
       </div>
     </div>
     <div style="border-top:1px solid var(--border);padding-top:18px;margin-top:4px">
       <div class="form-group">
-        <label>Ghi chú riêng<span class="optional-tag">(tuỳ chọn)</span></label>
+        <label for="edit-inp-note">Ghi chú riêng<span class="optional-tag">(tuỳ chọn)</span></label>
         <textarea id="edit-inp-note" placeholder="Mẹo nhớ từ, ngữ cảnh, điểm dễ nhầm lẫn..." style="min-height:100px;resize:vertical"></textarea>
       </div>
     </div>

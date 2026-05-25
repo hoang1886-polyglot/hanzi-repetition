@@ -663,10 +663,10 @@ function renderWordList(q=''){
   const wtBadges=wts.map(k=>{const i=getWtInfo(k);return i?`<span style="padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600;background:${i.bg};color:${i.color};white-space:nowrap;display:inline-block">${i.key} ${i.vi}</span>`:''}).join('');
   const wtHtml=`<div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center">
   ${wtBadges||'<span style="color:var(--text4);font-size:12px">—</span>'}
-  <button class="wt-add-btn" data-id="${w.id}" title="Chỉnh loại từ" style="width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#ff6b8a,#e8194b);color:#fff;border:none;cursor:pointer;font-size:14px;font-weight:700;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;margin-left:2px;line-height:1">+</button>
+  <button class="wt-add-btn" data-id="${w.id}" data-zh="${w.zh}" title="Chỉnh loại từ" style="width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#ff6b8a,#e8194b);color:#fff;border:none;cursor:pointer;font-size:14px;font-weight:700;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;margin-left:2px;line-height:1">+</button>
 </div>`;
       return`<tr>
-        <td style="font-family:'Noto Serif SC',serif;font-size:19px;font-weight:600">${tr(w.zh)}</td>
+        <td style="font-family:'Noto Serif SC',serif;font-size:19px;font-weight:600;white-space:nowrap">${tr(w.zh)}</td>
         <td style="color:var(--red);font-weight:500">${w.pinyin}</td>
         <td>${w.vi}</td>
         <td>${wtHtml}</td>
@@ -734,7 +734,9 @@ function saveWordEdit(){
   toast('✓ Đã lưu thay đổi!');
 }
 function openWordTypeEditor(wordId, anchorEl){
-  const word=db.words.find(w=>w.id===wordId);if(!word)return;
+  const zh=anchorEl.dataset.zh;
+  const word=(zh?db.words.find(w=>w.zh===zh):null)||db.words.find(w=>w.id===wordId);
+  if(!word)return;
   if(!word.wordTypes)word.wordTypes=word.wordType?[word.wordType]:[];
   const popover=$('wt-editor-popover'),tagsEl=$('wt-editor-tags');
 
@@ -933,7 +935,7 @@ function addWordFromArticle(zh,vi,exZh='',exVi='',zhDef='',wordType='',note=''){
     const already=db.words.find(w=>w.zh===zh&&article.linkedWords.includes(w.id));
     if(already){toast(`"${zh}" đã được thêm rồi`);return false;}
   }
-  const newWord={id:Date.now(),zh,vi,pinyin:getPinyin(zh),zhDef,exZh,exVi,note:note||'',wordType:wordType||'',status:'new',ef:2.5,interval:0,repetitions:0,nextReview:null,lastReview:null,added:Date.now()};
+  const newWord={id:Date.now()+Math.random(),zh,vi,pinyin:getPinyin(zh),zhDef,exZh,exVi,note:note||'',wordType:wordType||'',status:'new',ef:2.5,interval:0,repetitions:0,nextReview:null,lastReview:null,added:Date.now()};
   db.words.push(newWord);
   if(article){
     if(!article.linkedWords)article.linkedWords=[];
