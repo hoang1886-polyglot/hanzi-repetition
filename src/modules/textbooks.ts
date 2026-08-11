@@ -942,14 +942,16 @@ function tbRenderArticleVocabPanel(words: any[]): void {
     })
   })
 
-  // Bulk-add all words not yet in SRS
+  // Bulk-add all words not yet in SRS (with undo support)
   $('tb-add-all-vocab-btn')?.addEventListener('click', () => {
     let addedCount = 0
+    const addedZhs: string[] = []
     words.forEach((w: any, i: number) => {
       if (!db.words.some((dw: any) => dw.zh === w.zh)) {
         const added = addWordFromTextbook(w.zh, w.vi || '', w.exZh || '', w.exVi || '', w.note || '')
         if (added) {
           addedCount++
+          addedZhs.push(w.zh)
           const btn = vocabEl.querySelector(`.tb-vocab-add-btn[data-vi="${i}"]`) as HTMLButtonElement | null
           if (btn) {
             btn.textContent = '✓'
@@ -968,8 +970,21 @@ function tbRenderArticleVocabPanel(words: any[]): void {
       if (addAllBtn) {
         addAllBtn.textContent = `✓ Đã thêm ${addedCount} từ`
         addAllBtn.disabled = true
-        addAllBtn.style.background = 'var(--green)'
+        addAllBtn.style.background = 'linear-gradient(135deg,var(--green),#0d9e50)'
         addAllBtn.style.boxShadow  = 'none'
+        // Inject undo button right below
+        const undoBtn = document.createElement('button')
+        undoBtn.textContent = `↩ Hoàn tác (xoá ${addedCount} từ khỏi SRS)`
+        undoBtn.style.cssText = `width:100%;margin-top:6px;padding:7px 0;background:none;
+          border:1.5px solid var(--border2);border-radius:8px;font-size:11px;font-weight:600;
+          cursor:pointer;color:var(--text3);font-family:'DM Sans',sans-serif`
+        undoBtn.addEventListener('click', () => {
+          db.words = db.words.filter((w: any) => !addedZhs.includes(w.zh))
+          save()
+          toast(`↩ Đã xoá ${addedCount} từ khỏi SRS`)
+          tbRenderArticleVocabPanel(words)  // re-render: shows + buttons and Thêm tất cả again
+        })
+        addAllBtn.parentElement?.appendChild(undoBtn)
       }
     }
   })
